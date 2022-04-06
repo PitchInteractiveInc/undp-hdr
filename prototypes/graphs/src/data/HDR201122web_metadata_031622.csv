@@ -1,0 +1,33 @@
+﻿Full name,Short name,Time series,"Aggregates: World, HD group, region","A short explanation of how to interpret index values, including a range and whether high/low represent the positive or negative outcome",Note
+ISO3,iso3,-,-,-,-
+HDR Country Name,country,-,-,-,HDR 195 countries
+Human Development Groups,hdicode,-,-,-,4 HD groups
+UNDP Developeing Regions,region,-,-,-,https://hdr.undp.org/en/content/developing-regions
+Human Development Index (value),HDI,1990-2019,Y,"Index (0 to 1), higher value is better, N=189 (2019), latest year=2019",https://hdr.undp.org/en/composite/HDI
+Life Expectancy at Birth (years),LE,1990-2019,Y,-,-
+Expected Years of Schooling (years),EYS,1990-2019,Y,-,-
+Mean Years of Schooling (years),MYS,1990-2019,Y,-,-
+Gross National Income Per Capita (2017 PPP$),GNI_pc,1990-2019,Y,-,-
+Gender Development Index (value),GDI,"1995, 2000, 2005, 2010-2019",Y,"Index (0 to 1), higher value is better, N=167 (2019), latest year=2019",https://hdr.undp.org/en/composite/GDI
+"Life Expectancy at Birth, female (years)",LE_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Expected Years of Schooling, female (years)",EYS_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Mean Years of Schooling, female (years)",MYS_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Gross National Income Per Capita, female (2017 PPP$)",GNI_pc_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Life Expectancy at Birth, male (years)",LE_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Expected Years of Schooling, male (years)",EYS_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Mean Years of Schooling, male (years)",MYS_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Gross National Income Per Capita, male (2017 PPP$)",GNI_pc_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+Gender Inequality Index (value),GII,"1995, 2000, 2005, 2010-2019",Y,"Index (0 to 1), lower value is better, N=162 (2019), latest year=2019",https://hdr.undp.org/en/composite/GII
+"Maternal Mortality Ratio (deaths per 100,000 live births)",MMR,"1995, 2000, 2005, 2010-2017",Y,latest year=2017,-
+"Adolescent Birth Rate (births per 1,000 women ages 15-19)",ABR,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Population with at least some secondary education, female (% ages 25 and older)",SE_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Share of seats in parliament, female (% held by women)",PR_f,"1995, 1997, 2000, 2005, 2010-2019",Y,-,-
+"Labour force participation rate, female (% ages 15 and older)",LFPR_f,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Population with at least some secondary education, male (% ages 25 and older)",SE_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+"Share of seats in parliament, male (% held by men)",PR_m,"1995, 1997, 2000, 2005, 2010-2019",Y,-,-
+"Labour force participation rate, male (% ages 15 and older)",LFPR_m,"1995, 2000, 2005, 2010-2019",Y,-,-
+Inequality-adjusted Human Development Index (value),IHDI,2010-2019,Y,"Index (0 to 1), higher value is better, N=152 (2019), latest year=2019",https://hdr.undp.org/en/composite/IHDI
+Multidimensional Poverty Index (value),MPI,Latest year,only region see table in https://hdr.undp.org/sites/default/files/2021_mpi_statistical_data_table_1_and_2_en.pdf,"Index (0 to 1), lower value is better, N=109 (2021 MPI), latest year=2009-2020",This platform from OPHI: https://public.tableau.com/app/profile/ayush8576/viz/databank2021-Copy/GlobalDashboard and pick which representation could work
+Planetary pressures–adjusted Human Development Index (value),PHDI,Latest year 2019,Y,"Index (0 to 1), higher value is better, N=169 (2019), latest year=2019",https://hdr.undp.org/en/content/planetary-pressures%E2%80%93adjusted-human-development-index-phdi
+"Additional, not included in csv",,,,,
+Covid-19-adjusted Human Development Index (value),COVID-Adjusted HDI,"2020, 2021",Y,"Index (0 to 1), higher value is better, only aggregates no country level, latest year=2021",see page 13 of https://hdr.undp.org/sites/default/files/srhs2022.pdf
