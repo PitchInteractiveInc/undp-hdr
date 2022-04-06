@@ -48,7 +48,7 @@ export default function Graph(props) {
   const svgHeight = height + margins.top + margins.bottom
 
   const saveSVG = (event) => {
-    exportSVG(event.target.element, `${selectedMetric['Full name']}.svg`)
+    exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   }
 
   const xScale = scaleLinear()
@@ -104,7 +104,7 @@ export default function Graph(props) {
     const strokeWidth = isWorld ? 2 : 1
     let label = null
     if (isWorld) {
-      label = <text fontSize='0.6em' dy='-1em' x='0.5em' y={yScale(data[0].value)}>{country.Country}</text>
+      label = <text dy='-1em' x='0.5em' y={yScale(data[0].value)}>{country.Country}</text>
     }
     return (
       <g key={country.ISO3}>
@@ -129,7 +129,7 @@ export default function Graph(props) {
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} strokeDasharray='4,4' />
-        <text fontSize='0.6em' y={height} dy={'1em'} textAnchor='middle'>{year}</text>
+        <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
       </g>
     )
   })
@@ -143,12 +143,12 @@ export default function Graph(props) {
     let lastLabel = null
     if (index === colors.length - 1) {
       let nextValue = (index + 1) / colors.length * (yExtent[1] - yExtent[0]) + yExtent[0]
-      lastLabel = <text textAnchor='end' dx='-5' dy='0.3em' fontSize='0.6em'>{nextValue.toFixed(1)}</text>
+      lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{nextValue.toFixed(1)}</text>
     }
     return (
       <g key={color} transform={`translate(${-barWidth}, ${y})`}>
         <rect width={barWidth} height={barHeight} fill={color} />
-        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em' fontSize='0.6em'>{value.toFixed(1)}</text>
+        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(1)}</text>
         {lastLabel}
       </g>
     )
@@ -199,7 +199,7 @@ export default function Graph(props) {
       </div>
       Graph
       <div>
-        <svg width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
+        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{backgroundRects}</g>
