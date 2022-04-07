@@ -38,9 +38,6 @@ export default function Graph(props) {
   })
   console.log(graphColumns)
 
-  const yearExtent = extent(graphColumns, d => +d.substr(d.lastIndexOf('_') + 1))
-  console.log(yearExtent)
-
   const width = 800
   const height = 800
   const margins = { top: 20, right: 20, bottom: 20, left: 40 }
@@ -51,15 +48,17 @@ export default function Graph(props) {
     exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   }
 
-  const xScale = scaleLinear()
-    .domain(yearExtent)
-    .range([0, width])
 
-
+  const yearExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
   const yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
   data.forEach(country => {
     graphColumns.forEach(col => {
       const value = +country[col]
+      if (country[col] !== '') {
+        const year = +col.substr(col.lastIndexOf('_') + 1)
+        yearExtent[0] = Math.min(yearExtent[0], year)
+        yearExtent[1] = Math.max(yearExtent[1], year)
+      }
       yExtent[0] = Math.min(yExtent[0], value)
       yExtent[1] = Math.max(yExtent[1], value)
     })
@@ -68,6 +67,11 @@ export default function Graph(props) {
     yExtent[0] = 0
     yExtent[1] = 1
   }
+
+
+  const xScale = scaleLinear()
+    .domain(yearExtent)
+    .range([0, width])
 
   const yScale = scaleLinear()
     .domain(yExtent)
@@ -104,7 +108,8 @@ export default function Graph(props) {
     const strokeWidth = isWorld ? 2 : 1
     let label = null
     if (isWorld) {
-      label = <text dy='-1em' x='0.5em' y={yScale(data[0].value)}>{country.Country}</text>
+      const x = xScale(data[0].year)
+      label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
     }
     return (
       <g key={country.ISO3}>
