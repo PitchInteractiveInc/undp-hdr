@@ -22,7 +22,7 @@ const colors = [
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(4)
-
+  const [selectedCountries, setSelectedCountries] = useState([])
   console.log(data, metadata)
 
   if (!data || !metadata) {
@@ -31,7 +31,7 @@ export default function Graph(props) {
 
   const selectedMetric = metadata[selectedMetricIndex]
   const dataKey = selectedMetric['Short name']
-
+  const countSelectedCountries = selectedCountries.filter(d => d !== '').length
   const graphColumns = data.columns.filter(key => {
     const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
     return key.toLowerCase().match(keyRe)
@@ -63,11 +63,15 @@ export default function Graph(props) {
       yExtent[1] = Math.max(yExtent[1], value)
     })
   })
+  const countries = data.filter(d => d.ISO3 !== '')
+
+  console.log(yExtent)
   if (selectedMetric['Full name'].includes('Index')) {
-    yExtent[0] = 0
-    yExtent[1] = 1
+    yExtent[0] = Math.min(0, yExtent[0])
+    yExtent[1] = Math.max(1, yExtent[1])
   }
 
+  console.log(yExtent)
 
   const xScale = scaleLinear()
     .domain(yearExtent)
@@ -107,13 +111,25 @@ export default function Graph(props) {
     const stroke = isWorld ? 'black' : colorScale(data[0].value)
     const strokeWidth = isWorld ? 2 : 1
     let label = null
+    let opacity = 1
+    let showLabel = null
+    if (countSelectedCountries !== 0) {
+      const isSelected = selectedCountries.includes(country.ISO3)
+      opacity = isSelected ? 1 : 0.1
+      showLabel = isSelected
+    }
     if (isWorld) {
+      showLabel = true
+      opacity = 1
+    }
+    if (showLabel) {
       const x = xScale(data[0].year)
-      label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+        label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
     }
     return (
       <g key={country.ISO3}>
         <path
+          opacity={opacity}
           strokeWidth={strokeWidth}
           className='graphPath'
           d={lineGen(data)}
@@ -193,6 +209,24 @@ export default function Graph(props) {
     )
   })
 
+  let countryDropdowns = <div>
+    {range(3).map(i => {
+    const value = selectedCountries[i] || ''
+    const setCountry = (iso) => {
+      const newSelectedCountries = [...selectedCountries]
+      newSelectedCountries[i] = iso
+
+      setSelectedCountries(newSelectedCountries)
+    }
+    return <select key={i} placeholder='Select a country' value={value} onChange={e => setCountry(e.target.value)}>
+        <option value=''>Select a country</option>
+        {countries.map(country => {
+          return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
+        })}
+      </select>
+
+    })}
+  </div>
   return (
     <div className='Graph'>
       <div>
@@ -204,8 +238,9 @@ export default function Graph(props) {
             return <option key={i} value={i}>{d['Full name']}</option>
           })}
         </select>
+        <br />
+        {countryDropdowns}
       </div>
-      Graph
       <div>
         <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
 
