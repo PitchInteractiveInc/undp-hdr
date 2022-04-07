@@ -89,6 +89,8 @@ export default function Graph(props) {
     .domain(yExtent)
     .range(colors)
 
+  let selectedDots = []
+
   const paths = data.filter(d => d.ISO3 !== '' || d.Country == 'World').map(country => {
     const data = graphColumns.map(col => {
       if (country[col] === '') {
@@ -113,10 +115,25 @@ export default function Graph(props) {
     let label = null
     let opacity = 1
     let showLabel = null
-    if (countSelectedCountries !== 0) {
+    if (countSelectedCountries !== 0 && !isWorld) {
       const isSelected = selectedCountries.includes(country.ISO3)
       opacity = isSelected ? 1 : 0.1
       showLabel = isSelected
+
+      if (isSelected) {
+        selectedDots.push(<g key={country.ISO3}>
+          {data.map(datum => {
+            return <circle
+              key={datum.year}
+              cx={xScale(datum.year)}
+              cy={yScale(datum.value)}
+              r={3}
+              fill={stroke}
+              opacity={opacity}
+            />
+          })}
+        </g>)
+      }
     }
     if (isWorld) {
       showLabel = true
@@ -124,7 +141,8 @@ export default function Graph(props) {
     }
     if (showLabel) {
       const x = xScale(data[0].year)
-        label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+      label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+
     }
     return (
       <g key={country.ISO3}>
@@ -249,6 +267,7 @@ export default function Graph(props) {
             <g>{yScaleTicks}</g>
             <g>{paths}</g>
             <g>{years}</g>
+            <g>{selectedDots}</g>
           </g>
         </svg>
       </div>
