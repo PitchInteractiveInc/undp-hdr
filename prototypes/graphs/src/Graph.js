@@ -192,9 +192,12 @@ export default function Graph(props) {
     <div className='Graph'>
       <div>
         <select value={selectedMetricIndex} onChange={e => setSelectedMetricIndex(e.target.value)}>
-          {metadata.map((d, i) => (
-            <option key={i} value={i}>{d['Full name']}</option>
-          ))}
+          {metadata.map((d, i) => {
+            if (!d['Full name'].includes('Index')) {
+              return null
+            }
+            return <option key={i} value={i}>{d['Full name']}</option>
+          })}
         </select>
       </div>
       Graph
