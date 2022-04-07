@@ -7,7 +7,7 @@ import exportSVG from './exportSVG';
 
 import './Graph.scss'
 
-const colors = [
+export const colors = [
   '#d12816',
   '#ee402d',
   '#fbc42d',
