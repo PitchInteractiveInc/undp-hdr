@@ -21,8 +21,9 @@ export const colors = [
 ]
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
-  const [selectedMetricIndex, setSelectedMetricIndex] = useState(4)
+  const [selectedMetricIndex, setSelectedMetricIndex] = useState(6)
   const [selectedCountries, setSelectedCountries] = useState([])
+  const [showAllMetrics, setShowAllMetrics] = useState(false)
   console.log(data, metadata)
 
   if (!data || !metadata) {
@@ -36,6 +37,8 @@ export default function Graph(props) {
     const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
     return key.toLowerCase().match(keyRe)
   })
+  console.log(selectedMetric)
+  console.log(dataKey, data.columns)
   console.log(graphColumns)
 
   const width = 800
@@ -250,12 +253,16 @@ export default function Graph(props) {
       <div>
         <select value={selectedMetricIndex} onChange={e => setSelectedMetricIndex(e.target.value)}>
           {metadata.map((d, i) => {
-            if (!d['Full name'].includes('Index')) {
+            if (!d['Full name'].includes('Index') && !showAllMetrics) {
               return null
             }
             return <option key={i} value={i}>{d['Full name']}</option>
           })}
         </select>
+        <span>
+          Show all Metrics?{' '}
+          <input type="checkbox" checked={showAllMetrics} onChange={e => setShowAllMetrics(e.target.checked)} />
+        </span>
         <br />
         {countryDropdowns}
       </div>

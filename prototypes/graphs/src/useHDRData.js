@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { csvParse } from 'd3-dsv'
 
 
-import metadataFile from './data/HDR201122web_metadata_031622.csv'
-import dataFile from './data/HDR202122web_031722.csv'
+import metadataFile from './data/HDR201122web_metadata_040822.csv'
+import dataFile from './data/HDR2020_040722.csv'
 
 export default function useHDRData() {
   const [data, setData] = useState(null)
