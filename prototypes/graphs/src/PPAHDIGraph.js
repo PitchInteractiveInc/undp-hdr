@@ -25,14 +25,14 @@ export default function Graph(props) {
     exportSVG(event.target.closest('svg'), `PPA-HDI.svg`)
   }
 
-  const ppaKey = 'gdi_2019' // this is not the correct key but we don't have data for the proper one yet
+  const ppaKey = 'phdi_2019'
   const hdiKey = 'hdi_2019'
 
 
   const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '')
 
   const sortedCountries = [...countries]
-  sortedCountries.sort((a, b) => b[hdiKey] - a[hdiKey])
+  sortedCountries.sort((a, b) => b[ppaKey] - a[ppaKey])
 
   const rowHeight = 7
   const barHeight = 5
@@ -71,8 +71,7 @@ export default function Graph(props) {
 
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const hdiValue = +country[hdiKey]
-    // const phdiValue = +country[ppaKey]
-    const phdiValue = hdiValue * 0.8 // for now just make up phdi values
+    const phdiValue = +country[ppaKey]
 
     const hdiBarWidth = xScale(hdiValue)
     const phdiBarWidth = xScale(phdiValue)
@@ -122,7 +121,6 @@ export default function Graph(props) {
       {countryDropdowns}
       <div>
         <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
-          <text dy='1em'>This graph doesn't yet use real ppa hdi data</text>
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{xScaleTicks}</g>
             <g>{countryBars}</g>
