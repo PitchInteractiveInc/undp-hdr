@@ -12,13 +12,13 @@ export const colors = [
   '#d12816',
   '#ee402d',
   '#fbc42d',
-  '#feeb34',
   '#6de354',
   '#59ba47',
   '#60d4f2',
   '#21c1fc',
   '#6babeb',
   '#3288ce',
+  '#006eb5',
 ]
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
