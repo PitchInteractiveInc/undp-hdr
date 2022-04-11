@@ -5,6 +5,7 @@ import PPAHDIGraph from './PPAHDIGraph'
 import MPIGraph from './MPIGraph'
 import Countries from './Countries'
 import Country from './Country'
+import IndexPicker from './IndexPicker'
 import {   HashRouter,
   Routes,
   Route, NavLink} from 'react-router-dom'
@@ -13,7 +14,7 @@ function App() {
     <div className="App">
       <HashRouter>
         <div>
-          <NavLink to='/'>Indicies Graphs</NavLink>{' '}
+          <NavLink to='/indicies'>Indicies Graphs</NavLink>{' '}
           <NavLink to='/ppaHDI'>Planetary pressures adjusted HDI</NavLink>{' '}
           <NavLink to='/mpi'>MPI</NavLink>{' '}
           <NavLink to='/countries'>Countries</NavLink>
@@ -21,7 +22,9 @@ function App() {
         <Routes>
           <Route path='/mpi' element={<MPIGraph />} />
           <Route path='/ppaHDI' element={<PPAHDIGraph />} />
-          <Route path='/' element={<Graph />} />
+          <Route path='/indicies' element={<IndexPicker />}>
+            <Route path=':selectedMetricIndex' element={<Graph />} />
+          </Route>
           <Route path='/countries' element={<Countries />}>
             <Route path=':country' element={<Country />} />
           </Route>

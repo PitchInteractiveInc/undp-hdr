@@ -6,6 +6,7 @@ import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
 
 import './Graph.scss'
+import { useParams } from 'react-router-dom';
 
 export const colors = [
   '#d12816',
@@ -21,7 +22,7 @@ export const colors = [
 ]
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
-  const [selectedMetricIndex, setSelectedMetricIndex] = useState(6)
+  const { selectedMetricIndex } = useParams()
   const [selectedCountries, setSelectedCountries] = useState([])
   const [showAllMetrics, setShowAllMetrics] = useState(false)
   console.log(data, metadata)
@@ -251,18 +252,7 @@ export default function Graph(props) {
   return (
     <div className='Graph'>
       <div>
-        <select value={selectedMetricIndex} onChange={e => setSelectedMetricIndex(e.target.value)}>
-          {metadata.map((d, i) => {
-            if (!d['Full name'].includes('Index') && !showAllMetrics) {
-              return null
-            }
-            return <option key={i} value={i}>{d['Full name']}</option>
-          })}
-        </select>
-        <span>
-          Show all Metrics?{' '}
-          <input type="checkbox" checked={showAllMetrics} onChange={e => setShowAllMetrics(e.target.checked)} />
-        </span>
+
         <br />
         {countryDropdowns}
       </div>
