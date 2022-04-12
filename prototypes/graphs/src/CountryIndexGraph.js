@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom';
 import './CountryIndexGraph.scss'
+
+import ScatterGraph from './ScatterGraph'
+import BarGraph from './BarGraph'
+import DifferenceGraph from './DifferenceGraph'
+
 export default function CountryIndexGraph(props) {
   const { data, country, index } = props
 
@@ -16,7 +21,29 @@ export default function CountryIndexGraph(props) {
         </div>
       </div>
       <div className='indexGraphs'>
-
+        {
+          index.countryGraphTypes.map(graphType => {
+            let graph = null
+            switch(graphType) {
+              case 'scatter':
+                graph = <ScatterGraph data={data} country={country} index={index} />
+                break
+              // case 'bar':
+              //   graph = <BarGraph data={data} country={country} index={index} />
+              //   break
+              // case 'difference':
+              //   graph = <PieGraph data={data} country={country} index={index} />
+              //   break
+              default:
+                graph = <div>No graph for {graphType}</div>
+            }
+            return (
+              <div className='indexGraph' key={graphType}>
+                {graph}
+              </div>
+            )
+          })
+        }
       </div>
     </div>
   )
