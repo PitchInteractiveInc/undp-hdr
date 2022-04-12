@@ -1,0 +1,27 @@
+.CountryIndexGraph {
+
+  display: flex;
+  + .CountryIndexGraph {
+    margin-top: 2em;
+  }
+  .indexText {
+    width: 30%;
+    .key {
+      font-weight: bold;
+      color: #D12800;
+      font-size: 1.5em;
+    }
+    .name {
+      font-weight: bold;
+      font-size: 3em;
+      line-height: 1em;
+    }
+    .description {
+      margin: 1em 0;
+    }
+  }
+
+  .indexGraphs {
+    width: 70%;
+  }
+}

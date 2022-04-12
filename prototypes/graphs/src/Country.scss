@@ -1,4 +1,46 @@
 .CountryDetail {
+  text-align: left;
+  max-width: 1200px;
+  margin: 0 auto;
 
+  .dateUpdated {
 
+  }
+  .countryNameAndFlag {
+    font-size: 3em;
+    font-weight: bold;
+    display: flex;
+    text-transform: uppercase;;
+    img {
+      width: 2em;
+      object-fit: contain;
+    }
+    .countryName {
+      margin-left: 0.5em;
+    }
+  }
+  .population {
+    text-transform: uppercase;;
+    font-weight: bold;
+    margin-top: 1em;
+  }
+  .countryIntro {
+    font-size: 2em;
+    margin: 1em 0;
+  }
+  .downloadLinks {
+    a {
+      display: inline-block;
+      margin: 0 1em;
+    }
+  }
+  .indicies {
+    margin-top: 2em;
+  }
+
+  a {
+    border-bottom: 2px solid #D12800;
+    text-decoration: none;
+    color: #000;
+  }
 }
