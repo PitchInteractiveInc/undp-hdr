@@ -31,9 +31,9 @@ export default function CountryIndexGraph(props) {
               // case 'bar':
               //   graph = <BarGraph data={data} country={country} index={index} />
               //   break
-              // case 'difference':
-              //   graph = <PieGraph data={data} country={country} index={index} />
-              //   break
+              case 'difference':
+                graph = <DifferenceGraph data={data} country={country} index={index} />
+                break
               default:
                 graph = <div>No graph for {graphType}</div>
             }
