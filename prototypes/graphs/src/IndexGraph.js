@@ -4,8 +4,8 @@ import { extent, range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
-
-import './Graph.scss'
+import indicators from './indicators'
+import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
 
 export const colors = [
@@ -20,18 +20,25 @@ export const colors = [
   '#3288ce',
   '#006eb5',
 ]
-export default function Graph(props) {
+export default function IndexGraph(props) {
   const { data, metadata } = useHDRData()
-  const { selectedMetricIndex } = useParams()
+  const { selectedMetricShortName } = useParams()
   const [selectedCountries, setSelectedCountries] = useState([])
   const [showAllMetrics, setShowAllMetrics] = useState(false)
+  const indicator = indicators.find(d => d.key === selectedMetricShortName)
+  if (indicator.customGraph) {
+    return indicator.customGraph
+  }
   console.log(data, metadata)
 
   if (!data || !metadata) {
     return null
   }
 
-  const selectedMetric = metadata[selectedMetricIndex]
+  const selectedMetric = metadata.find(d => d['Short name'] === selectedMetricShortName)
+  if (!selectedMetric) {
+    return null
+  }
   const dataKey = selectedMetric['Short name']
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
   const graphColumns = data.columns.filter(key => {

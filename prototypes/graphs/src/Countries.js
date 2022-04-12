@@ -24,7 +24,6 @@ export default function Countries(props) {
           })}
         </select>
       </div>
-      {JSON.stringify(props)}
       <Outlet data={data} {...params} />
     </div>
   )

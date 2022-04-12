@@ -6,9 +6,7 @@ import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
 import downArrow from './images/downArrow.svg'
 
-import './Graph.scss'
-
-import {colors} from './Graph'
+import {colors} from './IndexGraph'
 
 export default function Graph(props) {
   const { data, metadata } = useHDRData()

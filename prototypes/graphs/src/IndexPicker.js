@@ -1,6 +1,7 @@
 import useHDRData from "./useHDRData"
 import { useParams, useNavigate, Outlet } from "react-router-dom"
 import { useState } from 'react'
+import indicators from './indicators'
 export default function IndexPicker(props) {
   const {data, metadata} = useHDRData()
   const defaultMetricIndex = 6
@@ -10,8 +11,8 @@ export default function IndexPicker(props) {
   const navigate = useNavigate()
   console.log(params)
 
-  const setIndex = (indexIndex) => {
-    navigate(`/indicies/${indexIndex}`, {replace: true})
+  const setIndex = (key) => {
+    navigate(`/indicies/${key}`, {replace: true})
   }
   if (!data) {
     return null
@@ -21,19 +22,14 @@ export default function IndexPicker(props) {
   return (
     <div>
       <div>
-        <select value={params.selectedMetricIndex || defaultMetricIndex} onChange={e => setIndex(e.target.value)}>
-          {metadata.map((d, i) => {
-            if (!d['Full name'].includes('Index') && !showAllMetrics) {
-              return null
-            }
-            return <option key={i} value={i}>{d['Full name']}</option>
+        <select value={params.selectedMetricShortName } onChange={e => setIndex(e.target.value)}>
+          <option value="">Select an index</option>
+          {indicators.map((d, i) => {
+
+            return <option key={i} value={d['key']}>{d['name']}</option>
           })}
         </select>
 
-        <span>
-          Show all Metrics?{' '}
-          <input type="checkbox" checked={showAllMetrics} onChange={e => setShowAllMetrics(e.target.checked)} />
-        </span>
       </div>
 
       <Outlet data={data} {...params} />

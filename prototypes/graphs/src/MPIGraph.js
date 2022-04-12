@@ -5,8 +5,6 @@ import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
 
-import './Graph.scss'
-
 const mpiColors = {
   'Child mortality': '#1f5a95',
   'Nutrition': '#006eb5',
