@@ -28,9 +28,9 @@ export default function CountryIndexGraph(props) {
               case 'scatter':
                 graph = <ScatterGraph data={data} country={country} index={index} />
                 break
-              // case 'bar':
-              //   graph = <BarGraph data={data} country={country} index={index} />
-              //   break
+              case 'bar':
+                graph = <BarGraph data={data} country={country} index={index} />
+                break
               case 'difference':
                 graph = <DifferenceGraph data={data} country={country} index={index} />
                 break

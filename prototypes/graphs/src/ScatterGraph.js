@@ -28,8 +28,8 @@ export default function ScatterGraph(props) {
     const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
     return key.toLowerCase().match(keyRe)
   })
-  console.log(dataKey, data.columns)
-  console.log(graphColumns)
+  // console.log(dataKey, data.columns)
+  // console.log(graphColumns)
 
   const width = 700
   const height = 600
@@ -68,7 +68,7 @@ export default function ScatterGraph(props) {
     .domain(yExtent)
     .range([height, 0])
 
-  console.log(yExtent)
+  // console.log(yExtent)
 
   const rowsToPlot = [
     { row: country, color: '#1F5A95' } ,
@@ -76,7 +76,7 @@ export default function ScatterGraph(props) {
     { row: data.find(d => d.Country === country.region ), color: '#A9B1B7'}
 
   ].filter(d => d.row)
-  console.log(rowsToPlot)
+  // console.log(rowsToPlot)
 
   const lineGenerator = line()
     .x(d => xScale(d.index))
@@ -284,7 +284,7 @@ export default function ScatterGraph(props) {
   return (
     <div className='ScatterGraph'>
       <div>
-        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{years}</g>

@@ -7,271 +7,125 @@ import exportSVG from './exportSVG';
 import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
+import useMPIData from './useMPIData';
+export default function BarGraphWrapper(props) {
+  const { index } = props
 
-export const colors = [
-  '#d12816',
-  '#ee402d',
-  '#fbc42d',
-  '#6de354',
-  '#59ba47',
-  '#60d4f2',
-  '#21c1fc',
-  '#6babeb',
-  '#3288ce',
-  '#006eb5',
-]
-export default function IndexGraph(props) {
-  const { data, metadata } = useHDRData()
-  const { selectedMetricShortName } = useParams()
-  const [selectedCountries, setSelectedCountries] = useState([])
-  const [showAllMetrics, setShowAllMetrics] = useState(false)
-  const indicator = indicators.find(d => d.key === selectedMetricShortName)
-  if (indicator.customGraph) {
-    return indicator.customGraph
+  if (index.key === 'MPI') {
+    return <MPIBarGraphWrapper {...props} />
   }
-  console.log(data, metadata)
 
-  if (!data || !metadata) {
+  return <BarGraph {...props} />
+}
+
+function MPIBarGraphWrapper(props) {
+  const { country } = props
+  const mpiData = useMPIData()
+  if (!mpiData) {
     return null
   }
+  const mpiCountry = mpiData.find(d => d.Country === country.Country)
+  return <BarGraph {...props} data={mpiData} country={mpiCountry} />
+}
 
-  const selectedMetric = metadata.find(d => d['Short name'] === selectedMetricShortName)
-  if (!selectedMetric) {
-    return null
-  }
-  const dataKey = selectedMetric['Short name']
-  const countSelectedCountries = selectedCountries.filter(d => d !== '').length
+function BarGraph(props) {
+  const { data, country, index } = props
+  const selectedCountry = country
+
+
+  const dataKey = index.key
   const graphColumns = data.columns.filter(key => {
-    const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
+    let keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
+    if (dataKey === 'MPI') {
+      keyRe = /^MPI$/i
+    }
     return key.toLowerCase().match(keyRe)
   })
-  console.log(selectedMetric)
   console.log(dataKey, data.columns)
   console.log(graphColumns)
+  const filteredData = data.filter(d => d[graphColumns[0]] !== ''
+    && (d.ISO3 !== '' || d.Country === 'World'))
+  console.log(filteredData)
 
-  const width = 800
-  const height = 800
-  const margins = { top: 20, right: 20, bottom: 20, left: 40 }
+  const width = 700
+  const height = 600
+  const margins = { top: 20, right: 30, bottom: 20, left: 40 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
-  const saveSVG = (event) => {
-    exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
-  }
-
-
-  const yearExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
-  const yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
-  data.forEach(country => {
-    graphColumns.forEach(col => {
-      const value = +country[col]
-      if (country[col] !== '') {
-        const year = +col.substr(col.lastIndexOf('_') + 1)
-        yearExtent[0] = Math.min(yearExtent[0], year)
-        yearExtent[1] = Math.max(yearExtent[1], year)
-      }
-      yExtent[0] = Math.min(yExtent[0], value)
-      yExtent[1] = Math.max(yExtent[1], value)
-    })
-  })
-  const countries = data.filter(d => d.ISO3 !== '')
-
-  console.log(yExtent)
-  if (selectedMetric['Full name'].includes('Index')) {
-    yExtent[0] = Math.min(0, yExtent[0])
-    yExtent[1] = Math.max(1, yExtent[1])
-  }
-
-  console.log(yExtent)
 
   const xScale = scaleLinear()
-    .domain(yearExtent)
+    .domain([0, filteredData.length])
     .range([0, width])
 
+  const yExtent = [0, 1]
   const yScale = scaleLinear()
     .domain(yExtent)
-    .range([height, 0])
+    .range([0, height])
 
-  console.log(yExtent)
-  // const lineGen = line()
-  //   .x(d => xScale())
+  const sortedData = [...filteredData]
+  sortedData.sort((a, b) => {
+    const aValue = a[graphColumns[0]]
+    const bValue = b[graphColumns[0]]
+    return index.key === 'MPI' ? bValue - aValue : aValue - bValue
+  })
 
-  const colorScale = scaleQuantize()
-    .domain(yExtent)
-    .range(colors)
-
-  let selectedDots = []
-
-  const paths = data.filter(d => d.ISO3 !== '' || d.Country == 'World').map(country => {
-    const data = graphColumns.map(col => {
-      if (country[col] === '') {
-        return null
-      }
-      const value = +country[col]
-      return {
-        value,
-        year: +col.substr(col.lastIndexOf('_') + 1)
-      }
-    }).filter(d => d)
-
-    const lineGen = line()
-      .x(d => xScale(d.year))
-      .y(d => yScale(d.value))
-    if (data.length === 0) {
-      return null
-    }
-    const isWorld = country.Country === 'World'
-    const stroke = isWorld ? 'black' : colorScale(data[0].value)
-    const strokeWidth = isWorld ? 2 : 1
-    let label = null
-    let opacity = 1
-    let showLabel = null
-    if (countSelectedCountries !== 0 && !isWorld) {
-      const isSelected = selectedCountries.includes(country.ISO3)
-      opacity = isSelected ? 1 : 0.1
-      showLabel = isSelected
-
-      if (isSelected) {
-        selectedDots.push(<g key={country.ISO3}>
-          {data.map(datum => {
-            return <circle
-              key={datum.year}
-              cx={xScale(datum.year)}
-              cy={yScale(datum.value)}
-              r={3}
-              fill={stroke}
-              opacity={opacity}
-            />
-          })}
-        </g>)
-      }
-    }
-    if (isWorld) {
+  const barWidth = width / sortedData.length * 0.8
+  const bars = sortedData.map((country, i) => {
+    const value = +country[graphColumns[0]]
+    const x = xScale(i)
+    const y = yScale(value)
+    let fill = '#EDEFF0'
+    let showLabel = false
+    if (selectedCountry && country.Country === selectedCountry.Country) {
+      fill = '#1F5A95'
       showLabel = true
-      opacity = 1
+    } else if (country.Country === 'World') {
+      fill = '#000'
+      showLabel = true
     }
-    if (showLabel) {
-      const x = xScale(data[0].year)
-      label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
-    }
+    let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={fill} y={height - y}>{value.toFixed(2)}</text> : null
     return (
-      <g key={country.ISO3}>
-        <path
-          opacity={opacity}
-          strokeWidth={strokeWidth}
-          className='graphPath'
-          d={lineGen(data)}
-          fill="none"
-          stroke={stroke}
-          strokeDasharray='1,1'
-          style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
+      <g transform={`translate(${x}, ${0})`} key={i}>
+        <rect
+          width={barWidth}
+          y={height - y}
+          height={y}
+          fill={fill}
         />
         {label}
       </g>
     )
   })
+  // const saveSVG = (event) => {
+  //   exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
+  // }
 
-  const yearArray = range(yearExtent[0], yearExtent[1] + 1)
 
-  const years = yearArray.map(year => {
-    const x = xScale(year)
+
+  const yScaleTicks = yScale.ticks(10).map((tick, index) => {
+    const y = yScale(tick)
     return (
-      <g key={year} transform={`translate(${x}, 0)`}>
-        <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} strokeDasharray='4,4' />
-        <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
+      <g key={tick} transform={`translate(${width}, ${height - y})`}>
+        <text dy='0.3em' dx='0.5em'>{tick}</text>
+        {/* <line x1={-width - xScale(0.5)} x2={-xScale(0.5)} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} /> */}
       </g>
     )
   })
 
-  const yScaleTicks = colors.map((color, index) => {
-    const percentage = index / colors.length
-    const y = (colors.length - index - 1) / colors.length * height
-    const barHeight = height / colors.length
-    const barWidth = 10
-    const value = percentage * (yExtent[1] - yExtent[0]) + yExtent[0]
-    let lastLabel = null
-    if (index === colors.length - 1) {
-      let nextValue = (index + 1) / colors.length * (yExtent[1] - yExtent[0]) + yExtent[0]
-      lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{nextValue.toFixed(1)}</text>
-    }
-    return (
-      <g key={color} transform={`translate(${-barWidth}, ${y})`}>
-        <rect width={barWidth} height={barHeight} fill={color} />
-        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(1)}</text>
-        {lastLabel}
-      </g>
-    )
-  })
-
-  const backgroundRects = [
-    {
-      fill: '#DBDDE0',
-      y0: 0,
-      y1: 0.35,
-    },
-    {
-      fill: '#E5E6E8',
-      y0: 0.35,
-      y1: 0.55,
-    },
-    {
-      fill: '#EDEEF0',
-      y0: 0.55,
-      y1: 0.75,
-    },
-    {
-      fill: '#F6F6F7',
-      y0: 0.75,
-      y1: 1,
-    }
-  ].map(rect => {
-    return (
-      <rect
-        key={rect.fill}
-        fill={rect.fill}
-        x={0}
-        y={height * (1-rect.y1)}
-        width={width}
-        height={height * (rect.y1 - rect.y0)}
-      />
-    )
-  })
-
-  let countryDropdowns = <div>
-    {range(3).map(i => {
-    const value = selectedCountries[i] || ''
-    const setCountry = (iso) => {
-      const newSelectedCountries = [...selectedCountries]
-      newSelectedCountries[i] = iso
-
-      setSelectedCountries(newSelectedCountries)
-    }
-    return <select key={i} placeholder='Select a country' value={value} onChange={e => setCountry(e.target.value)}>
-        <option value=''>Select a country</option>
-        {countries.map(country => {
-          return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
-        })}
-      </select>
-
-    })}
-  </div>
   return (
-    <div className='Graph'>
+    <div className='BarGraph'>
       <div>
-
-        <br />
-        {countryDropdowns}
-      </div>
-      <div>
-        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
-            <g>{backgroundRects}</g>
-            <g>{yScaleTicks}</g>
-            <g>{paths}</g>
-            <g>{years}</g>
-            <g>{selectedDots}</g>
+            {/* <g>{years}</g> */}
+            <g>
+              <line x1={width} x2={width} y1={0} y2={height} stroke='#A9B1B7' />
+              {yScaleTicks}
+            </g>
+            <g>{bars}</g>
           </g>
         </svg>
       </div>

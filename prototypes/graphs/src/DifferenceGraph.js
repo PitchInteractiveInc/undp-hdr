@@ -314,7 +314,7 @@ export default function DifferenceGraph(props) {
   return (
     <div className='ScatterGraph'>
       <div>
-        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{years}</g>
