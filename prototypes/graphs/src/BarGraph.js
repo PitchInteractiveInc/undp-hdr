@@ -8,6 +8,7 @@ import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
 import useMPIData from './useMPIData';
+import { comparisonColors } from './ComparisonCountrySelectors';
 export default function BarGraphWrapper(props) {
   const { index } = props
 
@@ -29,7 +30,7 @@ function MPIBarGraphWrapper(props) {
 }
 
 function BarGraph(props) {
-  const { data, country, index } = props
+  const { data, country, index, selectedCountries } = props
   const selectedCountry = country
 
 
@@ -83,6 +84,12 @@ function BarGraph(props) {
     } else if (country.Country === 'World') {
       fill = '#000'
       showLabel = true
+    } else if (selectedCountries.length > 0) {
+      const selectedCountryIndex = selectedCountries.findIndex(d => d === country.ISO3)
+      if (selectedCountryIndex !== -1) {
+        showLabel = true
+        fill = comparisonColors[selectedCountryIndex]
+      }
     }
 
     let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={fill} y={height - y}>{value.toFixed(2)}</text> : null

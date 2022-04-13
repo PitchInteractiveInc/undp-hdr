@@ -7,6 +7,7 @@ import exportSVG from './exportSVG';
 import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
+import { comparisonColors } from './ComparisonCountrySelectors';
 
 export const colors = [
   '#d12816',
@@ -21,7 +22,7 @@ export const colors = [
   '#006eb5',
 ]
 export default function DifferenceGraph(props) {
-  const { data, country, index } = props
+  const { data, country, index, selectedCountries } = props
 
   const dataKey = index.key
   const graphColumns = Array.from(new Set(data.columns.filter(key => {
@@ -76,6 +77,14 @@ export default function DifferenceGraph(props) {
     // { row: data.find(d => d.Country === country.region ), color: '#A9B1B7'}
 
   ].filter(d => d.row)
+  selectedCountries.forEach((iso3, index) => {
+    if (iso3) {
+      const country = data.find(d => d.ISO3 === iso3)
+      if (country) {
+        rowsToPlot.push({ row: country, color: comparisonColors[index] })
+      }
+    }
+  })
   console.log(rowsToPlot)
   const yearWidth = xScale(1)
   const markWidth = yearWidth * 0.8

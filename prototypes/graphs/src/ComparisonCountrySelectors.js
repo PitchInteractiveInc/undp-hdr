@@ -2,7 +2,7 @@ import { range } from 'd3-array'
 import './ComparisonCountrySelectors.scss'
 import classNames from 'classnames'
 import xIcon from './images/x.svg'
-const comparisonColors = [
+export const comparisonColors = [
   '#813BC7', '#ED9B25', '#00B786'
 ]
 export default function ComparisonCountrySelectors(props) {

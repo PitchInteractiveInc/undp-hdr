@@ -23,13 +23,13 @@ function GraphWrapper(props) {
   let graph = null
   switch(graphType) {
     case 'scatter':
-      graph = <ScatterGraph {...props} />
+      graph = <ScatterGraph {...props} selectedCountries={selectedCountries} />
       break
     case 'bar':
-      graph = <BarGraph {...props}  />
+      graph = <BarGraph {...props} selectedCountries={selectedCountries} />
       break
     case 'difference':
-      graph = <DifferenceGraph {...props}  />
+      graph = <DifferenceGraph {...props} selectedCountries={selectedCountries} />
       break
     default:
       graph = <div>No graph for {graphType}</div>
