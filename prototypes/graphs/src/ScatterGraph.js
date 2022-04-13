@@ -24,10 +24,10 @@ export default function ScatterGraph(props) {
   const { data, country, index } = props
 
   const dataKey = index.key
-  const graphColumns = data.columns.filter(key => {
+  const graphColumns = Array.from(new Set(data.columns.filter(key => {
     const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
     return key.toLowerCase().match(keyRe)
-  })
+  })))
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 

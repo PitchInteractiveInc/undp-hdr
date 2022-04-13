@@ -1,10 +1,46 @@
 import { Link } from 'react-router-dom';
 import './CountryIndexGraph.scss'
+import { useState } from 'react'
 
 import ScatterGraph from './ScatterGraph'
 import BarGraph from './BarGraph'
 import DifferenceGraph from './DifferenceGraph'
-
+import ComparisonCountrySelectors from './ComparisonCountrySelectors';
+function GraphWrapper(props) {
+  const { selectableCountries, graphType, data } = props
+  const [selectedCountries, setSelectedCountries] = useState(Array.from({length: selectableCountries}).map(() => ''))
+  const countries = data.filter(d => d.ISO3 !== '')
+  let countrySelectors = null
+  if (selectableCountries > 0) {
+    countrySelectors = <ComparisonCountrySelectors
+      selectedCountries={selectedCountries}
+      setSelectedCountries={setSelectedCountries}
+      maxSelectable={selectableCountries}
+      countries={countries}
+      colored={true || selectableCountries > 1}
+    />
+  }
+  let graph = null
+  switch(graphType) {
+    case 'scatter':
+      graph = <ScatterGraph {...props} />
+      break
+    case 'bar':
+      graph = <BarGraph {...props}  />
+      break
+    case 'difference':
+      graph = <DifferenceGraph {...props}  />
+      break
+    default:
+      graph = <div>No graph for {graphType}</div>
+  }
+  return (
+    <div className='indexGraph'>
+      {countrySelectors}
+      {graph}
+    </div>
+  )
+}
 export default function CountryIndexGraph(props) {
   const { data, country, index } = props
 
@@ -22,26 +58,15 @@ export default function CountryIndexGraph(props) {
       </div>
       <div className='indexGraphs'>
         {
-          index.countryGraphTypes.map(graphType => {
-            let graph = null
-            switch(graphType) {
-              case 'scatter':
-                graph = <ScatterGraph data={data} country={country} index={index} />
-                break
-              case 'bar':
-                graph = <BarGraph data={data} country={country} index={index} />
-                break
-              case 'difference':
-                graph = <DifferenceGraph data={data} country={country} index={index} />
-                break
-              default:
-                graph = <div>No graph for {graphType}</div>
-            }
-            return (
-              <div className='indexGraph' key={graphType}>
-                {graph}
-              </div>
-            )
+          index.countryGraphTypes.map((graphType, i) => {
+            return <GraphWrapper
+              key={graphType}
+              data={data}
+              country={country}
+              index={index}
+              graphType={graphType}
+              selectableCountries={index.countryGraphComparisonSelectableCountries[i]}
+            />
           })
         }
       </div>

@@ -1,0 +1,42 @@
+.ComparisonCountrySelectors {
+
+  span {
+    display: inline-block;
+    position: relative;
+    + span {
+      margin-left: 1em;
+    }
+  }
+  select {
+    text-transform: uppercase;
+    font-size: 0.7em;
+    max-width: 20em;
+
+    appearance: none;
+    padding: 0.3em 0 0.3em 1em;
+    border: none;
+    font-weight: bold;
+    background-color: #EDEFF0;
+    &.noSelection{
+      padding-left: 2em;
+      background-image: url('./images/plus.svg');
+      background-position: left center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+    }
+
+    &:active {
+      text-transform: none;
+    }
+    + select {
+      margin-left: 1em;
+    }
+  }
+
+  img {
+    cursor: pointer;
+    position: absolute;
+    right: 0.2em;
+    top: 0.2em;
+  }
+}
