@@ -4,40 +4,68 @@ const indicators =  [
   {
     key: 'HDI',
     name: 'Human Development Index',
-    countryGraphTypes: ['difference', 'scatter'],
-    countryGraphComparisonSelectableCountries: [0, 3],
+    countryGraphs: [
+      {
+        type: 'difference',
+        countSelectable: 0,
+      },
+      {
+        type: 'scatter',
+        countSelectable: 3,
+      }
+    ],
   },
   {
     key: 'GDI',
     name: 'Gender Development Index',
-    countryGraphTypes: ['scatter'],
-    countryGraphComparisonSelectableCountries: [1],
+    countryGraphs: [
+      {
+        type: 'scatter',
+        countSelectable: 1,
+      }
+    ],
   },
   {
     key: 'IHDI',
     name: 'Inequality-adjusted HDI',
-    countryGraphTypes: ['difference'],
-    countryGraphComparisonSelectableCountries: [1],
+    countryGraphs: [
+      {
+        type: 'difference',
+        countSelectable: 1,
+      }
+    ],
   },
   {
     key: 'GII',
     name: 'Gender Inequality index',
-    countryGraphTypes: ['scatter'],
-    countryGraphComparisonSelectableCountries: [1]
+    countryGraphs: [
+      {
+        type: 'scatter',
+        countSelectable: 1,
+      }
+    ],
   },
   {
     key: 'MPI',
     name: 'Multidimensional Poverty Index',
     customGraph: <MPIGraph />,
-    countryGraphTypes: ['bar'],
-    countryGraphComparisonSelectableCountries: [3]
+    countryGraphs: [
+      {
+        type: 'bar',
+        countSelectable: 3,
+      }
+    ],
   },
   {
     key: 'PHDI',
     name: 'Planetary pressures-adjusted HDI',
     customGraph: <PPAHDIGraph />,
-    countryGraphTypes: ['bar'],
-    countryGraphComparisonSelectableCountries: [3]
+    countryGraphs: [
+      {
+        type: 'bar',
+        countSelectable: 3,
+      }
+    ],
   }
 ]
 

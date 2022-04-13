@@ -7,37 +7,38 @@ import BarGraph from './BarGraph'
 import DifferenceGraph from './DifferenceGraph'
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 function GraphWrapper(props) {
-  const { selectableCountries, graphType, data } = props
-  const [selectedCountries, setSelectedCountries] = useState(Array.from({length: selectableCountries}).map(() => ''))
+  const { graph, data } = props
+  const { type, countSelectable } = graph
+  const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const countries = data.filter(d => d.ISO3 !== '')
   let countrySelectors = null
-  if (selectableCountries > 0) {
+  if (countSelectable > 0) {
     countrySelectors = <ComparisonCountrySelectors
       selectedCountries={selectedCountries}
       setSelectedCountries={setSelectedCountries}
-      maxSelectable={selectableCountries}
+      maxSelectable={countSelectable}
       countries={countries}
-      colored={true || selectableCountries > 1}
+      colored={true || countSelectable > 1}
     />
   }
-  let graph = null
-  switch(graphType) {
+  let graphElement = null
+  switch(type) {
     case 'scatter':
-      graph = <ScatterGraph {...props} selectedCountries={selectedCountries} />
+      graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} />
       break
     case 'bar':
-      graph = <BarGraph {...props} selectedCountries={selectedCountries} />
+      graphElement = <BarGraph {...props} selectedCountries={selectedCountries} />
       break
     case 'difference':
-      graph = <DifferenceGraph {...props} selectedCountries={selectedCountries} />
+      graphElement = <DifferenceGraph {...props} selectedCountries={selectedCountries} />
       break
     default:
-      graph = <div>No graph for {graphType}</div>
+      graphElement = <div>No graph for {type}</div>
   }
   return (
     <div className='indexGraph'>
       {countrySelectors}
-      {graph}
+      {graphElement}
     </div>
   )
 }
@@ -58,14 +59,13 @@ export default function CountryIndexGraph(props) {
       </div>
       <div className='indexGraphs'>
         {
-          index.countryGraphTypes.map((graphType, i) => {
+          index.countryGraphs.map((graph) => {
             return <GraphWrapper
-              key={graphType}
+              key={graph.type}
               data={data}
               country={country}
               index={index}
-              graphType={graphType}
-              selectableCountries={index.countryGraphComparisonSelectableCountries[i]}
+              graph={graph}
             />
           })
         }
