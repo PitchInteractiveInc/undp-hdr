@@ -8,6 +8,8 @@ import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
 import { comparisonColors } from './ComparisonCountrySelectors';
+import getGraphColumnsForKey from './getGraphColumnsForKey';
+import GraphColorLegend from './GraphColorLegend';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -24,10 +26,8 @@ export default function ScatterGraph(props) {
   const { data, country, index, selectedCountries } = props
 
   const dataKey = index.key
-  const graphColumns = Array.from(new Set(data.columns.filter(key => {
-    const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
-    return key.toLowerCase().match(keyRe)
-  })))
+  const graphColumns = getGraphColumnsForKey(data, dataKey)
+
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
@@ -72,8 +72,6 @@ export default function ScatterGraph(props) {
 
   const rowsToPlot = [
     { row: country, color: '#1F5A95' } ,
-    { row: data.find(d => d.Country === 'World'), color: '#55606F', },
-    { row: data.find(d => d.Country === country.region ), color: '#A9B1B7'}
 
   ].filter(d => d.row)
   // console.log(rowsToPlot)
@@ -86,6 +84,15 @@ export default function ScatterGraph(props) {
       }
     }
   })
+
+  const worldData = data.find(d => d.Country === 'World')
+  if (worldData) {
+    rowsToPlot.push({ row: worldData , color: '#55606F', })
+  }
+  const regionData = data.find(d => d.Country === country.region )
+  if (regionData) {
+    rowsToPlot.push({ row: regionData, color: '#A9B1B7'})
+  }
 
   const lineGenerator = line()
     .x(d => xScale(d.index))
@@ -292,6 +299,7 @@ export default function ScatterGraph(props) {
   // </div>
   return (
     <div className='ScatterGraph'>
+      <GraphColorLegend rows={rowsToPlot} />
       <div>
         <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
 

@@ -8,6 +8,7 @@ export const comparisonColors = [
 export default function ComparisonCountrySelectors(props) {
   const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable } = props
   return <div className='ComparisonCountrySelectors'>
+    <div className='label'>Add Country To Compare</div>
     {range(maxSelectable).map(i => {
     const value = selectedCountries[i] || ''
     const setCountry = (iso) => {

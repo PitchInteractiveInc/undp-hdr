@@ -9,6 +9,8 @@ import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
 import useMPIData from './useMPIData';
 import { comparisonColors } from './ComparisonCountrySelectors';
+import getGraphColumnsForKey from './getGraphColumnsForKey';
+import GraphColorLegend from './GraphColorLegend';
 export default function BarGraphWrapper(props) {
   const { index } = props
 
@@ -35,13 +37,7 @@ function BarGraph(props) {
 
 
   const dataKey = index.key
-  const graphColumns = data.columns.filter(key => {
-    let keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
-    if (dataKey === 'MPI') {
-      keyRe = /^MPI$/i
-    }
-    return key.toLowerCase().match(keyRe)
-  })
+  const graphColumns = getGraphColumnsForKey(data, dataKey)
   console.log(dataKey, data.columns)
   console.log(graphColumns)
   const filteredData = data.filter(d => d[graphColumns[0]] !== ''
@@ -72,6 +68,23 @@ function BarGraph(props) {
   })
 
   const barWidth = width / sortedData.length * 0.8
+  const legendRows = [
+    { row: selectedCountry, color: '#1F5A95' },
+  ]
+
+  selectedCountries.forEach((iso3, index) => {
+    if (iso3 !== '') {
+      const country = filteredData.find(d => d.ISO3 === iso3)
+      if (country) {
+        legendRows.push({ row: country, color: comparisonColors[index] })
+      }
+    }
+  })
+  const worldData = data.find(d => d.Country === 'World')
+  if (worldData) {
+    legendRows.push({ row: worldData, color: '#000', })
+
+  }
   const bars = sortedData.map((country, i) => {
     const value = +country[graphColumns[0]]
     const x = xScale(i)
@@ -120,9 +133,10 @@ function BarGraph(props) {
       </g>
     )
   })
-
+  console.log(legendRows)
   return (
     <div className='BarGraph'>
+      <GraphColorLegend rows={legendRows} />
       <div>
         <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
 

@@ -1,5 +1,10 @@
 .ComparisonCountrySelectors {
 
+  .label {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+  }
   span {
     display: inline-block;
     position: relative;
