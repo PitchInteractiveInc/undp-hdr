@@ -69,8 +69,10 @@ function BarGraph(props) {
 
   const barWidth = width / sortedData.length * 0.8
   const legendRows = [
-    { row: selectedCountry, color: '#1F5A95' },
   ]
+  if (selectedCountry) {
+    legendRows.push({ row: selectedCountry, color: '#1F5A95' })
+  }
 
   selectedCountries.forEach((iso3, index) => {
     if (iso3 !== '') {
