@@ -1,7 +1,7 @@
 import './CountryTooltip.scss'
 import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
-function GDIScatterTooltip(props) {
+function ChangeTooltipHeader(props) {
   const { point, data, index } = props
   console.log(point)
   const country = point.hover[2].row
@@ -23,16 +23,27 @@ function GDIScatterTooltip(props) {
       </div>
     )
   }
-  const tableKeys = [
-    { label: 'HDI Value', key: 'hdi' },
-    { label: 'Life Expectancy at Birth', key: 'le', suffix: 'years', },
-    { label: 'Expected Years of Schooling', key: 'eys', suffix: 'years', },
-    { label: 'Mean Years of Schooling', key: 'mys', suffix: 'years', },
-    { label: 'Gross National Income Per Capita', key: 'gni_pc' },
+  return (
+    <>
 
-  ]
+      <div className='countryName'>{country.Country}</div>
+      <hr />
+      <div className='stat'>
+        <div className='label'>{year} {index.key} value</div>
+        <div className='value'>{value}</div>
+      </div>
+      {previousYear}
+    </>
+  )
+}
+function GenderTable(props) {
+  const { tableKeys, point } = props
 
-  const table = (
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+
+  const year = getYearOfColumn(column)
+  return (
     <table>
       <thead>
         <tr>
@@ -59,19 +70,55 @@ function GDIScatterTooltip(props) {
       </tbody>
     </table>
   )
+
+}
+function GDIScatterTooltip(props) {
+  const tableKeys = [
+    { label: 'HDI Value', key: 'hdi' },
+    { label: 'Life Expectancy at Birth', key: 'le', suffix: 'years', },
+    { label: 'Expected Years of Schooling', key: 'eys', suffix: 'years', },
+    { label: 'Mean Years of Schooling', key: 'mys', suffix: 'years', },
+    { label: 'Gross National Income Per Capita', key: 'gni_pc' },
+
+  ]
+
   return (
     <div>
-      <div className='countryName'>{country.Country}</div>
+      <ChangeTooltipHeader {...props} />
       <hr />
-      <div className='stat'>
-        <div className='label'>{year} {index.key} value</div>
-        <div className='value'>{value}</div>
-      </div>
-      {previousYear}
-      <hr />
-      {table}
+      <GenderTable tableKeys={tableKeys} {...props} />
     </div>
 
+  )
+}
+
+function GIIScatterTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+
+  const tableKeys = [
+    { label: 'Share of seats in parliament', key: 'pr', suffix: '%' },
+    { label: 'Population with at least some secondary education', key: 'se', suffix: '%' },
+    { label: 'Labour force participation rate (age 25 and older)', key: 'lfpr', suffix: '%' },
+
+  ]
+  return (
+    <div>
+      <ChangeTooltipHeader {...props} />
+      <hr />
+      <div className='stat'>
+        <div className='label'>Maternal Mortality Ratio</div>
+        <div className='value'>{country[`mmr_${year}`]}<span className='suffix'> death/100,000 live births</span></div>
+      </div>
+      <div className='stat'>
+        <div className='label'>Adolescent Birth Rate</div>
+        <div className='value'>{country[`abr_${year}`]}<span className='suffix'> births/1,000 women age 15-19</span></div>
+      </div>
+
+      <GenderTable tableKeys={tableKeys} {...props} />
+    </div>
   )
 }
 
@@ -87,7 +134,12 @@ export default function CountryTooltip(props) {
   if (index && graph) {
     if (index.key === 'GDI' && graph.type === 'scatter') {
       tooltipContents = <GDIScatterTooltip {...props} />
+    } else if (index.key === 'GII' && graph.type === 'scatter') {
+      tooltipContents = <GIIScatterTooltip {...props} />
     }
+  }
+  if (!tooltipContents) {
+    return null
   }
   return (
     <div className='CountryTooltip' style={style}>
