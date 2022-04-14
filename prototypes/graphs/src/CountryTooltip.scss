@@ -1,0 +1,11 @@
+.CountryTooltip {
+  position: absolute;
+
+  border: 1px solid black;
+  background-color: #fff;
+  padding: 0.5em 1em;
+  font-size: 0.875em;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}

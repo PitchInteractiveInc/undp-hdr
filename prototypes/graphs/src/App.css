@@ -5,3 +5,6 @@
 a.active {
   font-weight: bold;
 }
+.svgContainer {
+  position: relative;
+}

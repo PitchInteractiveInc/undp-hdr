@@ -4,7 +4,9 @@ import './IndexGraph.scss'
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
-
+import { Delaunay } from 'd3-delaunay';
+import { useState, useRef } from 'react';
+import CountryTooltip from './CountryTooltip';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -18,11 +20,11 @@ export const colors = [
   '#006eb5',
 ]
 export default function ScatterGraph(props) {
-  const { data, country, index, selectedCountries } = props
+  const { data, country, index, selectedCountries, graph } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
-
+  const [hoveredPoint, setHoveredPoint] = useState(null)
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
@@ -92,6 +94,8 @@ export default function ScatterGraph(props) {
   const lineGenerator = line()
     .x(d => xScale(d.index))
     .y(d => yScale(d.value))
+
+  const delaunayData = []
   const lineData = rowsToPlot.map(row => {
     const dots = []
     const stroke = row.color
@@ -101,12 +105,15 @@ export default function ScatterGraph(props) {
         return null
       }
       const value = +row.row[col]
+      const dotX = xScale(colIndex)
+      const dotY = yScale(value)
+      delaunayData.push([dotX, dotY, {row: row.row, col}])
       dots.push(
         <circle
           r={4}
           key={year}
-          cx={xScale(colIndex)}
-          cy={yScale(value)}
+          cx={dotX}
+          cy={dotY}
           fill={stroke}
         />
       )
@@ -122,86 +129,7 @@ export default function ScatterGraph(props) {
       </g>
     )
   })
-  // const lineGen = line()
-  //   .x(d => xScale())
-
-  // const colorScale = scaleQuantize()
-  //   .domain(yExtent)
-  //   .range(colors)
-
-  // let selectedDots = []
-
-  // const paths = data.filter(d => d.ISO3 !== '' || d.Country == 'World').map(country => {
-  //   const data = graphColumns.map(col => {
-  //     if (country[col] === '') {
-  //       return null
-  //     }
-  //     const value = +country[col]
-  //     return {
-  //       value,
-  //       year: +col.substr(col.lastIndexOf('_') + 1)
-  //     }
-  //   }).filter(d => d)
-
-  //   const lineGen = line()
-  //     .x(d => xScale(d.year))
-  //     .y(d => yScale(d.value))
-  //   if (data.length === 0) {
-  //     return null
-  //   }
-  //   const isWorld = country.Country === 'World'
-  //   const stroke = isWorld ? 'black' : colorScale(data[0].value)
-  //   const strokeWidth = isWorld ? 2 : 1
-  //   let label = null
-  //   let opacity = 1
-  //   let showLabel = null
-  //   if (countSelectedCountries !== 0 && !isWorld) {
-  //     const isSelected = selectedCountries.includes(country.ISO3)
-  //     opacity = isSelected ? 1 : 0.1
-  //     showLabel = isSelected
-
-  //     if (isSelected) {
-  //       selectedDots.push(<g key={country.ISO3}>
-  //         {data.map(datum => {
-  //           return <circle
-  //             key={datum.year}
-  //             cx={xScale(datum.year)}
-  //             cy={yScale(datum.value)}
-  //             r={3}
-  //             fill={stroke}
-  //             opacity={opacity}
-  //           />
-  //         })}
-  //       </g>)
-  //     }
-  //   }
-  //   if (isWorld) {
-  //     showLabel = true
-  //     opacity = 1
-  //   }
-  //   if (showLabel) {
-  //     const x = xScale(data[0].year)
-  //     label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
-
-  //   }
-  //   return (
-  //     <g key={country.ISO3}>
-  //       <path
-  //         opacity={opacity}
-  //         strokeWidth={strokeWidth}
-  //         className='graphPath'
-  //         d={lineGen(data)}
-  //         fill="none"
-  //         stroke={stroke}
-  //         strokeDasharray='1,1'
-  //         style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
-  //       />
-  //       {label}
-  //     </g>
-  //   )
-  // })
-
-  // const yearArray = range(yearExtent[0], yearExtent[1] + 1)
+  const delaunay = Delaunay.from(delaunayData)
 
   const years = graphColumns.map((column, columnIndex) => {
     const year = +column.substr(column.lastIndexOf('_') + 1)
@@ -240,63 +168,39 @@ export default function ScatterGraph(props) {
     )
   })
 
-  // const backgroundRects = [
-  //   {
-  //     fill: '#DBDDE0',
-  //     y0: 0,
-  //     y1: 0.35,
-  //   },
-  //   {
-  //     fill: '#E5E6E8',
-  //     y0: 0.35,
-  //     y1: 0.55,
-  //   },
-  //   {
-  //     fill: '#EDEEF0',
-  //     y0: 0.55,
-  //     y1: 0.75,
-  //   },
-  //   {
-  //     fill: '#F6F6F7',
-  //     y0: 0.75,
-  //     y1: 1,
-  //   }
-  // ].map(rect => {
-  //   return (
-  //     <rect
-  //       key={rect.fill}
-  //       fill={rect.fill}
-  //       x={0}
-  //       y={height * (1-rect.y1)}
-  //       width={width}
-  //       height={height * (rect.y1 - rect.y0)}
-  //     />
-  //   )
-  // })
+  const svgRef = useRef()
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX, mouseY)
+    console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1) {
+      console.log(closestPointIndex)
+      console.log(delaunayData[closestPointIndex])
+      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+    }
+  }
+  const mouseLeave = () => {
+    // setHoveredPoint(null)
+  }
 
-  // let countryDropdowns = <div>
-  //   {range(3).map(i => {
-  //   const value = selectedCountries[i] || ''
-  //   const setCountry = (iso) => {
-  //     const newSelectedCountries = [...selectedCountries]
-  //     newSelectedCountries[i] = iso
+  let tooltip = null
+  if (hoveredPoint) {
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
+    )
+  }
 
-  //     setSelectedCountries(newSelectedCountries)
-  //   }
-  //   return <select key={i} placeholder='Select a country' value={value} onChange={e => setCountry(e.target.value)}>
-  //       <option value=''>Select a country</option>
-  //       {countries.map(country => {
-  //         return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
-  //       })}
-  //     </select>
-
-  //   })}
-  // </div>
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} />
-      <div>
-        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+      <div className='svgContainer'>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+          onMouseMove={mouseMove}
+          onMouseEnter={mouseMove}
+          onMouseLeave={mouseLeave}
+          ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{years}</g>
@@ -304,6 +208,7 @@ export default function ScatterGraph(props) {
             <g>{lineData}</g>
           </g>
         </svg>
+        {tooltip}
       </div>
     </div>
   )
