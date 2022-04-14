@@ -171,6 +171,41 @@ function IHDIDifferenceTooltip(props) {
   )
 }
 
+
+function HDIDifferenceTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+
+  return (
+    <div>
+      <ChangeTooltipHeader {...props} />
+      <hr />
+      <Stat
+        label='Life expectancy at birth'
+        value={country[`le_${year}`]}
+        suffix='years'
+      />
+      <Stat
+        label='Expected years of schooling'
+        value={country[`eys_${year}`]}
+        suffix='years'
+      />
+      <Stat
+        label='Mean years of schooling'
+        value={country[`mys_${year}`]}
+        suffix='years'
+      />
+      <Stat
+        label='Gross National Income per capita'
+        value={country[`gni_pc_${year}`]}
+        suffix='(constant 2017 PPP$)'
+      />
+    </div>
+  )
+}
+
 export default function CountryTooltip(props) {
   const { point, index, graph } = props
 
@@ -187,6 +222,8 @@ export default function CountryTooltip(props) {
       tooltipContents = <GIIScatterTooltip {...props} />
     } else if (index.key === 'IHDI' && graph.type === 'difference') {
       tooltipContents = <IHDIDifferenceTooltip {...props} />
+    } else if (index.key === 'HDI' && graph.type === 'difference') {
+      tooltipContents = <HDIDifferenceTooltip {...props} />
     }
   }
   if (!tooltipContents) {
