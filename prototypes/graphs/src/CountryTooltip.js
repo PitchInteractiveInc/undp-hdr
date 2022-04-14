@@ -1,6 +1,17 @@
 import './CountryTooltip.scss'
 import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
+
+function Stat(props) {
+  const { label, value, suffix } = props
+  const s = suffix ? (<span className='suffix'> {suffix}</span>) : null
+  return (
+    <div className='stat'>
+      <div className='label'>{label}</div>
+      <div className='value'>{value}{s}</div>
+    </div>
+  )
+}
 function ChangeTooltipHeader(props) {
   const { point, data, index } = props
   console.log(point)
@@ -17,10 +28,10 @@ function ChangeTooltipHeader(props) {
     const previousValue = +country[previousColumn]
     const difference = value - previousValue
     previousYear = (
-      <div className='stat'>
-        <div className='label'>{index.key} change from {previousYear}</div>
-        <div className='value'>{difference > 0 ? '+' : ''}{difference.toFixed(3)}</div>
-      </div>
+      <Stat
+        label={`${index.key} change from ${previousYear}`}
+        value={`${difference > 0 ? '+' : ''}${difference.toFixed(3)}`}
+      />
     )
   }
   return (
@@ -28,10 +39,10 @@ function ChangeTooltipHeader(props) {
 
       <div className='countryName'>{country.Country}</div>
       <hr />
-      <div className='stat'>
-        <div className='label'>{year} {index.key} value</div>
-        <div className='value'>{value}</div>
-      </div>
+      <Stat
+        label={`${year} ${index.key} value`}
+        value={value}
+      />
       {previousYear}
     </>
   )
@@ -108,16 +119,54 @@ function GIIScatterTooltip(props) {
     <div>
       <ChangeTooltipHeader {...props} />
       <hr />
-      <div className='stat'>
-        <div className='label'>Maternal Mortality Ratio</div>
-        <div className='value'>{country[`mmr_${year}`]}<span className='suffix'> death/100,000 live births</span></div>
-      </div>
-      <div className='stat'>
-        <div className='label'>Adolescent Birth Rate</div>
-        <div className='value'>{country[`abr_${year}`]}<span className='suffix'> births/1,000 women age 15-19</span></div>
-      </div>
-
+      <Stat
+        label='Maternal Mortality Ratio'
+        value={country[`mmr_${year}`]}
+        suffix='death/100,000 live births'
+      />
+      <Stat
+        label='Adolescent Birth Rate'
+        value={country[`abr_${year}`]}
+        suffix='births/1,000 women age 15-19'
+      />
       <GenderTable tableKeys={tableKeys} {...props} />
+    </div>
+  )
+}
+
+function IHDIDifferenceTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+
+  return (
+    <div>
+      <ChangeTooltipHeader {...props} />
+      <Stat
+        label='HDI value'
+        value={country[`hdi_${year}`]}
+      />
+      <Stat
+        label='Overall loss (from HDI to IHDI)'
+        value={country[`loss_${year}`]}
+        suffix='%'
+      />
+      <Stat
+        label='Inequality in life expectancy'
+        value={country[`ineq_le_${year}`]}
+        suffix='%'
+      />
+      <Stat
+        label='Inequality in education'
+        value={country[`ineq_edu_${year}`]}
+        suffix='%'
+      />
+      <Stat
+        label='Inequality in income'
+        value={country[`ineq_inc_${year}`]}
+        suffix='%'
+      />
     </div>
   )
 }
@@ -136,6 +185,8 @@ export default function CountryTooltip(props) {
       tooltipContents = <GDIScatterTooltip {...props} />
     } else if (index.key === 'GII' && graph.type === 'scatter') {
       tooltipContents = <GIIScatterTooltip {...props} />
+    } else if (index.key === 'IHDI' && graph.type === 'difference') {
+      tooltipContents = <IHDIDifferenceTooltip {...props} />
     }
   }
   if (!tooltipContents) {

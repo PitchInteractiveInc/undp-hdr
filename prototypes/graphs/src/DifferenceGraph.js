@@ -4,6 +4,9 @@ import './IndexGraph.scss'
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
+import { Delaunay } from 'd3-delaunay';
+import { useState, useRef } from 'react';
+import CountryTooltip from './CountryTooltip';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -17,12 +20,14 @@ export const colors = [
   '#006eb5',
 ]
 export default function DifferenceGraph(props) {
-  const { data, country, index, selectedCountries } = props
+  const { data, country, index, selectedCountries, graph } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
-  console.log(dataKey, data.columns)
-  console.log(graphColumns)
+  const [hoveredPoint, setHoveredPoint] = useState(null)
+
+  // console.log(dataKey, data.columns)
+  // console.log(graphColumns)
 
   const width = 700
   const height = 600
@@ -80,6 +85,8 @@ export default function DifferenceGraph(props) {
   console.log(rowsToPlot)
   const yearWidth = xScale(1)
   const markWidth = yearWidth * 0.8
+  const delaunayData = []
+
   const differenceData = rowsToPlot.map(row => {
     const stroke = row.color
     const rowData = graphColumns.map((col, colIndex) => {
@@ -91,12 +98,15 @@ export default function DifferenceGraph(props) {
       return {
         index: colIndex,
         value,
+        col
       }
     }).filter(d => d);
     const differenceMarks = rowData.map((datum, datumIndex) => {
       const x = xScale(datum.index)
       const y = yScale(datum.value)
       let previousYearMarks = null
+      delaunayData.push([x, y, {row: row.row, col: datum.col}])
+
       if (datumIndex > 0) {
         const prevY = yScale(rowData[datumIndex - 1].value)
         previousYearMarks = (
@@ -140,6 +150,8 @@ export default function DifferenceGraph(props) {
       </g>
     )
   })
+  const delaunay = Delaunay.from(delaunayData)
+
   const years = graphColumns.map((column, columnIndex) => {
     const year = +column.substr(column.lastIndexOf('_') + 1)
 
@@ -177,11 +189,41 @@ export default function DifferenceGraph(props) {
     )
   })
 
+
+  const svgRef = useRef()
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX, mouseY)
+    console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1) {
+      console.log(closestPointIndex)
+      console.log(delaunayData[closestPointIndex])
+      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+    }
+  }
+  const mouseLeave = () => {
+    // setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
+    )
+  }
+
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} />
-      <div>
-        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+      <div className='svgContainer'>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+          onMouseMove={mouseMove}
+          onMouseEnter={mouseMove}
+          onMouseLeave={mouseLeave}
+          ref={svgRef}>
+
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{years}</g>
@@ -189,6 +231,7 @@ export default function DifferenceGraph(props) {
             <g>{differenceData}</g>
           </g>
         </svg>
+        {tooltip}
       </div>
     </div>
   )
