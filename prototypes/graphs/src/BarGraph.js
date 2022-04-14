@@ -5,6 +5,10 @@ import useMPIData from './useMPIData';
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
+
+import { Delaunay } from 'd3-delaunay';
+import { useState, useRef } from 'react';
+import CountryTooltip from './CountryTooltip';
 export default function BarGraphWrapper(props) {
   const { index } = props
 
@@ -26,17 +30,18 @@ function MPIBarGraphWrapper(props) {
 }
 
 function BarGraph(props) {
-  const { data, country, index, selectedCountries } = props
+  const { data, country, index, selectedCountries, graph } = props
   const selectedCountry = country
+  const [hoveredPoint, setHoveredPoint] = useState(null)
 
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
-  console.log(dataKey, data.columns)
-  console.log(graphColumns)
+  // console.log(dataKey, data.columns)
+  // console.log(graphColumns)
   const filteredData = data.filter(d => d[graphColumns[0]] !== ''
     && (d.ISO3 !== '' || d.Country === 'World'))
-  console.log(filteredData)
+  // console.log(filteredData)
 
   const width = 700
   const height = 600
@@ -81,6 +86,8 @@ function BarGraph(props) {
     legendRows.push({ row: worldData, color: '#000', })
 
   }
+  const delaunayData = []
+
   const bars = sortedData.map((country, i) => {
     const value = +country[graphColumns[0]]
     const x = xScale(i)
@@ -100,6 +107,8 @@ function BarGraph(props) {
         fill = comparisonColors[selectedCountryIndex]
       }
     }
+    delaunayData.push([x, height - y, {row: country, col: graphColumns[0]}])
+
 
     let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={fill} y={height - y}>{value.toFixed(2)}</text> : null
     return (
@@ -114,6 +123,8 @@ function BarGraph(props) {
       </g>
     )
   })
+  const delaunay = Delaunay.from(delaunayData)
+
   // const saveSVG = (event) => {
   //   exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   // }
@@ -129,12 +140,41 @@ function BarGraph(props) {
       </g>
     )
   })
-  console.log(legendRows)
+
+  const svgRef = useRef()
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1) {
+      console.log(closestPointIndex)
+      console.log(delaunayData[closestPointIndex])
+      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+    }
+  }
+  const mouseLeave = () => {
+    // setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} graph={graph} />
+    )
+  }
+
+
   return (
     <div className='BarGraph'>
       <GraphColorLegend rows={legendRows} />
-      <div>
-        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+      <div className='svgContainer'>
+        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+          onMouseMove={mouseMove}
+          onMouseEnter={mouseMove}
+          onMouseLeave={mouseLeave}
+          ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             {/* <g>{years}</g> */}
@@ -145,6 +185,7 @@ function BarGraph(props) {
             <g>{bars}</g>
           </g>
         </svg>
+        {tooltip}
       </div>
     </div>
   )

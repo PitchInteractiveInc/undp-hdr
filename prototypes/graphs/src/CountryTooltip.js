@@ -14,7 +14,6 @@ function Stat(props) {
 }
 function ChangeTooltipHeader(props) {
   const { point, data, index } = props
-  console.log(point)
   const country = point.hover[2].row
   const column = point.hover[2].col
   const year = getYearOfColumn(column)
@@ -40,7 +39,7 @@ function ChangeTooltipHeader(props) {
       <div className='countryName'>{country.Country}</div>
       <hr />
       <Stat
-        label={`${year} ${index.key} value`}
+        label={`${year ? year : ''} ${index.key} value`}
         value={value}
       />
       {previousYear}
@@ -206,6 +205,100 @@ function HDIDifferenceTooltip(props) {
   )
 }
 
+export function HDIScatterTooltip(props) {
+  const { allRows, point, data, index } = props
+
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+  const allColumns = getGraphColumnsForKey(data, index.key)
+  const columnIndex = allColumns.indexOf(column)
+  const yearKeys = []
+  if (columnIndex > 0) {
+    yearKeys.push(allColumns[columnIndex - 1])
+  }
+  yearKeys.push(column)
+  if (columnIndex < allColumns.length - 1) {
+    yearKeys.push(allColumns[columnIndex + 1])
+  }
+  return (
+    <table>
+      <thead>
+        <tr>
+          <td>HDI Value</td>
+          {yearKeys.map(key => <td key={key}>{getYearOfColumn(key)}</td>)}
+        </tr>
+      </thead>
+      {allRows.map(row => {
+        const country = row.row
+        return (
+          <tr>
+            <td>{country.Country}</td>
+            {yearKeys.map(key => {
+              return <td key={key}>{country[key]}</td>
+            })}
+
+          </tr>
+        )
+      })}
+    </table>
+  )
+}
+
+function MPIBarTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+
+  return (
+    <div>
+      <ChangeTooltipHeader {...props} />
+    </div>
+  )
+}
+
+function PHDIBarTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const column = point.hover[2].col
+  const year = getYearOfColumn(column)
+
+  return (
+    <div>
+      <div className='countryName'>{country.Country}</div>
+      <hr />
+      <Stat
+        label='HDI value'
+        value={country[`hdi_${year}`]}
+      />
+      <Stat
+        label='PHDI value'
+        value={country[`phdi_${year}`]}
+      />
+      <Stat
+        label='Difference from HDI value (%)'
+        value={country[`diff_hdi_phdi_${year}`]}
+      />
+      <Stat
+        label='Difference from HDI rank'
+        value={country[`rankdiff_hdi_phdi_${year}`]}
+      />
+      <hr />
+      <Stat
+        label='Material footprint per capita (tonnes)'
+        value={country['co2_prod_2018']}
+      />
+      <Stat
+        label='Carbon dixoide per capita (production, tonnes)'
+        value={country['mf_2017']}
+      />
+
+
+    </div>
+  )
+
+}
 export default function CountryTooltip(props) {
   const { point, index, graph } = props
 
@@ -214,7 +307,6 @@ export default function CountryTooltip(props) {
   }
   let tooltipContents = null
 
-  console.log(index, graph)
   if (index && graph) {
     if (index.key === 'GDI' && graph.type === 'scatter') {
       tooltipContents = <GDIScatterTooltip {...props} />
@@ -224,6 +316,12 @@ export default function CountryTooltip(props) {
       tooltipContents = <IHDIDifferenceTooltip {...props} />
     } else if (index.key === 'HDI' && graph.type === 'difference') {
       tooltipContents = <HDIDifferenceTooltip {...props} />
+    } else if (index.key === 'HDI' && graph.type === 'scatter') {
+      tooltipContents = <HDIScatterTooltip {...props} />
+    } else if (index.key === 'MPI' && graph.type === 'bar') {
+      tooltipContents = <MPIBarTooltip {...props} />
+    } else if (index.key === 'PHDI' && graph.type === 'bar') {
+      tooltipContents = <PHDIBarTooltip {...props} />
     }
   }
   if (!tooltipContents) {
