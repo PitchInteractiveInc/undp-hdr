@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import useMPIData from "./useMPIData";
-import { extent, range, max } from 'd3-array'
-import { scaleLinear, scaleQuantize } from 'd3-scale'
-import { line } from 'd3-shape'
+import { range, max } from 'd3-array'
+import { scaleLinear } from 'd3-scale'
 import exportSVG from './exportSVG';
 
 const mpiColors = {

@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import useHDRData from "./useHDRData";
-import { extent, range } from 'd3-array'
+import { range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
-import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
 import downArrow from './images/downArrow.svg'
 

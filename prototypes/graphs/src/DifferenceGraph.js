@@ -1,12 +1,6 @@
-import { useState } from 'react'
-import useHDRData from "./useHDRData";
-import { extent, range } from 'd3-array'
-import { scaleLinear, scaleQuantize } from 'd3-scale'
-import { line } from 'd3-shape'
-import exportSVG from './exportSVG';
-import indicators from './indicators'
+
+import { scaleLinear } from 'd3-scale'
 import './IndexGraph.scss'
-import { useParams } from 'react-router-dom';
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
@@ -87,10 +81,8 @@ export default function DifferenceGraph(props) {
   const yearWidth = xScale(1)
   const markWidth = yearWidth * 0.8
   const differenceData = rowsToPlot.map(row => {
-    const dots = []
     const stroke = row.color
     const rowData = graphColumns.map((col, colIndex) => {
-      const year = +col.substr(col.lastIndexOf('_') + 1)
       if (row.row[col] === '') {
         return null
       }

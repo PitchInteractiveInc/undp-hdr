@@ -1,7 +1,7 @@
 import useHDRData from "./useHDRData"
 import { useParams, useNavigate, Outlet } from "react-router-dom"
 export default function Countries(props) {
-  const {data, metadata} = useHDRData()
+  const {data} = useHDRData()
   const params = useParams()
   const navigate = useNavigate()
   console.log(params)

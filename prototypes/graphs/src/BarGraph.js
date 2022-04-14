@@ -1,12 +1,6 @@
-import { useState } from 'react'
-import useHDRData from "./useHDRData";
-import { extent, range } from 'd3-array'
-import { scaleLinear, scaleQuantize } from 'd3-scale'
-import { line } from 'd3-shape'
-import exportSVG from './exportSVG';
-import indicators from './indicators'
+
+import { scaleLinear } from 'd3-scale'
 import './IndexGraph.scss'
-import { useParams } from 'react-router-dom';
 import useMPIData from './useMPIData';
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';

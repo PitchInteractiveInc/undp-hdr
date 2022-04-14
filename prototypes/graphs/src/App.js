@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Graph from './IndexGraph'
 import PPAHDIGraph from './PPAHDIGraph'

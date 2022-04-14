@@ -1,19 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import useHDRData from "./useHDRData"
 import './Country.scss'
 import indicators from './indicators'
 import CountryIndexGraph from './CountryIndexGraph'
 export default function Country(props) {
-  const {data, metadata} = useHDRData()
+  const {data} = useHDRData()
   const params = useParams()
-  const navgiate = useNavigate()
   if (!data) {
     return
   }
   const country = data.find(d => d.ISO3 === params.country)
-  const setCountry = (country) => {
-    navgiate(`/countries/${country}`, {replace: true})
-  }
   return (
     <div className='CountryDetail'>
       {/* <select value={params.country} onChange={setCountry}>

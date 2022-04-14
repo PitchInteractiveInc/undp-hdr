@@ -1,11 +1,8 @@
 import useHDRData from "./useHDRData"
 import { useParams, useNavigate, Outlet } from "react-router-dom"
-import { useState } from 'react'
 import indicators from './indicators'
 export default function IndexPicker(props) {
-  const {data, metadata} = useHDRData()
-  const defaultMetricIndex = 6
-  const [showAllMetrics, setShowAllMetrics] = useState(false)
+  const {data } = useHDRData()
 
   const params = useParams()
   const navigate = useNavigate()

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useHDRData from "./useHDRData";
-import { extent, range } from 'd3-array'
+import { range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
 import exportSVG from './exportSVG';
@@ -24,7 +24,6 @@ export default function IndexGraph(props) {
   const { data, metadata } = useHDRData()
   const { selectedMetricShortName } = useParams()
   const [selectedCountries, setSelectedCountries] = useState([])
-  const [showAllMetrics, setShowAllMetrics] = useState(false)
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
   if (indicator.customGraph) {
     return indicator.customGraph
@@ -102,7 +101,7 @@ export default function IndexGraph(props) {
 
   let selectedDots = []
 
-  const paths = data.filter(d => d.ISO3 !== '' || d.Country == 'World').map(country => {
+  const paths = data.filter(d => d.ISO3 !== '' || d.Country === 'World').map(country => {
     const data = graphColumns.map(col => {
       if (country[col] === '') {
         return null
