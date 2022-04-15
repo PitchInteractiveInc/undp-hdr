@@ -35,6 +35,8 @@ export default function DifferenceGraph(props) {
   if (hdiGraph) {
     height = 292
   }
+  const ihdiGraph = index.key === 'IHDI'
+
   const margins = { top: 20, right: 20, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
@@ -118,39 +120,44 @@ export default function DifferenceGraph(props) {
       const y = yScale(datum.value)
       let previousYearMarks = null
       delaunayData.push([x, y, {row: row.row, col: datum.col}])
-
+      let markHeight = ihdiGraph ? 5 : 1
+      let previousIsMore = false
       if (datumIndex > 0) {
-        const prevY = yScale(rowData[datumIndex - 1].value)
+        const prevValue = rowData[datumIndex - 1].value
+        const prevY = yScale(prevValue)
+        previousIsMore = prevValue > datum.value
+        const differenceColor = y < prevY ? '#88E51C' : '#FD9B94'
         previousYearMarks = (
           <g>
-            <line
-              x1={-markWidth / 2}
-              x2={markWidth / 2}
-              y1={prevY}
-              y2={prevY}
+            <rect
+              x={-markWidth / 2}
+              width={markWidth}
+              y={previousIsMore ? prevY - markHeight - (ihdiGraph ? 1 : 0): prevY + (ihdiGraph ? 1 : 0) }
+              height={markHeight}
               stroke={stroke}
-              strokeWidth={2}
-              strokeDasharray='3,3'
+              strokeDasharray={ihdiGraph ? null : '3,3'}
+              fill='none'
             />
             <rect
               y={Math.min(y, prevY)}
               x={-markWidth / 2}
               width={markWidth}
               height={Math.abs(y - prevY)}
-              fill={y < prevY ? '#88E51C' : '#FD9B94'}
+              stroke={differenceColor}
+              fill={differenceColor}
             />
           </g>
         )
       }
       return (
         <g key={datumIndex} transform={`translate(${x}, 0)`}>
-          <line
-            x1={-markWidth / 2}
-            x2={markWidth / 2}
+          <rect
+            x={-markWidth / 2}
+            width={markWidth}
             stroke={stroke}
-            strokeWidth={2}
-            y1={y}
-            y2={y}
+            y={previousIsMore ? y : y - markHeight}
+            height={markHeight}
+            fill={ihdiGraph ? stroke : 'none'}
           />
           {previousYearMarks}
         </g>
@@ -210,10 +217,7 @@ export default function DifferenceGraph(props) {
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
-    console.log(mouseX, mouseY)
     if (closestPointIndex !== -1) {
-      console.log(closestPointIndex)
-      console.log(delaunayData[closestPointIndex])
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
     }
   }
