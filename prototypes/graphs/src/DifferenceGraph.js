@@ -242,6 +242,10 @@ export default function DifferenceGraph(props) {
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{years}</g>
             <g>{yScaleTicks}</g>
+            <g>
+              <line x1={0} x2={width} y1={height} y2={height} stroke='#A9B1B7' strokeWidth={0.5} />
+              <line x1={0} x2={width} y1={0} y2={0} stroke='#A9B1B7' strokeWidth={0.5} />
+            </g>
             <g>{differenceData}</g>
           </g>
         </svg>

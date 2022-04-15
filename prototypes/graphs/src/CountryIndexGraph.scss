@@ -39,4 +39,29 @@
   svg {
     overflow: visible;
   }
+
+  .hdiLabels {
+    display: flex;
+    color: #232E3E;
+    font-weight: bold;
+    margin-top: 0.5em;
+    align-items: center;
+    .hdiValue {
+      font-size: 0.75em;
+      width: 10em;
+
+      position: relative;
+      text-align: center;
+      + .hdiValue {
+        margin-left: 2px;
+      }
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }

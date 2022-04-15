@@ -38,7 +38,10 @@ export default function HDIIntroGraph(props) {
       color = '#D12800'
       const rank = countriesSorted.length - index
       const style = { fontWeight: 'bold', textTransform: 'uppercase' }
-      label = <text style={style} x={barWidth + 1} fill={color} textAnchor='end' dy='-0.7em'>{country.Country}'s HDI Rank: {rank}</text>
+      const indexPercent = (index / countriesSorted.length)
+      const textAnchor = indexPercent < 0.33 ? 'start' : indexPercent < 0.66 ? 'middle' : 'end'
+      const textX = indexPercent < 0.33 ? -1 - barWidth : indexPercent < 0.66 ? 0 : barWidth + 1
+      label = <text style={style} x={textX} fill={color} textAnchor={textAnchor} dy='-0.7em'>{country.Country}'s HDI Rank: {rank}</text>
       arrow = <path d="M4,0,8,6H0Z" transform="translate(8 6) rotate(180) translate(3, 8)" fill="#d12800"/>
 
     }

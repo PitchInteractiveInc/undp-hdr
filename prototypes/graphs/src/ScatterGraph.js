@@ -7,6 +7,7 @@ import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
+import hdiBackgroundRectData from './hdiBackgroundRectData';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -54,8 +55,7 @@ export default function ScatterGraph(props) {
     })
   })
 
-  yExtent[0] = Math.min(0, yExtent[0])
-  yExtent[1] = Math.max(1, yExtent[1])
+
 
   const xScale = scaleLinear()
     .domain([0, graphColumns.length])
@@ -64,8 +64,8 @@ export default function ScatterGraph(props) {
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([height, 0])
-
-  // console.log(yExtent)
+    .nice()
+  console.log(yScale.domain())
 
   const rowsToPlot = [
     { row: country, color: '#1F5A95' } ,
@@ -110,7 +110,7 @@ export default function ScatterGraph(props) {
       delaunayData.push([dotX, dotY, {row: row.row, col}])
       dots.push(
         <circle
-          r={4}
+          r={6}
           key={year}
           cx={dotX}
           cy={dotY}
@@ -130,14 +130,14 @@ export default function ScatterGraph(props) {
     )
   })
   const delaunay = Delaunay.from(delaunayData)
-
+  const isHDIGraph = index.key === 'HDI'
   const years = graphColumns.map((column, columnIndex) => {
     const year = +column.substr(column.lastIndexOf('_') + 1)
 
     const x = xScale(columnIndex + 0.5)
-    const showYearLines = graphColumns.length > 20
-    const showYearRects = !showYearLines
-    const everyOtherLabel = showYearLines
+    const showYearLines = isHDIGraph
+    const showYearRects = !isHDIGraph
+    const everyOtherLabel = graphColumns.length > 20
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {showYearLines ?
@@ -158,15 +158,33 @@ export default function ScatterGraph(props) {
     )
   })
 
-  const yScaleTicks = yScale.ticks(10).map((tick, index) => {
-    const y = yScale(tick)
-    return (
-      <g key={tick} transform={`translate(${width}, ${y})`}>
-        <text dx='0.5em' dy='0.3em'>{tick}</text>
-        <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
-      </g>
-    )
-  })
+  let yScaleTicks = null
+  if (isHDIGraph) {
+    yScaleTicks = hdiBackgroundRectData.map((backgroundRect, i) => {
+      const y0 = yScale(backgroundRect.y0)
+      const y1 = yScale(backgroundRect.y1)
+      const height = Math.abs(y1 - y0)
+      const y = Math.min(y0, y1)
+      const fill = backgroundRect.fill
+      return (
+        <g>
+          <rect width={width} y={y} fill={fill} height={height} key={i} opacity={backgroundRect.opacity} ></rect>
+          <text y={y0} x={width} dy={'0.3em'} dx='0.5em'>{backgroundRect.y0}</text>
+          {i === hdiBackgroundRectData.length - 1 ? <text y={y1} x={width} dy='0.3em' dx='0.5em'>{backgroundRect.y1}</text> : null}
+        </g>
+      )
+    })
+  } else {
+    yScaleTicks = yScale.ticks(10).map((tick, index) => {
+      const y = yScale(tick)
+      return (
+        <g key={tick} transform={`translate(${width}, ${y})`}>
+          <text dx='0.5em' dy='0.3em'>{tick}</text>
+          <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
+        </g>
+      )
+    })
+  }
 
   const svgRef = useRef()
   const mouseMove = (event) => {
@@ -174,10 +192,10 @@ export default function ScatterGraph(props) {
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
-    console.log(mouseX, mouseY)
+    // console.log(mouseX, mouseY)
     if (closestPointIndex !== -1) {
-      console.log(closestPointIndex)
-      console.log(delaunayData[closestPointIndex])
+      // console.log(closestPointIndex)
+      // console.log(delaunayData[closestPointIndex])
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
     }
   }
@@ -192,9 +210,28 @@ export default function ScatterGraph(props) {
     )
   }
 
+  let hdiLabels = null
+  if (isHDIGraph) {
+    hdiLabels = (
+      <div className='hdiLabels'>
+        <div style={{ marginRight: '1em'}}>HDI classifciation (value):</div>
+        {hdiBackgroundRectData.map((backgroundRect, i) => {
+          return (
+
+            <div key={i} className='hdiValue' >
+              <div className='background' style={{ opacity: backgroundRect.opacity, backgroundColor: backgroundRect.fill }} />
+              {backgroundRect.label}
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} />
+      {hdiLabels}
       <div className='svgContainer'>
         <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
@@ -203,8 +240,22 @@ export default function ScatterGraph(props) {
           ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
-            <g>{years}</g>
-            <g>{yScaleTicks}</g>
+            {isHDIGraph ?
+              <>
+                <g>{yScaleTicks}</g>
+                <g>{years}</g>
+              </>
+              :
+              <>
+                <g>{years}</g>
+                <g>{yScaleTicks}</g>
+              </>
+            }
+            <g>
+              <line x1={0} x2={width} y1={height} y2={height} stroke='#A9B1B7' strokeWidth={0.5} />
+              <line x1={0} x2={width} y1={0} y2={0} stroke='#A9B1B7' strokeWidth={0.5} />
+
+            </g>
             <g>{lineData}</g>
           </g>
         </svg>

@@ -7,7 +7,7 @@ import exportSVG from './exportSVG';
 import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
-
+import hdiBackgroundRectData from './hdiBackgroundRectData';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -202,32 +202,12 @@ export default function IndexGraph(props) {
     )
   })
 
-  const backgroundRects = [
-    {
-      fill: '#DBDDE0',
-      y0: 0,
-      y1: 0.35,
-    },
-    {
-      fill: '#E5E6E8',
-      y0: 0.35,
-      y1: 0.55,
-    },
-    {
-      fill: '#EDEEF0',
-      y0: 0.55,
-      y1: 0.75,
-    },
-    {
-      fill: '#F6F6F7',
-      y0: 0.75,
-      y1: 1,
-    }
-  ].map(rect => {
+  const backgroundRects = hdiBackgroundRectData.map(rect => {
     return (
       <rect
         key={rect.fill}
         fill={rect.fill}
+        opacity={rect.opacity}
         x={0}
         y={height * (1-rect.y1)}
         width={width}
