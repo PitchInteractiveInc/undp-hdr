@@ -21,7 +21,7 @@ export const colors = [
 ]
 export default function DifferenceGraph(props) {
   const { data, country, index, selectedCountries, graph } = props
-
+  const selectedCountry = country
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
   const [hoveredPoint, setHoveredPoint] = useState(null)
@@ -30,7 +30,11 @@ export default function DifferenceGraph(props) {
   // console.log(graphColumns)
 
   const width = 700
-  const height = 460
+  let height = 460
+  const hdiGraph = index.key === 'HDI'
+  if (hdiGraph) {
+    height = 292
+  }
   const margins = { top: 20, right: 20, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
@@ -43,6 +47,9 @@ export default function DifferenceGraph(props) {
   const yearExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
   const yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
   data.forEach(country => {
+    if (hdiGraph && country !== selectedCountry) {
+      return
+    }
     graphColumns.forEach(col => {
       const value = +country[col]
       if (country[col] !== '') {
@@ -55,9 +62,10 @@ export default function DifferenceGraph(props) {
     })
   })
 
-  yExtent[0] = Math.min(0, yExtent[0])
-  yExtent[1] = Math.max(1, yExtent[1])
-
+  if (!hdiGraph) {
+    yExtent[0] = Math.min(0, yExtent[0])
+    yExtent[1] = Math.max(1, yExtent[1])
+  }
   const xScale = scaleLinear()
     .domain([0, graphColumns.length])
     .range([0, width])
@@ -65,6 +73,10 @@ export default function DifferenceGraph(props) {
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([height, 0])
+
+  if (hdiGraph) {
+    yScale.nice()
+  }
 
   console.log(yExtent)
 
@@ -156,9 +168,9 @@ export default function DifferenceGraph(props) {
     const year = +column.substr(column.lastIndexOf('_') + 1)
 
     const x = xScale(columnIndex + 0.5)
-    const showYearLines = graphColumns.length > 20
-    const showYearRects = !showYearLines
-    const everyOtherLabel = showYearLines
+    const showYearLines = false
+    const showYearRects = true
+    const everyOtherLabel = graphColumns.length > 20
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {showYearLines ?
@@ -179,12 +191,14 @@ export default function DifferenceGraph(props) {
     )
   })
 
-  const yScaleTicks = yScale.ticks(10).map((tick, index) => {
+  const tickCount = hdiGraph ? 3 : 10
+  const strokeDasharray = hdiGraph ? null : '4,3'
+  const yScaleTicks = yScale.ticks(tickCount).map((tick, index) => {
     const y = yScale(tick)
     return (
       <g key={tick} transform={`translate(${width}, ${y})`}>
         <text dx='0.5em' dy='0.3em'>{tick}</text>
-        <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
+        <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray={strokeDasharray} strokeWidth={0.5} />
       </g>
     )
   })
