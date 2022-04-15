@@ -7,12 +7,10 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'difference',
-        countSelectable: 0,
         title: ({country, extent}) => `Trends in ${country}'s HDI ${extent.join(' – ')}`,
       },
       {
         type: 'scatter',
-        countSelectable: 3,
         title: ({country, extent}) => `${country}'s HDI in comparison ${extent.join(' – ')}`,
       }
     ],
@@ -23,7 +21,6 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'scatter',
-        countSelectable: 1,
         title: ({country, extent}) => `${country}'s GDI in comparison ${extent.join(' – ')}`,
 
       }
@@ -35,9 +32,7 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'difference',
-        countSelectable: 1,
         title: ({country, extent}) => `${country}'s IHDI in comparison ${extent.join(' – ')}`,
-
       }
     ],
   },
@@ -47,7 +42,6 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'scatter',
-        countSelectable: 1,
         title: ({country, extent}) => `${country}'s GII in comparison ${extent.join(' – ')}`,
 
       }
@@ -60,7 +54,6 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'bar',
-        countSelectable: 3,
         title: ({country, extent}) => `${country}'s MPI in comparison of latest year`,
 
       }
@@ -73,7 +66,6 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'bar',
-        countSelectable: 3,
         title: ({country, extent}) => `${country}'s PHDI in comparison of year ${extent[1]}`,
 
       }

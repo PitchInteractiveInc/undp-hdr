@@ -7,13 +7,15 @@ import BarGraph from './BarGraph'
 import DifferenceGraph from './DifferenceGraph'
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
+const countSelectable = 3
 function GraphWrapper(props) {
   const { graph, data, country, index } = props
-  const { type, countSelectable, title } = graph
+  const { type, title } = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const countries = data.filter(d => d.ISO3 !== '')
   let countrySelectors = null
-  if (countSelectable > 0) {
+  let hideCountrySelectors = index.key === 'HDI' && graph.type === 'difference'
+  if (countSelectable > 0 && !hideCountrySelectors) {
     countrySelectors = <ComparisonCountrySelectors
       selectedCountries={selectedCountries}
       setSelectedCountries={setSelectedCountries}

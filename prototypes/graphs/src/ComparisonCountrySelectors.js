@@ -7,26 +7,29 @@ export const comparisonColors = [
 ]
 export default function ComparisonCountrySelectors(props) {
   const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable } = props
+  const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
   return <div className='ComparisonCountrySelectors'>
     <div className='label'>Add Country To Compare</div>
-    {range(maxSelectable).map(i => {
-    const value = selectedCountries[i] || ''
-    const setCountry = (iso) => {
-      const newSelectedCountries = [...selectedCountries]
-      newSelectedCountries[i] = iso
-      console.log(newSelectedCountries)
-      setSelectedCountries(newSelectedCountries)
-    }
-    const hasSelection = value !== ''
-    const color = colored ? comparisonColors[i] : null
-    const style = {}
-    if (hasSelection) {
-      style.backgroundColor = color
-      style.color = colored ? 'white' : null
-    }
+    {range(numToShow).map(i => {
+      const value = selectedCountries[i] || ''
+      const setCountry = (iso) => {
+        let newSelectedCountries = [...selectedCountries]
+        newSelectedCountries[i] = iso
+        newSelectedCountries = newSelectedCountries.filter(d => d !== '')
+        console.log(newSelectedCountries)
+        setSelectedCountries(newSelectedCountries)
+      }
+      const hasSelection = value !== ''
+      const color = colored ? comparisonColors[i] : null
+      const style = {}
+      if (hasSelection) {
+        style.backgroundColor = color
+        style.color = colored ? 'white' : null
+      }
 
-    const placeholder = 'Add a country'.toUpperCase()
-    return <span key={i}>
+      const placeholder = 'Add a country'.toUpperCase()
+
+      return <span key={i}>
         <select placeholder={placeholder} style={style} value={value} className={classNames({noSelection: !hasSelection})} onChange={e => setCountry(e.target.value)}>
           <option value=''>{placeholder}</option>
           {countries.map(country => {
