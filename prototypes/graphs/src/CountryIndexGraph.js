@@ -52,9 +52,18 @@ function GraphWrapper(props) {
     })
     titleText = <div className='graphTitle'>{title({country: country.Country, extent: yearExtent})}</div>
   }
+  let lowerBetter = null
+  if (index.lowerBetter) {
+    lowerBetter = (
+      <div className='lowerBetter'>
+        Note: the lower {index.key} value the country has, the better rank it is in {index.key}.
+      </div>
+    )
+  }
   return (
     <div className='indexGraph'>
       {titleText}
+      {lowerBetter}
       {countrySelectors}
       {graphElement}
     </div>

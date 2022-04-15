@@ -52,6 +52,7 @@ const indicators =  [
 
       }
     ],
+    lowerBetter: true,
   },
   {
     key: 'MPI',
@@ -64,6 +65,7 @@ const indicators =  [
 
       }
     ],
+    lowerBetter: true,
   },
   {
     key: 'PHDI',

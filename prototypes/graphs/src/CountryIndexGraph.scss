@@ -64,4 +64,19 @@
       }
     }
   }
+
+  .lowerBetter {
+    color: #D12800;
+    font-weight: 600;
+    margin-top: -0.75em;
+    margin-bottom: 0.5em;
+  }
+  .differenceLegend {
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-left: 2em;
+    }
+  }
 }
