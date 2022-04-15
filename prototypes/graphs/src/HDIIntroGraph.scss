@@ -1,0 +1,18 @@
+.HDIIntroGraph {
+  margin-bottom: 2em;
+  .largeStats {
+    display: flex;
+    > div {
+      + div {
+        margin-left: 2em;
+      }
+      .label {
+
+      }
+      .value {
+        font-size: 2em;
+        font-weight: bold;
+      }
+    }
+  }
+}

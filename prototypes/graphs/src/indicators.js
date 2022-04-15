@@ -6,8 +6,14 @@ const indicators =  [
     name: 'Human Development Index',
     countryGraphs: [
       {
+        type: 'hdiIntro',
+        title: ({country}) => `${country}'s Human Development Profile`,
+        noCountrySelection: true,
+      },
+      {
         type: 'difference',
         title: ({country, extent}) => `Trends in ${country}'s HDI ${extent.join(' – ')}`,
+        noCountrySelection: true,
       },
       {
         type: 'scatter',

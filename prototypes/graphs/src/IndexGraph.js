@@ -98,7 +98,6 @@ export default function IndexGraph(props) {
   const colorScale = scaleQuantize()
     .domain(yExtent)
     .range(colors)
-
   let selectedDots = []
 
   const paths = data.filter(d => d.ISO3 !== '' || d.Country === 'World').map(country => {

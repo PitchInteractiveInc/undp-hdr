@@ -7,15 +7,15 @@ import BarGraph from './BarGraph'
 import DifferenceGraph from './DifferenceGraph'
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
+import HDIIntroGraph from './HDIIntroGraph';
 const countSelectable = 3
 function GraphWrapper(props) {
   const { graph, data, country, index } = props
-  const { type, title } = graph
+  const { type, title, noCountrySelection} = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const countries = data.filter(d => d.ISO3 !== '')
   let countrySelectors = null
-  let hideCountrySelectors = index.key === 'HDI' && graph.type === 'difference'
-  if (countSelectable > 0 && !hideCountrySelectors) {
+  if (countSelectable > 0 && !noCountrySelection) {
     countrySelectors = <ComparisonCountrySelectors
       selectedCountries={selectedCountries}
       setSelectedCountries={setSelectedCountries}
@@ -26,6 +26,9 @@ function GraphWrapper(props) {
   }
   let graphElement = null
   switch(type) {
+    case 'hdiIntro':
+      graphElement = <HDIIntroGraph {...props} />
+      break
     case 'scatter':
       graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} />
       break
