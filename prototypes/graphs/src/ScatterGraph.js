@@ -65,7 +65,6 @@ export default function ScatterGraph(props) {
     .domain(yExtent)
     .range([height, 0])
     .nice()
-  console.log(yScale.domain())
 
   const rowsToPlot = [
     { row: country, color: '#1F5A95' } ,
@@ -233,7 +232,7 @@ export default function ScatterGraph(props) {
       <GraphColorLegend rows={rowsToPlot} />
       {hdiLabels}
       <div className='svgContainer'>
-        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
           onMouseLeave={mouseLeave}

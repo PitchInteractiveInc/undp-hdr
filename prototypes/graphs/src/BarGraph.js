@@ -54,7 +54,9 @@ function BarGraph(props) {
     .domain([0, filteredData.length])
     .range([0, width])
 
-  const yExtent = [0, 1]
+  const yMin = Math.min(...filteredData.map(d => +d[graphColumns[0]]))
+  const yMax = Math.max(...filteredData.map(d => +d[graphColumns[0]]))
+  const yExtent = [yMin, yMax]
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([0, height])
@@ -147,10 +149,7 @@ function BarGraph(props) {
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
-    console.log(mouseX, mouseY)
     if (closestPointIndex !== -1) {
-      console.log(closestPointIndex)
-      console.log(delaunayData[closestPointIndex])
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
     }
   }
@@ -170,7 +169,7 @@ function BarGraph(props) {
     <div className='BarGraph'>
       <GraphColorLegend rows={legendRows} />
       <div className='svgContainer'>
-        <svg fontSize='0.7em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
           onMouseLeave={mouseLeave}
