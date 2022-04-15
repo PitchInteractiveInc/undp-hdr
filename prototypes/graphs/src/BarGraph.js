@@ -44,8 +44,8 @@ function BarGraph(props) {
   // console.log(filteredData)
 
   const width = 700
-  const height = 600
-  const margins = { top: 20, right: 30, bottom: 20, left: 40 }
+  const height = 460
+  const margins = { top: 20, right: 30, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -155,7 +155,7 @@ function BarGraph(props) {
     }
   }
   const mouseLeave = () => {
-    // setHoveredPoint(null)
+    setHoveredPoint(null)
   }
 
   let tooltip = null

@@ -29,8 +29,8 @@ export default function ScatterGraph(props) {
   // console.log(graphColumns)
 
   const width = 700
-  const height = 600
-  const margins = { top: 20, right: 20, bottom: 20, left: 40 }
+  const height = 460
+  const margins = { top: 20, right: 20, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -92,7 +92,7 @@ export default function ScatterGraph(props) {
   }
 
   const lineGenerator = line()
-    .x(d => xScale(d.index))
+    .x(d => xScale(d.index + 0.5))
     .y(d => yScale(d.value))
 
   const delaunayData = []
@@ -105,7 +105,7 @@ export default function ScatterGraph(props) {
         return null
       }
       const value = +row.row[col]
-      const dotX = xScale(colIndex)
+      const dotX = xScale(colIndex + 0.5)
       const dotY = yScale(value)
       delaunayData.push([dotX, dotY, {row: row.row, col}])
       dots.push(
@@ -134,7 +134,7 @@ export default function ScatterGraph(props) {
   const years = graphColumns.map((column, columnIndex) => {
     const year = +column.substr(column.lastIndexOf('_') + 1)
 
-    const x = xScale(columnIndex)
+    const x = xScale(columnIndex + 0.5)
     const showYearLines = graphColumns.length > 20
     const showYearRects = !showYearLines
     const everyOtherLabel = showYearLines
@@ -162,8 +162,8 @@ export default function ScatterGraph(props) {
     const y = yScale(tick)
     return (
       <g key={tick} transform={`translate(${width}, ${y})`}>
-        <text dy='0.3em'>{tick}</text>
-        <line x1={-width - xScale(0.5)} x2={-xScale(0.5)} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
+        <text dx='0.5em' dy='0.3em'>{tick}</text>
+        <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
       </g>
     )
   })
