@@ -166,7 +166,7 @@ export default function ScatterGraph(props) {
       const y = Math.min(y0, y1)
       const fill = backgroundRect.fill
       return (
-        <g>
+        <g key={i}>
           <rect width={width} y={y} fill={fill} height={height} key={i} opacity={backgroundRect.opacity} ></rect>
           <text y={y0} x={width} dy={'0.3em'} dx='0.5em'>{backgroundRect.y0}</text>
           {i === hdiBackgroundRectData.length - 1 ? <text y={y1} x={width} dy='0.3em' dx='0.5em'>{backgroundRect.y1}</text> : null}
@@ -247,7 +247,7 @@ export default function ScatterGraph(props) {
               :
               <>
                 <g>{years}</g>
-                <g>{yScaleTicks}</g>
+                <g>yScaleTicks}</g>
               </>
             }
             <g>

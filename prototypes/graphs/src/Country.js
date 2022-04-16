@@ -3,10 +3,12 @@ import useHDRData from "./useHDRData"
 import './Country.scss'
 import indicators from './indicators'
 import CountryIndexGraph from './CountryIndexGraph'
+import useMPIData from "./useMPIData"
 export default function Country(props) {
-  const {data} = useHDRData()
+  let {data} = useHDRData()
+  const mpiData = useMPIData()
   const params = useParams()
-  if (!data) {
+  if (!data || !mpiData) {
     return
   }
   const country = data.find(d => d.ISO3 === params.country)
@@ -35,7 +37,9 @@ export default function Country(props) {
       </div>
       <div className='indicies'>
         {indicators.map((indicator, i) => {
-          return <CountryIndexGraph key={indicator.key} index={indicator} data={data} country={country} />
+          let dataToUse = indicator.key === 'MPI' ? mpiData : data
+          const countryToUse = dataToUse.find(d => d.ISO3 === params.country) || country
+          return <CountryIndexGraph key={indicator.key} index={indicator} data={dataToUse} country={countryToUse} />
         })}
       </div>
 

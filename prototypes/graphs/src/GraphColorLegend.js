@@ -10,7 +10,7 @@ export default function GraphColorLegend(props) {
         const color = row.color
         const country = row.row.Country
         return (
-          <div style={{ color }}>{country}</div>
+          <div key={i} style={{ color }}>{country}</div>
         )
       })}
     </div>

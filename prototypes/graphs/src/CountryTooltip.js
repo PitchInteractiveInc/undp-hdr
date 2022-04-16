@@ -229,18 +229,20 @@ export function HDIScatterTooltip(props) {
           {yearKeys.map(key => <td key={key}>{getYearOfColumn(key)}</td>)}
         </tr>
       </thead>
-      {allRows.map(row => {
-        const country = row.row
-        return (
-          <tr>
-            <td>{country.Country}</td>
-            {yearKeys.map(key => {
-              return <td key={key}>{country[key]}</td>
-            })}
+      <tbody>
+        {allRows.map(row => {
+          const country = row.row
+          return (
+            <tr key={country.Country}>
+              <td>{country.Country}</td>
+              {yearKeys.map(key => {
+                return <td key={key}>{country[key]}</td>
+              })}
 
-          </tr>
-        )
-      })}
+            </tr>
+          )
+        })}
+      </tbody>
     </table>
   )
 }

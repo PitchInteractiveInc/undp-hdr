@@ -80,7 +80,7 @@ export default function DifferenceGraph(props) {
     yScale.nice()
   }
 
-  console.log(yExtent)
+  // console.log(yExtent)
 
   const rowsToPlot = [
     { row: country, color: '#1F5A95' } ,
@@ -96,7 +96,7 @@ export default function DifferenceGraph(props) {
       }
     }
   })
-  console.log(rowsToPlot)
+  // console.log(rowsToPlot)
   const yearWidth = xScale(1)
   const markWidth = yearWidth * 0.8
   const delaunayData = []
@@ -232,7 +232,7 @@ export default function DifferenceGraph(props) {
     )
   }
 
-  let legend = <GraphColorLegend rows={rowsToPlot} />
+  let legend = <GraphColorLegend key='color' rows={rowsToPlot} />
   if (hdiGraph) {
     legend = (
       <svg xmlns="http://www.w3.org/2000/svg" width="759.5" height="21" viewBox="0 0 759.5 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
@@ -251,7 +251,7 @@ export default function DifferenceGraph(props) {
     )
   } else if (ihdiGraph) {
     const legend2 = (
-      <svg xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
+      <svg key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
         <text id="Line:" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Line:</tspan></text>
         <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
         <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>

@@ -9,7 +9,7 @@ import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
-export default function BarGraphWrapper(props) {
+function BarGraphWrapper(props) {
   const { index } = props
 
   if (index.key === 'MPI') {
@@ -29,7 +29,7 @@ function MPIBarGraphWrapper(props) {
   return <BarGraph {...props} data={mpiData} country={mpiCountry} />
 }
 
-function BarGraph(props) {
+export default function BarGraph(props) {
   const { data, country, index, selectedCountries, graph } = props
   const selectedCountry = country
   const [hoveredPoint, setHoveredPoint] = useState(null)
