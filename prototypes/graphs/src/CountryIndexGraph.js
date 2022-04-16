@@ -60,10 +60,18 @@ function GraphWrapper(props) {
       </div>
     )
   }
+  let missingCountryDisclaimer = null
+  if (!data.includes(country)) {
+    missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
+      <strong>{country.Country} is not a part of the {index.key} graph below.</strong><br />
+      Due to a lack of relavant data, the {index.key} has not been calculated for this country.
+    </div>
+  }
   return (
     <div className='indexGraph'>
       {titleText}
       {lowerBetter}
+      {missingCountryDisclaimer}
       {countrySelectors}
       {graphElement}
     </div>

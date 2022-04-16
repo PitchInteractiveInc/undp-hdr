@@ -71,7 +71,7 @@ export default function BarGraph(props) {
   const barWidth = width / sortedData.length * 0.8
   const legendRows = [
   ]
-  if (selectedCountry) {
+  if (selectedCountry && data.includes(selectedCountry)) {
     legendRows.push({ row: selectedCountry, color: '#1F5A95' })
   }
 
