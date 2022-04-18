@@ -198,7 +198,7 @@ function HDIDifferenceTooltip(props) {
       />
       <Stat
         label='Gross National Income per capita'
-        value={country[`gni_pc_${year}`]}
+        value={country[`gnipc_${year}`]}
         suffix='(constant 2017 PPP$)'
       />
     </div>

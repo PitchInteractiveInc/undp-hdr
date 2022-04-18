@@ -86,4 +86,29 @@
     background-color: #F7F7F7;
     margin-bottom: 1em;
   }
+  .additionalIndexContent {
+    margin-top: 2em;
+    .contentTitle {
+      font-size: 1.25em;
+      font-weight: bold;
+    }
+    .hdiVariable {
+      margin: 0.5em 0 1em 0;
+      .hdiVariableLabel {
+        font-size: 1.25em;
+        font-weight: 600;
+      }
+      .hdiVariableValue {
+        font-size: 1.625em;
+        font-weight: bold;
+        display: flex;
+        align-items: baseline;
+        .suffix {
+          padding-left: 0.5em;
+          font-weight: normal;
+          font-size: 0.615em;
+        }
+      }
+    }
+  }
 }
