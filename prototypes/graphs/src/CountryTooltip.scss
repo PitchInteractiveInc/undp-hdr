@@ -9,4 +9,72 @@
   left: 0;
   pointer-events: none;
   z-index: 10;
+  width: 423px;
+
+  box-sizing: border-box;
+
+  .countryName {
+    font-weight: bold;
+
+  }
+  hr {
+    border-color: black;
+    margin: 0.25em 0;
+  }
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2em 0;
+
+    &.bold {
+      font-weight: bold;
+    }
+    +.stat {
+    }
+    &.bottomBorder {
+
+      padding: 0.3em 0;
+      padding-top: 0;
+      + .bottomBorder {
+        padding-top: 0.3em;
+        border-top: 0.5px solid #232E3E;
+      }
+    }
+    .suffix {
+      font-size: 0.71em;
+    }
+  }
+
+  .positive {
+    color: #88E51C;
+  }
+  .negative {
+    color: #D12800;
+  }
+
+  hr + .genderTable {
+    margin-top: -0.25em;
+
+  }
+  .genderTable {
+
+    border-collapse: collapse;
+    thead {
+      background-color: #EDEFF0;
+      font-size: 0.85em;
+      td {
+        white-space: none;
+      }
+    }
+    tbody {
+      tr {
+        + tr {
+          border-top: 0.5px solid #232E3E;
+        }
+        td:first-child {
+          font-size: 0.85em;
+        }
+      }
+    }
+  }
 }

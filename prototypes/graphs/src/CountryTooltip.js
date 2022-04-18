@@ -1,14 +1,15 @@
+import classNames from 'classnames'
 import './CountryTooltip.scss'
 import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
 
 function Stat(props) {
-  const { label, value, suffix } = props
+  const { label, value, suffix, bold, bottomBorder, valueClass } = props
   const s = suffix ? (<span className='suffix'> {suffix}</span>) : null
   return (
-    <div className='stat'>
+    <div className={classNames('stat', { bold, bottomBorder })}>
       <div className='label'>{label}</div>
-      <div className='value'>{value}{s}</div>
+      <div className={classNames('value', valueClass)}>{value}{s}</div>
     </div>
   )
 }
@@ -28,8 +29,10 @@ function ChangeTooltipHeader(props) {
     const difference = value - previousValue
     previousYear = (
       <Stat
+        bold
         label={`${index.key} change from ${previousYear}`}
         value={`${difference > 0 ? '+' : ''}${difference.toFixed(3)}`}
+        valueClass={difference > 0 ? 'positive' : 'negative'}
       />
     )
   }
@@ -39,6 +42,7 @@ function ChangeTooltipHeader(props) {
       <div className='countryName'>{country.Country}</div>
       <hr />
       <Stat
+        bold
         label={`${year ? year : ''} ${index.key} value`}
         value={value}
       />
@@ -54,13 +58,13 @@ function GenderTable(props) {
 
   const year = getYearOfColumn(column)
   return (
-    <table>
+    <table className='genderTable'>
       <thead>
         <tr>
           <td />
           <td>Female</td>
           <td>Male</td>
-          <td>Gender gap</td>
+          <td className='negative'>Gender gap</td>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +77,7 @@ function GenderTable(props) {
               <td>{label}</td>
               <td>{fValue}{s}</td>
               <td>{mValue}{s}</td>
-              <td>{(fValue - mValue).toFixed(3)}{s}</td>
+              <td className='negative'>{(fValue - mValue).toFixed(3)}{s}</td>
             </tr>
           )
         })}
@@ -142,29 +146,35 @@ function IHDIDifferenceTooltip(props) {
   return (
     <div>
       <ChangeTooltipHeader {...props} />
+      <hr />
       <Stat
         label='HDI value'
         value={country[`hdi_${year}`]}
+        bottomBorder
       />
       <Stat
         label='Overall loss (from HDI to IHDI)'
         value={country[`loss_${year}`]}
         suffix='%'
+        bottomBorder
       />
       <Stat
         label='Inequality in life expectancy'
         value={country[`ineq_le_${year}`]}
         suffix='%'
+        bottomBorder
       />
       <Stat
         label='Inequality in education'
         value={country[`ineq_edu_${year}`]}
         suffix='%'
+        bottomBorder
       />
       <Stat
         label='Inequality in income'
         value={country[`ineq_inc_${year}`]}
         suffix='%'
+        bottomBorder
       />
     </div>
   )
@@ -185,21 +195,25 @@ function HDIDifferenceTooltip(props) {
         label='Life expectancy at birth'
         value={country[`le_${year}`]}
         suffix='years'
+        bottomBorder
       />
       <Stat
         label='Expected years of schooling'
         value={country[`eys_${year}`]}
         suffix='years'
+        bottomBorder
       />
       <Stat
         label='Mean years of schooling'
         value={country[`mys_${year}`]}
         suffix='years'
+        bottomBorder
       />
       <Stat
         label='Gross National Income per capita'
         value={country[`gnipc_${year}`]}
         suffix='(constant 2017 PPP$)'
+        bottomBorder
       />
     </div>
   )
@@ -226,17 +240,18 @@ export function HDIScatterTooltip(props) {
       <thead>
         <tr>
           <td>HDI Value</td>
-          {yearKeys.map(key => <td key={key}>{getYearOfColumn(key)}</td>)}
+          {yearKeys.map(key => <td key={key} style={{ fontWeight: key === column ? 'bold' : null}}>{getYearOfColumn(key)}</td>)}
         </tr>
       </thead>
       <tbody>
         {allRows.map(row => {
           const country = row.row
           return (
-            <tr key={country.Country}>
+            <tr key={country.Country} style={{ color: row.color}}>
               <td>{country.Country}</td>
               {yearKeys.map(key => {
-                return <td key={key}>{country[key]}</td>
+                const fontWeight = key === column ? 'bold' : 'normal'
+                return <td key={key} style={{ fontWeight }}>{country[key]}</td>
               })}
 
             </tr>
@@ -290,10 +305,12 @@ function PHDIBarTooltip(props) {
       <Stat
         label='Material footprint per capita (tonnes)'
         value={country['co2_prod_2018']}
+        bottomBorder
       />
       <Stat
         label='Carbon dixoide per capita (production, tonnes)'
         value={country['mf_2017']}
+        bottomBorder
       />
 
 
