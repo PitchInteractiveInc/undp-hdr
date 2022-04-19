@@ -10,6 +10,7 @@ export default function format(value, key) {
     case 'pr':
     case 'se':
     case 'lfpr':
+    case 'mpi':
       decimals = 1
       break
     case 'gnipc':

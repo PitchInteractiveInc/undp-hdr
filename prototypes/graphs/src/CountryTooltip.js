@@ -3,6 +3,7 @@ import './CountryTooltip.scss'
 import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
 import format from './format'
+import { mpiColors } from './MPIGraph'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -282,10 +283,54 @@ function MPIBarTooltip(props) {
   const country = point.hover[2].row
   const column = point.hover[2].col
   const year = getYearOfColumn(column)
-
+  const mpiMetrics = Object.keys(mpiColors)
+  const svgHeight = 315
+  const svgWidth = 373
+  const barWidth = 167
+  const textPadding = 10
+  let runningY = 0
+  const numNonZero = mpiMetrics.filter(metric => +country[metric] !== 0).length
+  const barPadding = 1
+  const totalBarPadding = barPadding * (numNonZero - 1)
+  const availableHeight = svgHeight - totalBarPadding
   return (
     <div>
       <ChangeTooltipHeader {...props} />
+      <hr />
+      <svg width={svgWidth} height={svgHeight}>
+        <g>
+
+          {mpiMetrics.map(metric => {
+            const value = country[metric]
+            if (value === '' || value === '0') {
+              return null
+            }
+            // console.log(metric, value)
+            const rectHeight = availableHeight * (value / 100)
+            const rectY = runningY
+            runningY += rectHeight + barPadding
+            return (
+              <g key={metric} transform={`translate(0, ${rectY})`}>
+                <rect
+                  width={barWidth}
+                  height={rectHeight}
+                  fill={mpiColors[metric]}
+                />
+                <text
+                  x={barWidth + textPadding}
+                  dy='1em'
+                  fill={mpiColors[metric]}
+                  fontWeight='bold'
+                >
+                  {metric}: {format(value, 'mpi')}%
+                </text>
+
+              </g>
+            )
+            })}
+
+        </g>
+      </svg>
     </div>
   )
 }

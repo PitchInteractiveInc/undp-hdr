@@ -4,7 +4,7 @@ import { range, max } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import exportSVG from './exportSVG';
 
-const mpiColors = {
+export const mpiColors = {
   'Child mortality': '#1f5a95',
   'Nutrition': '#006eb5',
   'Sanitation': '#3288ce',
