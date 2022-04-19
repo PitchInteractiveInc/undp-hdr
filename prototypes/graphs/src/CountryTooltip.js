@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import './CountryTooltip.scss'
 import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
-
+import format from './format'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass } = props
   const s = suffix ? (<span className='suffix'> {suffix}</span>) : null
@@ -31,7 +31,7 @@ function ChangeTooltipHeader(props) {
       <Stat
         bold
         label={`${index.key} change from ${previousYear}`}
-        value={`${difference > 0 ? '+' : ''}${difference.toFixed(3)}`}
+        value={`${difference > 0 ? '+' : ''}${format(difference)}`}
         valueClass={difference > 0 ? 'positive' : 'negative'}
       />
     )
@@ -44,7 +44,7 @@ function ChangeTooltipHeader(props) {
       <Stat
         bold
         label={`${year ? year : ''} ${index.key} value`}
-        value={value}
+        value={format(value)}
       />
       {previousYear}
     </>
@@ -193,25 +193,25 @@ function HDIDifferenceTooltip(props) {
       <hr />
       <Stat
         label='Life expectancy at birth'
-        value={country[`le_${year}`]}
+        value={format(country[`le_${year}`], 'le')}
         suffix='years'
         bottomBorder
       />
       <Stat
         label='Expected years of schooling'
-        value={country[`eys_${year}`]}
+        value={format(country[`eys_${year}`], 'eys')}
         suffix='years'
         bottomBorder
       />
       <Stat
         label='Mean years of schooling'
-        value={country[`mys_${year}`]}
+        value={format(country[`mys_${year}`], 'mys')}
         suffix='years'
         bottomBorder
       />
       <Stat
         label='Gross National Income per capita'
-        value={country[`gnipc_${year}`]}
+        value={format(country[`gnipc_${year}`], 'gnipc')}
         suffix='(constant 2017 PPP$)'
         bottomBorder
       />

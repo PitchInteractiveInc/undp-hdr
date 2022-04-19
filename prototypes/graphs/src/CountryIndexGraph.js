@@ -9,6 +9,7 @@ import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import HDIIntroGraph from './HDIIntroGraph';
 import getYearOfColumn from './getYearOfColumn';
+import format from './format';
 const countSelectable = 3
 function GraphWrapper(props) {
   const { graph, data, country, index } = props
@@ -100,7 +101,7 @@ export default function CountryIndexGraph(props) {
         {hdiVariables.map(({ key, label, suffix }) => {
           const columns = getGraphColumnsForKey(data, key)
           const lastColumn = columns[columns.length - 1]
-          const value = country[lastColumn]
+          const value = format(country[lastColumn], key)
           return (
             <div key={key} className='hdiVariable'>
 
