@@ -236,7 +236,7 @@ export function HDIScatterTooltip(props) {
     yearKeys.push(allColumns[columnIndex + 1])
   }
   return (
-    <table>
+    <table className='HDIScatterTooltip'>
       <thead>
         <tr>
           <td>HDI Value</td>
@@ -251,7 +251,22 @@ export function HDIScatterTooltip(props) {
               <td>{country.Country}</td>
               {yearKeys.map(key => {
                 const fontWeight = key === column ? 'bold' : 'normal'
-                return <td key={key} style={{ fontWeight }}>{country[key]}</td>
+                const value = country[key]
+                const allColumnIndex = allColumns.indexOf(key)
+                let difference = null
+                if (allColumnIndex > 0) {
+                  const prevValue = country[allColumns[allColumnIndex - 1]]
+                  const diff = (value - prevValue)
+                  const className = diff > 0 ? 'positive' : 'negative'
+                  const arrow = (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4">
+                      <path d="M4,0,8,4H0Z" className={classNames('arrow', className)}/>
+                    </svg>
+                  )
+
+                  difference = <div className={className}>{arrow}{diff.toFixed(3)}</div>
+                }
+                return <td key={key} style={{ fontWeight }}>{value}{difference}</td>
               })}
 
             </tr>

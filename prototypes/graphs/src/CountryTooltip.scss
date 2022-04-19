@@ -47,9 +47,18 @@
 
   .positive {
     color: #88E51C;
+    fill: #88E51C;
   }
   .negative {
     color: #D12800;
+    fill: #D12800;
+  }
+
+  .arrow {
+    transform: translate(-5px, -2px);
+  }
+  .arrow.negative {
+    transform: rotate(180deg) transform(5px, 2px);
   }
 
   hr + .genderTable {
@@ -75,6 +84,29 @@
           font-size: 0.85em;
         }
       }
+    }
+  }
+
+  .HDIScatterTooltip {
+    border-collapse: collapse;
+    width: calc(100% - 1em);
+    margin: 0 0.5em;
+    thead {
+      border-bottom: 1px solid black;
+    }
+    td:not(:first-child) {
+      text-align: center;
+    }
+    tbody {
+      td:first-child {
+        font-weight: bold;
+      }
+      tr + tr {
+        border-top: 0.5px solid #232E3E;
+      }
+    }
+    td:nth-child(odd) {
+      background-color: #FAFAFA;
     }
   }
 }
