@@ -5,7 +5,7 @@ import getYearOfColumn from './getYearOfColumn'
 import format from './format'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass } = props
-  const s = suffix ? (<span className='suffix'> {suffix}</span>) : null
+  const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
   return (
     <div className={classNames('stat', { bold, bottomBorder })}>
       <div className='label'>{label}</div>
@@ -51,7 +51,7 @@ function ChangeTooltipHeader(props) {
   )
 }
 function GenderTable(props) {
-  const { tableKeys, point } = props
+  const { tableKeys, point, firstColumnWidth } = props
 
   const country = point.hover[2].row
   const column = point.hover[2].col
@@ -71,13 +71,13 @@ function GenderTable(props) {
         {tableKeys.map(({label, key, suffix}) => {
           const fValue = country[`${key}_f_${year}`]
           const mValue = country[`${key}_m_${year}`]
-          let s = suffix ? (<span className='suffix'> {suffix}</span>) : null
+          let s = suffix ? (<span className='suffix'>{suffix}</span>) : null
           return (
             <tr key={key}>
-              <td>{label}</td>
-              <td>{fValue}{s}</td>
-              <td>{mValue}{s}</td>
-              <td className='negative'>{(fValue - mValue).toFixed(3)}{s}</td>
+              <td style={{ width: firstColumnWidth}}>{label}</td>
+              <td>{format(fValue, key)}{s}</td>
+              <td>{format(mValue, key)}{s}</td>
+              <td className='negative' style={{ textAlign: 'right'}}>{format(fValue - mValue, key)}{s}</td>
             </tr>
           )
         })}
@@ -89,9 +89,9 @@ function GenderTable(props) {
 function GDIScatterTooltip(props) {
   const tableKeys = [
     { label: 'HDI Value', key: 'hdi' },
-    { label: 'Life Expectancy at Birth', key: 'le', suffix: 'years', },
-    { label: 'Expected Years of Schooling', key: 'eys', suffix: 'years', },
-    { label: 'Mean Years of Schooling', key: 'mys', suffix: 'years', },
+    { label: 'Life Expectancy at Birth', key: 'le', suffix: ' years', },
+    { label: 'Expected Years of Schooling', key: 'eys', suffix: ' years', },
+    { label: 'Mean Years of Schooling', key: 'mys', suffix: ' years', },
     { label: 'Gross National Income Per Capita', key: 'gni_pc' },
 
   ]
@@ -114,8 +114,8 @@ function GIIScatterTooltip(props) {
 
   const tableKeys = [
     { label: 'Share of seats in parliament', key: 'pr', suffix: '%' },
-    { label: 'Population with at least some secondary education', key: 'se', suffix: '%' },
-    { label: 'Labour force participation rate (age 25 and older)', key: 'lfpr', suffix: '%' },
+    { label: <>Population with at least some<br />secondary education<br />(age 25 and older)</>, key: 'se', suffix: '%' },
+    { label: <>Labour force participation rate<br />(age 25 and older)</>, key: 'lfpr', suffix: '%' },
 
   ]
   return (
@@ -124,15 +124,15 @@ function GIIScatterTooltip(props) {
       <hr />
       <Stat
         label='Maternal Mortality Ratio'
-        value={country[`mmr_${year}`]}
+        value={format(country[`mmr_${year}`], 'mmr')}
         suffix='death/100,000 live births'
       />
       <Stat
         label='Adolescent Birth Rate'
-        value={country[`abr_${year}`]}
+        value={format(country[`abr_${year}`], 'abr')}
         suffix='births/1,000 women age 15-19'
       />
-      <GenderTable tableKeys={tableKeys} {...props} />
+      <GenderTable firstColumnWidth='20em' tableKeys={tableKeys} {...props} />
     </div>
   )
 }
@@ -149,30 +149,30 @@ function IHDIDifferenceTooltip(props) {
       <hr />
       <Stat
         label='HDI value'
-        value={country[`hdi_${year}`]}
+        value={format(country[`hdi_${year}`], 'hdi')}
         bottomBorder
       />
       <Stat
         label='Overall loss (from HDI to IHDI)'
-        value={country[`loss_${year}`]}
+        value={format(country[`loss_${year}`], 'loss')}
         suffix='%'
         bottomBorder
       />
       <Stat
         label='Inequality in life expectancy'
-        value={country[`ineq_le_${year}`]}
+        value={format(country[`ineq_le_${year}`], 'ineq_le')}
         suffix='%'
         bottomBorder
       />
       <Stat
         label='Inequality in education'
-        value={country[`ineq_edu_${year}`]}
+        value={format(country[`ineq_edu_${year}`], 'ineq_edu')}
         suffix='%'
         bottomBorder
       />
       <Stat
         label='Inequality in income'
-        value={country[`ineq_inc_${year}`]}
+        value={format(country[`ineq_inc_${year}`], 'ineq_inc')}
         suffix='%'
         bottomBorder
       />
@@ -194,25 +194,25 @@ function HDIDifferenceTooltip(props) {
       <Stat
         label='Life expectancy at birth'
         value={format(country[`le_${year}`], 'le')}
-        suffix='years'
+        suffix=' years'
         bottomBorder
       />
       <Stat
         label='Expected years of schooling'
         value={format(country[`eys_${year}`], 'eys')}
-        suffix='years'
+        suffix=' years'
         bottomBorder
       />
       <Stat
         label='Mean years of schooling'
         value={format(country[`mys_${year}`], 'mys')}
-        suffix='years'
+        suffix=' years'
         bottomBorder
       />
       <Stat
         label='Gross National Income per capita'
         value={format(country[`gnipc_${year}`], 'gnipc')}
-        suffix='(constant 2017 PPP$)'
+        suffix=' (constant 2017 PPP$)'
         bottomBorder
       />
     </div>
@@ -302,29 +302,29 @@ function PHDIBarTooltip(props) {
       <hr />
       <Stat
         label='HDI value'
-        value={country[`hdi_${year}`]}
+        value={format(country[`hdi_${year}`], 'hdi')}
       />
       <Stat
         label='PHDI value'
-        value={country[`phdi_${year}`]}
+        value={format(country[`phdi_${year}`], 'phdi')}
       />
       <Stat
         label='Difference from HDI value (%)'
-        value={country[`diff_hdi_phdi_${year}`]}
+        value={format(country[`diff_hdi_phdi_${year}`], 'diff_hdi_phdi')}
       />
       <Stat
         label='Difference from HDI rank'
-        value={country[`rankdiff_hdi_phdi_${year}`]}
+        value={format(country[`rankdiff_hdi_phdi_${year}`], 'rankdiff_hdi_phdi')}
       />
       <hr />
       <Stat
         label='Material footprint per capita (tonnes)'
-        value={country['co2_prod_2018']}
+        value={format(country['co2_prod_2018'], 'co2_prod')}
         bottomBorder
       />
       <Stat
         label='Carbon dixoide per capita (production, tonnes)'
-        value={country['mf_2017']}
+        value={format(country['mf_2017'], 'mf')}
         bottomBorder
       />
 
