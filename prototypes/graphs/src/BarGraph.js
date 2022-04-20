@@ -109,10 +109,19 @@ export default function BarGraph(props) {
         fill = comparisonColors[selectedCountryIndex]
       }
     }
-    delaunayData.push([x, height - y, {row: country, col: graphColumns[0]}])
+    delaunayData.push([x, height / 2, {row: country, col: graphColumns[0]}])
 
-
-    let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={fill} y={height - y}>{value.toFixed(2)}</text> : null
+    let labelFill = fill
+    let stroke = null
+    if (hoveredPoint) {
+      if (hoveredPoint.hover[2].row === country && fill === '#EDEFF0') {
+        stroke = '#000'
+        fill = 'none'
+        labelFill = stroke
+        showLabel = true
+      }
+    }
+    let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={labelFill} y={height - y}>{value.toFixed(2)}</text> : null
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
         <rect
@@ -120,6 +129,7 @@ export default function BarGraph(props) {
           y={height - y}
           height={y}
           fill={fill}
+          stroke={stroke}
         />
         {label}
       </g>
