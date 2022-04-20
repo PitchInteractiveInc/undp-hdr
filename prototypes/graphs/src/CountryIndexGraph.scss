@@ -74,8 +74,8 @@
   .differenceLegend {
     display: flex;
     align-items: center;
-
-    svg {
+    margin-bottom: 0.5em;
+    * + svg {
       margin-left: 2em;
     }
   }

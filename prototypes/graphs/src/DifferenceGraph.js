@@ -60,9 +60,9 @@ export default function DifferenceGraph(props) {
         const year = +col.substr(col.lastIndexOf('_') + 1)
         yearExtent[0] = Math.min(yearExtent[0], year)
         yearExtent[1] = Math.max(yearExtent[1], year)
+        yExtent[0] = Math.min(yExtent[0], value)
+        yExtent[1] = Math.max(yExtent[1], value)
       }
-      yExtent[0] = Math.min(yExtent[0], value)
-      yExtent[1] = Math.max(yExtent[1], value)
     })
   })
 
@@ -70,6 +70,7 @@ export default function DifferenceGraph(props) {
     yExtent[0] = Math.min(0, yExtent[0])
     yExtent[1] = Math.max(1, yExtent[1])
   }
+  console.log(yExtent)
   const xScale = scaleLinear()
     .domain([0, graphColumns.length])
     .range([0, width])

@@ -320,7 +320,7 @@ export default function ScatterGraph(props) {
               :
               <>
                 <g>{years}</g>
-                <g>yScaleTicks}</g>
+                <g>{yScaleTicks}</g>
               </>
             }
             <g>
