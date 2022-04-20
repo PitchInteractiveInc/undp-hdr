@@ -18,7 +18,7 @@ export default function HDIIntroGraph(props) {
   const lastColumn = columns[columns.length - 1]
   const year = getYearOfColumn(lastColumn)
   const [hoveredPoint, setHoveredPoint] = useState(null)
-  const width = 750
+  const width = 700
   const height = 55
   const margins = { top: 30, right: 0, bottom: 30, left: 0 }
   const countriesSorted = [...data]
@@ -29,10 +29,13 @@ export default function HDIIntroGraph(props) {
     return aValue - bValue
   })
   const barWidth = 2
+  const totalCountryWidth = barWidth * countriesSorted.length
+  const totalGapWidth = width - totalCountryWidth
+  const gapWidth = totalGapWidth / (countriesSorted.length - 1)
   let xThresholds = {}
   const delaunayData = []
   const countryBars = countriesSorted.map((country, index) => {
-    const x = index * (barWidth + 1)
+    const x = index * (barWidth + gapWidth)
     let color = hdiIntroColorScale(country[lastColumn])
     if (xThresholds[color] === undefined) {
       xThresholds[color] = x
