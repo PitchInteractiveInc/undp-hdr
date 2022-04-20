@@ -170,10 +170,10 @@ export default function DifferenceGraph(props) {
           const year = getYearOfColumn(datum.col)
           hoverLabel = (
             <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
-              <text fontWeight={'bold'} fill={stroke} textAnchor='middle' dy='1em' >
+              <text fontWeight={'600'} fill={stroke} textAnchor='middle' dy='1em' >
                 {format(datum.value)}
               </text>
-              <text fontWeight='bold' fill='#D12800' textAnchor='middle' dy='2em' >
+              <text fontWeight='600' fill='#D12800' textAnchor='middle' dy='2em' >
                 {format(row.row[`loss_${year}`], 'loss')}% loss
               </text>
             </g>

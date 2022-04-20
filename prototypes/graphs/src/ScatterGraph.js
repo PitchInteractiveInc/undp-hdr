@@ -8,6 +8,7 @@ import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
 import hdiBackgroundRectData from './hdiBackgroundRectData';
+import format from './format';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -98,6 +99,7 @@ export default function ScatterGraph(props) {
   const lineData = rowsToPlot.map(row => {
     const dots = []
     const stroke = row.color
+    let hoverLabel = null
     const rowData = graphColumns.map((col, colIndex) => {
       const year = +col.substr(col.lastIndexOf('_') + 1)
       if (row.row[col] === '') {
@@ -107,8 +109,23 @@ export default function ScatterGraph(props) {
       const dotX = xScale(colIndex + 0.5)
       const dotY = yScale(value)
       delaunayData.push([dotX, dotY, {row: row.row, col}])
+      let opacity = null
+
+      if (hoveredPoint) {
+        if (/*hoveredPoint.hover[2].row === row.row &&*/ hoveredPoint.hover[2].col === col) {
+          opacity = 1
+          hoverLabel = (
+            <text x={dotX} fontWeight='600' y={dotY + 6} dy='1em' textAnchor='middle' fill={stroke}>
+              {format(value)}
+            </text>
+          )
+        } else {
+          opacity = 0.5
+        }
+      }
       dots.push(
         <circle
+          opacity={opacity}
           r={6}
           key={year}
           cx={dotX}
@@ -123,8 +140,9 @@ export default function ScatterGraph(props) {
     }).filter(d => d)
     return (
       <g key={row.row.Country}>
-        <path d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
+        <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
         <g>{dots}</g>
+        {hoverLabel}
       </g>
     )
   })
