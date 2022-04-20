@@ -80,6 +80,10 @@
     }
   }
 
+  g {
+    transition: opacity 0.3s ease-in-out;
+  }
+
   .missingCountryDisclaimer {
     padding: 0.75em 1em;
     color: #232E3E;

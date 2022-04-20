@@ -7,10 +7,10 @@ import { mpiColors } from './MPIGraph'
 import {hdiIntroColorScale, hdiRanks} from './HDIIntroGraph'
 
 function Stat(props) {
-  const { label, value, suffix, bold, bottomBorder, valueClass } = props
+  const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
   return (
-    <div className={classNames('stat', { bold, bottomBorder })}>
+    <div className={classNames('stat', { bold, bottomBorder, negative })}>
       <div className='label'>{label}</div>
       <div className={classNames('value', valueClass)}>{value}{s}</div>
     </div>
@@ -160,6 +160,7 @@ function IHDIDifferenceTooltip(props) {
         value={format(country[`loss_${year}`], 'loss')}
         suffix='%'
         bottomBorder
+        negative
       />
       <Stat
         label='Inequality in life expectancy'

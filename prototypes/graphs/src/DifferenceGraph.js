@@ -7,6 +7,8 @@ import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
+import format from './format';
+import getYearOfColumn from './getYearOfColumn';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -108,10 +110,14 @@ export default function DifferenceGraph(props) {
         return null
       }
       const value = +row.row[col]
-
+      let prevValue = null
+      if (ihdiGraph) {
+        prevValue = +row.row[col.replace('i', '')]
+      }
       return {
         index: colIndex,
         value,
+        prevValue,
         col
       }
     }).filter(d => d);
@@ -122,11 +128,14 @@ export default function DifferenceGraph(props) {
       delaunayData.push([x, y, {row: row.row, col: datum.col}])
       let markHeight = ihdiGraph ? 5 : 1
       let previousIsMore = false
-      if (datumIndex > 0) {
-        const prevValue = rowData[datumIndex - 1].value
-        const prevY = yScale(prevValue)
+      let previousHeight = 0
+      let prevY = y
+      if (datumIndex > 0 || datum.prevValue) {
+        const prevValue = datum.prevValue || rowData[datumIndex - 1].value
+        prevY = yScale(prevValue)
         previousIsMore = prevValue > datum.value
         const differenceColor = y < prevY ? '#88E51C' : '#FD9B94'
+        previousHeight = Math.abs(y - prevY)
         previousYearMarks = (
           <g>
             <rect
@@ -142,15 +151,37 @@ export default function DifferenceGraph(props) {
               y={Math.min(y, prevY)}
               x={-markWidth / 2}
               width={markWidth}
-              height={Math.abs(y - prevY)}
+              height={previousHeight}
               stroke={differenceColor}
               fill={differenceColor}
             />
           </g>
         )
       }
+      let opacity = null
+      let hoverLabel = null
+      if (hoveredPoint) {
+        if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
+          opacity = 1
+        } else {
+          opacity = 0.3
+        }
+        if (index.key === 'IHDI' && hoveredPoint.hover[2].col === datum.col) {
+          const year = getYearOfColumn(datum.col)
+          hoverLabel = (
+            <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
+              <text fontWeight={'bold'} fill={stroke} textAnchor='middle' dy='1em' >
+                {format(datum.value)}
+              </text>
+              <text fontWeight='bold' fill='#D12800' textAnchor='middle' dy='2em' >
+                {format(row.row[`loss_${year}`], 'loss')}% loss
+              </text>
+            </g>
+          )
+        }
+      }
       return (
-        <g key={datumIndex} transform={`translate(${x}, 0)`}>
+        <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
           <rect
             x={-markWidth / 2}
             width={markWidth}
@@ -160,6 +191,7 @@ export default function DifferenceGraph(props) {
             fill={ihdiGraph ? stroke : 'none'}
           />
           {previousYearMarks}
+          {hoverLabel}
         </g>
       )
     })
