@@ -2,6 +2,14 @@ import getGraphColumnsForKey from "./getGraphColumnsForKey"
 import getYearOfColumn from "./getYearOfColumn"
 import './HDIIntroGraph.scss'
 import { scaleThreshold } from "d3-scale"
+import { Delaunay } from "d3-delaunay"
+import { useState, useRef } from "react"
+import CountryTooltip from "./CountryTooltip"
+
+export const hdiIntroColorScale = scaleThreshold()
+  .domain([0.55, 0.7, 0.8, 1])
+  .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
+export const hdiRanks = ['Low', 'Medium', 'High', 'Very high']
 
 export default function HDIIntroGraph(props) {
   const { graph, data, country, index } = props
@@ -9,11 +17,7 @@ export default function HDIIntroGraph(props) {
   const columns = getGraphColumnsForKey(data, index.key)
   const lastColumn = columns[columns.length - 1]
   const year = getYearOfColumn(lastColumn)
-
-  const colorScale = scaleThreshold()
-    .domain([0.55, 0.7, 0.8, 1])
-    .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
-  const ranks = ['Low', 'Medium', 'High', 'Very high']
+  const [hoveredPoint, setHoveredPoint] = useState(null)
   const width = 750
   const height = 55
   const margins = { top: 30, right: 0, bottom: 30, left: 0 }
@@ -26,17 +30,19 @@ export default function HDIIntroGraph(props) {
   })
   const barWidth = 2
   let xThresholds = {}
+  const delaunayData = []
   const countryBars = countriesSorted.map((country, index) => {
     const x = index * (barWidth + 1)
-    let color = colorScale(country[lastColumn])
+    let color = hdiIntroColorScale(country[lastColumn])
     if (xThresholds[color] === undefined) {
       xThresholds[color] = x
     }
     let label = null
     let arrow = null
+    delaunayData.push([x, height / 2, { row: country, col: lastColumn}])
     if (country === selectedCountry) {
       color = '#D12800'
-      const rank = countriesSorted.length - index
+      const rank = country[`hdi_rank_${year}`]
       const style = { fontWeight: 'bold', textTransform: 'uppercase' }
       const indexPercent = (index / countriesSorted.length)
       const textAnchor = indexPercent < 0.33 ? 'start' : indexPercent < 0.66 ? 'middle' : 'end'
@@ -53,6 +59,31 @@ export default function HDIIntroGraph(props) {
       </g>
     )
   })
+  const delaunay = Delaunay.from(delaunayData)
+
+  const svgRef = useRef()
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    if (closestPointIndex !== -1) {
+      // console.log(closestPointIndex, delaunayData[closestPointIndex])
+      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+    }
+  }
+  const mouseLeave = () => {
+    setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} graph={{type: 'hdiIntro'}} />
+    )
+  }
+
+
   return (
     <div className='HDIIntroGraph'>
       <div className='largeStats'>
@@ -62,7 +93,7 @@ export default function HDIIntroGraph(props) {
         </div>
         <div>
           <div className='label'>Human development classification</div>
-          <div className='value' style={{ color: colorScale(country[lastColumn])}}>{country.hdicode}</div>
+          <div className='value' style={{ color: hdiIntroColorScale(country[lastColumn])}}>{country.hdicode}</div>
         </div>
         <div>
           <div className='label'>Region</div>
@@ -72,11 +103,15 @@ export default function HDIIntroGraph(props) {
       <div>
         HDI rank by Human development classification
         <div className='svgContainer'>
-          <svg width={width + margins.left + margins.right} height={height + margins.top + margins.bottom}>
+          <svg width={width + margins.left + margins.right} height={height + margins.top + margins.bottom}
+            onMouseMove={mouseMove}
+            onMouseEnter={mouseMove}
+            onMouseLeave={mouseLeave}
+            ref={svgRef}>
             <g transform={`translate(${margins.left}, ${margins.top})`}>
               <g>{countryBars}</g>
-              <g>{ranks.map((rank, rankIndex) => {
-                const color = colorScale.range()[rankIndex]
+              <g>{hdiRanks.map((rank, rankIndex) => {
+                const color = hdiIntroColorScale.range()[rankIndex]
                 const x = xThresholds[color]
                 return <text key={rank} x={x} y={height} dy='1em' fill={color}>{rank}</text>
               })}</g>
@@ -85,6 +120,7 @@ export default function HDIIntroGraph(props) {
               </g>
             </g>
           </svg>
+          {tooltip}
         </div>
       </div>
     </div>

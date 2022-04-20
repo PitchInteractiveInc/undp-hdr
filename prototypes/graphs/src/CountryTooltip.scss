@@ -12,7 +12,14 @@
   width: 423px;
 
   box-sizing: border-box;
-
+  &.hdiIntroTooltip {
+    width: 274px;
+    padding: 0;
+    border: none;
+    > div {
+      padding: 0.5em 1em;
+    }
+  }
   .countryName {
     font-weight: bold;
 
@@ -111,5 +118,10 @@
     td:nth-child(odd) {
       background-color: #FAFAFA;
     }
+  }
+
+  .flex {
+    display: flex;
+    justify-content: space-between;
   }
 }

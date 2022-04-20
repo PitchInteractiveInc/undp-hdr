@@ -4,6 +4,8 @@ import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
 import format from './format'
 import { mpiColors } from './MPIGraph'
+import {hdiIntroColorScale, hdiRanks} from './HDIIntroGraph'
+
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -376,8 +378,44 @@ function PHDIBarTooltip(props) {
 
     </div>
   )
-
 }
+
+
+function HDIIntroTooltip(props) {
+  const {point, data} = props
+  const country = point.hover[2].row
+  const columns = getGraphColumnsForKey(data, 'hdi')
+  const lastColumn = columns[columns.length - 1]
+  const lastYear = getYearOfColumn(lastColumn)
+  const style = {backgroundColor: hdiIntroColorScale(country[lastColumn]), color: '#fff'}
+  return (
+    <div style={style}>
+      <div className='flex'
+        style={{ fontWeight: 'bold', borderBottom: '1px solid #fff',
+          justifyContent: 'space-between', alignItems: 'center'}}>
+        <div className='countryName'>{country.Country}</div>
+        <div>HDI rank: {country[`hdi_rank_${lastYear}`]}</div>
+      </div>
+      <div className='flex' style={{ marginTop: '0.5em'}}>
+        <div style={{ width: '50%'}}>
+          <div>
+            Classifciation
+          </div>
+          <div style={{fontWeight: 'bold'}}>{country.hdicode}</div>
+        </div>
+        <div style={{ width: '50%'}}>
+          <div>
+            Region
+          </div>
+          <div style={{ fontWeight: 'bold'}}>
+            {country.region === '' ? 'Not defined' : country.region}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CountryTooltip(props) {
   const { point, index, graph } = props
 
@@ -385,7 +423,7 @@ export default function CountryTooltip(props) {
     transform: `translate(${point.x}px, ${point.y}px)`
   }
   let tooltipContents = null
-
+  let className = null
   if (index && graph) {
     if (index.key === 'GDI' && graph.type === 'scatter') {
       tooltipContents = <GDIScatterTooltip {...props} />
@@ -401,13 +439,16 @@ export default function CountryTooltip(props) {
       tooltipContents = <MPIBarTooltip {...props} />
     } else if (index.key === 'PHDI' && graph.type === 'bar') {
       tooltipContents = <PHDIBarTooltip {...props} />
+    } else if (index.key === 'HDI' && graph.type === 'hdiIntro') {
+      className = 'hdiIntroTooltip'
+      tooltipContents = <HDIIntroTooltip {...props} />
     }
   }
   if (!tooltipContents) {
     return null
   }
   return (
-    <div className='CountryTooltip' style={style}>
+    <div className={classNames('CountryTooltip', className)} style={style}>
       {tooltipContents}
     </div>
   )
