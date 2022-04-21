@@ -70,7 +70,6 @@ export default function DifferenceGraph(props) {
     yExtent[0] = Math.min(0, yExtent[0])
     yExtent[1] = Math.max(1, yExtent[1])
   }
-  console.log(yExtent)
   const xScale = scaleLinear()
     .domain([0, graphColumns.length])
     .range([0, width])
