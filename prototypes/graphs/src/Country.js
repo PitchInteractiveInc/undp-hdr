@@ -29,7 +29,7 @@ export default function Country(props) {
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc hendrerit ligula sit amet tortor auctor semper. Aliquam aliquet, augue non consectetur congue, eros enim tempor ipsum, ac fringilla odio tellus a sapien. Integer maximus sem id justo consectetur, vitae porttitor est efficitur.
       </div>
       <div className='downloadLinks'>
-        Download
+        <span className='downloadLabel'>Download</span>
         <a href="#">Country Data (csv)</a>
         <a href="#">Metadata (PDF)</a>
         <a href="#">This page as PDF</a>

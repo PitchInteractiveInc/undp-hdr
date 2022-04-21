@@ -30,6 +30,10 @@
     margin: 1em 0;
   }
   .downloadLinks {
+    .downloadLabel {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
     a {
       display: inline-block;
       margin: 0 1em;
