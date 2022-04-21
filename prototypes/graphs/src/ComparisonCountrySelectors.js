@@ -6,7 +6,7 @@ export const comparisonColors = [
   '#813BC7', '#ED9B25', '#00B786'
 ]
 export default function ComparisonCountrySelectors(props) {
-  const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable } = props
+  const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable, exclude } = props
   const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
   return <div className='ComparisonCountrySelectors'>
     <div className='label'>Add Country To Compare</div>
@@ -33,6 +33,9 @@ export default function ComparisonCountrySelectors(props) {
         <select placeholder={placeholder} style={style} value={value} className={classNames({noSelection: !hasSelection})} onChange={e => setCountry(e.target.value)}>
           <option value=''>{placeholder}</option>
           {countriesSorted.map(country => {
+            if (exclude && exclude.ISO3 === country.ISO3) {
+              return null
+            }
             return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
           })}
         </select>

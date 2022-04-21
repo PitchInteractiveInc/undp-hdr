@@ -20,6 +20,7 @@ function GraphWrapper(props) {
   if (countSelectable > 0 && !noCountrySelection) {
     countrySelectors = <ComparisonCountrySelectors
       selectedCountries={selectedCountries}
+      exclude={country}
       setSelectedCountries={setSelectedCountries}
       maxSelectable={countSelectable}
       countries={countries}
