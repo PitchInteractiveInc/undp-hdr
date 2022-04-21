@@ -54,8 +54,16 @@ export default function HDIIntroGraph(props) {
       arrow = <path d="M4,0,8,6H0Z" transform="translate(8 6) rotate(180) translate(3, 8)" fill="#d12800"/>
 
     }
+    let opacity = null
+    if (hoveredPoint) {
+      if (hoveredPoint.hover[2].row === country) {
+        opacity = 1
+      } else {
+        opacity = 0.3
+      }
+    }
     return (
-      <g key={country.ISO3} transform={`translate(${x}, 0)`}>
+      <g key={country.ISO3} opacity={opacity} transform={`translate(${x}, 0)`}>
         <rect width={barWidth} height={height} fill={color} />
         {label}
         {arrow}
