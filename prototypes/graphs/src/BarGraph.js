@@ -159,7 +159,7 @@ export default function BarGraph(props) {
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
-    if (closestPointIndex !== -1) {
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
     }
   }

@@ -104,6 +104,7 @@ export default function ScatterGraph(props) {
     const dots = []
     const stroke = row.color
     let hoverLabel = null
+    let hoverLine = null
     const rowData = graphColumns.map((col, colIndex) => {
       const year = getYearOfColumn(col)
       if (row.row[col] === '') {
@@ -123,6 +124,15 @@ export default function ScatterGraph(props) {
               {format(value)}
             </text>
           )
+          if (hoveredPoint.hover[2].row === row.row) {
+            hoverLine = (
+              <line
+                x1={dotX} y1={0} x2={dotX} y2={height}
+                stroke='#232E3E'
+                strokeDasharray='4,4'
+              />
+            )
+          }
           if (hoveredPoint.hover[2].row === row.row && index.key === 'GDI') {
             const maleValue = row.row[`hdi_m_${year}`]
             const femaleValue = row.row[`hdi_f_${year}`]
@@ -194,6 +204,7 @@ export default function ScatterGraph(props) {
     }).filter(d => d)
     return (
       <g key={row.row.Country}>
+        {hoverLine}
         <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
         <g>{dots}</g>
         {hoverLabel}
@@ -265,7 +276,7 @@ export default function ScatterGraph(props) {
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     // console.log(mouseX, mouseY)
-    if (closestPointIndex !== -1) {
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       // console.log(closestPointIndex)
       // console.log(delaunayData[closestPointIndex])
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })

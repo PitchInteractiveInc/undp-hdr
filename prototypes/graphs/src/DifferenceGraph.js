@@ -160,9 +160,18 @@ export default function DifferenceGraph(props) {
       }
       let opacity = null
       let hoverLabel = null
+      let hoverLine = null
       if (hoveredPoint) {
         if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
           opacity = 1
+          hoverLine = (
+            <line
+              y1={0}
+              y2={height}
+              stroke='#232E3E'
+              strokeDasharray='4,4'
+            />
+          )
         } else {
           opacity = 0.3
         }
@@ -182,6 +191,7 @@ export default function DifferenceGraph(props) {
       }
       return (
         <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
+          {hoverLine}
           <rect
             x={-markWidth / 2}
             width={markWidth}
@@ -249,7 +259,7 @@ export default function DifferenceGraph(props) {
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
-    if (closestPointIndex !== -1) {
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
     }
   }
