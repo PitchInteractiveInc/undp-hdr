@@ -297,7 +297,7 @@ export default function ScatterGraph(props) {
   if (isHDIGraph) {
     hdiLabels = (
       <div className='hdiLabels'>
-        <div style={{ marginRight: '1em'}}>HDI classifciation (value):</div>
+        <div style={{ marginRight: '1em'}}>HDI classification (value):</div>
         {hdiBackgroundRectData.map((backgroundRect, i) => {
           return (
 

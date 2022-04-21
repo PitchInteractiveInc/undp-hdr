@@ -400,7 +400,7 @@ function HDIIntroTooltip(props) {
       <div className='flex' style={{ marginTop: '0.5em'}}>
         <div style={{ width: '50%'}}>
           <div>
-            Classifciation
+            Classification
           </div>
           <div style={{fontWeight: 'bold'}}>{country.hdicode}</div>
         </div>
