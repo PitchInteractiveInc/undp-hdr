@@ -121,7 +121,7 @@ export default function BarGraph(props) {
         showLabel = true
       }
     }
-    let label = showLabel ? <text dy='-0.5em'textAnchor='middle' fill={labelFill} y={height - y}>{value.toFixed(2)}</text> : null
+    let label = showLabel ? <text dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{value.toFixed(2)}</text> : null
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
         <rect

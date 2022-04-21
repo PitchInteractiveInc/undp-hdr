@@ -269,16 +269,16 @@ export default function DifferenceGraph(props) {
     legend = (
       <svg xmlns="http://www.w3.org/2000/svg" width="759.5" height="21" viewBox="0 0 759.5 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
         <text id="How_to_read_this_chart:" data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
-        <text id="current_year" data-name="current year" transform="translate(242.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
-        <text id="previous_year" data-name="previous year" transform="translate(409.588)" fill="#232e3e"><tspan x="0" y="15">previous year</tspan></text>
-        <text id="increase" transform="translate(566.5 1)" fill="#232e3e"><tspan x="0" y="15">increase</tspan></text>
-        <text id="decrease" transform="translate(691.5 1)" fill="#232e3e"><tspan x="0" y="15">decrease</tspan></text>
-        <line id="Line_11034" data-name="Line 11034" x2="55" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
-        <line id="Line_11035" data-name="Line 11035" x2="55" transform="translate(343 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
-        <rect id="Rectangle_23495" data-name="Rectangle 23495" width="30" height="4.5" transform="translate(528.066 10)" fill="#88e51c"/>
-        <rect id="Rectangle_23496" data-name="Rectangle 23496" width="30" height="5" transform="translate(653 10)" fill="#fd9b94"/>
-        <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(648 14) rotate(180)" fill="#fd9b94"/>
-        <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(515.934 10)" fill="#88e51c"/>
+        <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
+        <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">previous year</tspan></text>
+        <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">increase</tspan></text>
+        <text id="decrease" transform="translate(631.5 1)" fill="#232e3e"><tspan x="0" y="15">decrease</tspan></text>
+        <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
+        <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
+        <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
+        <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#fd9b94"/>
+        <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#fd9b94"/>
+        <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
       </svg>
     )
   } else if (ihdiGraph) {
