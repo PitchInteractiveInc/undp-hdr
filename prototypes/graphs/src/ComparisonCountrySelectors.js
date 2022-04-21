@@ -2,12 +2,16 @@ import { range } from 'd3-array'
 import './ComparisonCountrySelectors.scss'
 import classNames from 'classnames'
 import xIcon from './images/x.svg'
+import { useEffect } from 'react'
 export const comparisonColors = [
   '#813BC7', '#ED9B25', '#00B786'
 ]
 export default function ComparisonCountrySelectors(props) {
   const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable, exclude } = props
   const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
+  useEffect(() => {
+    setSelectedCountries(Array.from({length: numToShow}).map(() => ''))
+  }, [exclude])
   return <div className='ComparisonCountrySelectors'>
     <div className='label'>Add Country To Compare</div>
     {range(numToShow).map(i => {
