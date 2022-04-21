@@ -1,5 +1,6 @@
 import useHDRData from "./useHDRData"
 import { useParams, useNavigate, Outlet } from "react-router-dom"
+import './Countries.scss'
 export default function Countries(props) {
   const {data} = useHDRData()
   const params = useParams()
@@ -15,9 +16,9 @@ export default function Countries(props) {
   const countries = data.filter(d => d.ISO3 !== '')
   countries.sort((a, b) => a.Country.localeCompare(b.Country))
   return (
-    <div>
+    <div className='Countries'>
       <div>
-        <select placeholder='Select a country' value={params.country || ''} onChange={e => setCountry(e.target.value)}>
+        <select className='countrySelect' placeholder='Select a country' value={params.country || ''} onChange={e => setCountry(e.target.value)}>
           <option value=''>Select a country</option>
           {countries.map(country => {
             return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
