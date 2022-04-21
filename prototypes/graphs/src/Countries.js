@@ -13,7 +13,7 @@ export default function Countries(props) {
     return null
   }
   const countries = data.filter(d => d.ISO3 !== '')
-  console.log(countries)
+  countries.sort((a, b) => a.Country.localeCompare(b.Country))
   return (
     <div>
       <div>

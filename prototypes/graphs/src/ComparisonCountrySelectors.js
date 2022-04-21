@@ -26,13 +26,13 @@ export default function ComparisonCountrySelectors(props) {
         style.backgroundColor = color
         style.color = colored ? 'white' : null
       }
-
+      const countriesSorted = [...countries].sort((a, b) => a.Country.localeCompare(b.Country))
       const placeholder = 'Add a country'.toUpperCase()
 
       return <span key={i}>
         <select placeholder={placeholder} style={style} value={value} className={classNames({noSelection: !hasSelection})} onChange={e => setCountry(e.target.value)}>
           <option value=''>{placeholder}</option>
-          {countries.map(country => {
+          {countriesSorted.map(country => {
             return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
           })}
         </select>
