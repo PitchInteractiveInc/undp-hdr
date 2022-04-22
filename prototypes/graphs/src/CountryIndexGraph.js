@@ -64,10 +64,28 @@ function GraphWrapper(props) {
     )
   }
   let missingCountryDisclaimer = null
-  if (!data.includes(country)) {
+  let missingCountries = []
+  const potentialCountries = [country, ...selectedCountries.filter(d => d !== '').map(iso => data.find(d => d.ISO3 === iso))]
+  potentialCountries.forEach(c => {
+    if (!data.find(d => d.ISO3 === c.ISO3)) {
+      missingCountries.push(c)
+    } else {
+      const columns = getGraphColumnsForKey(data, index.key)
+      const numValues = columns.reduce((p, col) => {
+        return p + (c[col] !== '' ? 1 : 0)
+      }, 0)
+      if (numValues === 0) {
+        missingCountries.push(c)
+      }
+    }
+  })
+  if (missingCountries.length) {
+    const verb = missingCountries.length === 1 ? 'is' : 'are'
+    const countryNameLabel = missingCountries.map(d => d.Country).join(', ')
+    const countryLabel = missingCountries.length === 1 ? 'this country' : 'these countries'
     missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
-      <strong>{country.Country} is not a part of the {index.key} graph below.</strong><br />
-      Due to a lack of relavant data, the {index.key} has not been calculated for this country.
+      <strong>{countryNameLabel} {verb} not a part of the {index.key} graph below.</strong><br />
+      Due to a lack of relavant data, the {index.key} has not been calculated for {countryLabel}.
     </div>
   }
   return (
