@@ -208,8 +208,8 @@ export default function ScatterGraph(props) {
         {hoverLine}
         <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
         <g>{dots}</g>
-        {hoverLabel}
-        {additionalContent}
+        {/* {hoverLabel} */}
+        {/* {additionalContent} */}
       </g>
     )
   })
