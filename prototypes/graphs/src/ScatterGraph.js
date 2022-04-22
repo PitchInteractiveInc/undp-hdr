@@ -185,7 +185,11 @@ export default function ScatterGraph(props) {
           }
 
         } else {
-          opacity = 0.5
+          if (hoveredPoint.hover[2].row === row.row) {
+            opacity = 0.5
+          } else {
+            opacity = 0.3
+          }
         }
       }
       dots.push(
