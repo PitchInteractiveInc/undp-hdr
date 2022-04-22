@@ -32,15 +32,19 @@ export default function ComparisonCountrySelectors(props) {
       }
       const countriesSorted = [...countries].sort((a, b) => a.Country.localeCompare(b.Country))
       const placeholder = 'Add a country'.toUpperCase()
-
       return <span key={i}>
         <select placeholder={placeholder} style={style} value={value} className={classNames({noSelection: !hasSelection})} onChange={e => setCountry(e.target.value)}>
           <option value=''>{placeholder}</option>
           {countriesSorted.map(country => {
-            if (exclude && exclude.ISO3 === country.ISO3) {
-              return null
+            let disabled = false
+            if (selectedCountries.includes(country.ISO3)) {
+              disabled = true
             }
-            return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
+            if (exclude && exclude.ISO3 === country.ISO3) {
+              disabled = true
+            }
+
+            return <option disabled={disabled} key={country.ISO3} value={country.ISO3}>{country.Country}</option>
           })}
         </select>
         {hasSelection ? (
