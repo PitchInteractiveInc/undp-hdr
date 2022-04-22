@@ -100,10 +100,10 @@ export default function DifferenceGraph(props) {
   })
   // console.log(rowsToPlot)
   const yearWidth = xScale(1)
-  const markWidth = yearWidth * 0.8
+  const markWidth = (yearWidth * 0.8) / rowsToPlot.length
   const delaunayData = []
 
-  const differenceData = rowsToPlot.map(row => {
+  const differenceData = rowsToPlot.map((row, rowIndex) => {
     const stroke = row.color
     const rowData = graphColumns.map((col, colIndex) => {
       if (row.row[col] === '') {
@@ -122,7 +122,7 @@ export default function DifferenceGraph(props) {
       }
     }).filter(d => d);
     const differenceMarks = rowData.map((datum, datumIndex) => {
-      const x = xScale(datum.index + 0.5)
+      const x = xScale(datum.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1
       const y = yScale(datum.value)
       let previousYearMarks = null
       let markHeight = ihdiGraph ? 5 : 1
