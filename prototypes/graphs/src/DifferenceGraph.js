@@ -125,7 +125,6 @@ export default function DifferenceGraph(props) {
       const x = xScale(datum.index + 0.5)
       const y = yScale(datum.value)
       let previousYearMarks = null
-      delaunayData.push([x, y, {row: row.row, col: datum.col}])
       let markHeight = ihdiGraph ? 5 : 1
       let previousIsMore = false
       let previousHeight = 0
@@ -158,6 +157,9 @@ export default function DifferenceGraph(props) {
           </g>
         )
       }
+      const delaunayY = rowsToPlot.length === 1 ? (height / 2) : ((y + prevY) / 2)
+      delaunayData.push([x, delaunayY, {row: row.row, col: datum.col}])
+
       let opacity = null
       let hoverLabel = null
       let hoverLine = null
