@@ -186,6 +186,11 @@ export default function BarGraph(props) {
           ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
+            <rect
+              fill='#FAFAFA'
+              width={width}
+              height={height}
+            />
             {/* <g>{years}</g> */}
             <g>
               <line x1={width} x2={width} y1={0} y2={height} stroke='#A9B1B7' />
