@@ -54,6 +54,8 @@ export default function BarGraph(props) {
     .domain([0, filteredData.length])
     .range([0, width])
 
+  const columnWidth = xScale(1)
+
   const yMin = Math.min(...filteredData.map(d => +d[graphColumns[0]]))
   const yMax = Math.max(...filteredData.map(d => +d[graphColumns[0]]))
   const yExtent = [yMin, yMax]
@@ -160,7 +162,10 @@ export default function BarGraph(props) {
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
-      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+      const x = delaunayData[closestPointIndex][0] + barWidth / 2
+      console.log(event)
+      const clientX = x + svgPosition.left
+      setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: Math.max(30, columnWidth), clientX, clientY: event.clientY })
     }
   }
   const mouseLeave = () => {

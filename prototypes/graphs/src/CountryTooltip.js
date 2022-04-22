@@ -420,8 +420,23 @@ function HDIIntroTooltip(props) {
 export default function CountryTooltip(props) {
   const { point, index, graph } = props
 
+  let x = point.x
+  let y = point.y
+  if (point.columnWidth) {
+    x += point.columnWidth / 2
+  }
+  const tooltipWidth = graph.type === 'hdiIntro' ? 274 : 423
+  const scrollBarPadding = 40
+  const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
+  const flipY = point.clientY > window.innerHeight / 2
+  if (flipX) {
+    x = point.x - tooltipWidth
+    if (point.columnWidth) {
+      x -= point.columnWidth / 2 + 5
+    }
+  }
   const style = {
-    transform: `translate(${point.x}px, ${point.y}px)`
+    transform: `translate(${x}px, ${y}px) ${flipY ? 'translateY(-100%)' : ''}`
   }
   let tooltipContents = null
   let className = null

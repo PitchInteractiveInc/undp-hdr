@@ -65,6 +65,7 @@ export default function ScatterGraph(props) {
     .domain([0, graphColumns.length])
     .range([0, width])
 
+  const columnWidth = xScale(1)
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([height, 0])
@@ -279,7 +280,10 @@ export default function ScatterGraph(props) {
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       // console.log(closestPointIndex)
       // console.log(delaunayData[closestPointIndex])
-      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+      const x = delaunayData[closestPointIndex][0]
+      const y = delaunayData[closestPointIndex][1]
+      const clientX = x + svgPosition.left
+      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth, clientX, clientY: event.clientY })
     }
   }
   const mouseLeave = () => {

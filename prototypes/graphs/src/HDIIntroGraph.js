@@ -80,7 +80,8 @@ export default function HDIIntroGraph(props) {
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     if (closestPointIndex !== -1) {
       // console.log(closestPointIndex, delaunayData[closestPointIndex])
-      setHoveredPoint({ x: mouseX, y: mouseY, hover: delaunayData[closestPointIndex] })
+      const x = delaunayData[closestPointIndex][0]
+      setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: 10, clientX: event.clientX, clientY: event.clientY })
     }
   }
   const mouseLeave = () => {
