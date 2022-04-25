@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './CountryIndexGraph.scss'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 import ScatterGraph from './ScatterGraph'
 import BarGraph from './BarGraph'
@@ -12,10 +12,26 @@ import getYearOfColumn from './getYearOfColumn';
 import format from './format';
 const countSelectable = 3
 function GraphWrapper(props) {
-  const { graph, data, country, index } = props
+  const { graph, data, country, index, syncCountries, forceSelection } = props
   const { type, title, noCountrySelection} = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
-  const countries = data.filter(d => d.ISO3 !== '')
+  const countries = useMemo(() => {
+    return data.filter(d => d.ISO3 !== '')}, [data])
+
+  useEffect(() => {
+    if (forceSelection && !noCountrySelection) {
+      const countriesInThisDataset = forceSelection.filter(iso => {
+        const country = countries.find(c => c.ISO3 === iso)
+        return !!country
+      })
+      const selectionsDifferent = countriesInThisDataset.some(iso => selectedCountries.indexOf(iso) === -1)
+        || selectedCountries.some(iso => countriesInThisDataset.indexOf(iso) === -1)
+      if (selectionsDifferent) {
+        setSelectedCountries(countriesInThisDataset)
+      }
+    }
+  }, [forceSelection, countries, noCountrySelection, selectedCountries])
+
   let countrySelectors = null
   if (countSelectable > 0 && !noCountrySelection) {
     countrySelectors = <ComparisonCountrySelectors
@@ -25,6 +41,7 @@ function GraphWrapper(props) {
       maxSelectable={countSelectable}
       countries={countries}
       colored={true || countSelectable > 1}
+      syncCountries={syncCountries}
     />
   }
   let graphElement = null
@@ -99,7 +116,7 @@ function GraphWrapper(props) {
   )
 }
 export default function CountryIndexGraph(props) {
-  const { data, country, index } = props
+  const { data, country, index, syncCountries, forceSelection } = props
 
 
   let additionalIndexContent = null
@@ -154,6 +171,8 @@ export default function CountryIndexGraph(props) {
               country={country}
               index={index}
               graph={graph}
+              syncCountries={syncCountries}
+              forceSelection={forceSelection}
             />
           })
         }

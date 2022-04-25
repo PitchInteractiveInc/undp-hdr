@@ -4,14 +4,30 @@ import './Country.scss'
 import indicators from './indicators'
 import CountryIndexGraph from './CountryIndexGraph'
 import useMPIData from "./useMPIData"
+import { useEffect, useState, useCallback } from "react"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
   const params = useParams()
+
+  const [syncingCountries, setSyncingCountries] = useState(false)
+  const syncCountries = useCallback((countries) => {
+    setSyncingCountries(countries)
+  }, [])
+
+  useEffect(() => {
+    if (syncingCountries) {
+      setSyncingCountries(false)
+    }
+  }, [syncingCountries])
+
+
   if (!data || !mpiData) {
     return
   }
+
   const country = data.find(d => d.ISO3 === params.country)
+
   return (
     <div className='CountryDetail'>
       {/* <select value={params.country} onChange={setCountry}>
@@ -39,7 +55,14 @@ export default function Country(props) {
         {indicators.map((indicator, i) => {
           let dataToUse = indicator.key === 'MPI' ? mpiData : data
           const countryToUse = dataToUse.find(d => d.ISO3 === params.country) || country
-          return <CountryIndexGraph key={indicator.key} index={indicator} data={dataToUse} country={countryToUse} />
+          return <CountryIndexGraph
+            key={indicator.key}
+            index={indicator}
+            data={dataToUse}
+            country={countryToUse}
+            syncCountries={syncCountries}
+            forceSelection={syncingCountries}
+          />
         })}
       </div>
 
