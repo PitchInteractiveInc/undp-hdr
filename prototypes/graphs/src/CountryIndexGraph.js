@@ -122,34 +122,6 @@ export default function CountryIndexGraph(props) {
 
   let additionalIndexContent = null
 
-  if (index.key === 'HDI') {
-    const hdiVariables = [
-      { key: 'le', label: 'Life expectancy at birth', suffix: 'years' },
-      { key: 'eys', label: 'Expected years of schooling', suffix: 'years' },
-      { key: 'mys', label: 'Mean years of schooling', suffix: 'years' },
-      { key: 'gnipc', label: 'Gross National Income per capita', suffix: '(constant 2017 PPP$)' },
-    ]
-    const leColumns = getGraphColumnsForKey(data, 'le')
-    const lastColumn = leColumns[leColumns.length - 1]
-    const year = getYearOfColumn(lastColumn)
-    additionalIndexContent = (
-      <div className='additionalIndexContent'>
-        <div className='contentTitle'>HDI Indicies of the year {year}:</div>
-        {hdiVariables.map(({ key, label, suffix }) => {
-          const columns = getGraphColumnsForKey(data, key)
-          const lastColumn = columns[columns.length - 1]
-          const value = format(country[lastColumn], key)
-          return (
-            <div key={key} className='hdiVariable'>
-
-              <div className='hdiVariableLabel'>{label}</div>
-              <div className='hdiVariableValue'>{value} <span className='suffix'>{suffix}</span></div>
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
   return (
     <div className='CountryIndexGraph'>
       <div className='indexText'>
