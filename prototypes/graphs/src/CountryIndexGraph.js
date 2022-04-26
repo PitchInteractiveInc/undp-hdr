@@ -10,6 +10,7 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import HDIIntroGraph from './HDIIntroGraph';
 import getYearOfColumn from './getYearOfColumn';
 import format from './format';
+import getCountryIndexDescription from './getCountryIndexDescription';
 const countSelectable = 3
 function GraphWrapper(props) {
   const { graph, data, country, index, syncCountries, forceSelection } = props
@@ -155,7 +156,7 @@ export default function CountryIndexGraph(props) {
         <div className='key'>{index.key}</div>
         <div className='name'>{index.name}</div>
         <div className='description'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc hendrerit ligula sit amet tortor auctor semper. Aliquam aliquet, augue non consectetur congue, eros enim tempor ipsum, ac fringilla odio tellus a sapien. Integer maximus sem id justo consectetur, vitae porttitor est efficitur.
+          {getCountryIndexDescription(country, index, data)}
         </div>
         <div className='indicatorLink'>
           <Link to={`/indicies/${index.key}`}>More Insights on {index.key}</Link>

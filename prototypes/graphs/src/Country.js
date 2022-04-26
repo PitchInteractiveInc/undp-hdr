@@ -42,7 +42,7 @@ export default function Country(props) {
       </div>
       <div className='population'>Population ##,###,###</div>
       <div className='countryIntro'>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc hendrerit ligula sit amet tortor auctor semper. Aliquam aliquet, augue non consectetur congue, eros enim tempor ipsum, ac fringilla odio tellus a sapien. Integer maximus sem id justo consectetur, vitae porttitor est efficitur.
+        An interactive human development summary for {country.Country}, capturing the achievements in the HDI (assessment of the population’s average longevity, knowledge, and standard of living) and a set of complementary measures that estimate gender gaps, inequality, planetary pressures, and poverty (covering developing countries).
       </div>
       <div className='downloadLinks'>
         <span className='downloadLabel'>Download</span>
