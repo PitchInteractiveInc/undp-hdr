@@ -66,6 +66,9 @@ export default function Country(props) {
         })}
       </div>
 
+      <div className='footnote'>
+        <sup>1</sup> It is important to note that HDRO is mandated to use internationally-standardized data. National and international data can differ because international agencies standardize national data to allow comparability across countries and, in some cases, may not have access to the most recent national data.
+      </div>
     </div>
   )
 }
