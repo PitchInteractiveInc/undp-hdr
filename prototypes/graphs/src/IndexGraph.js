@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import useHDRData from "./useHDRData";
 import { range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
@@ -11,6 +11,11 @@ import hdiBackgroundRectData from './hdiBackgroundRectData';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import RegionFilter from './RegionFilter';
+import CountryTooltip from './CountryTooltip';
+import { Delaunay } from 'd3-delaunay';
+import { type } from '@testing-library/user-event/dist/type';
+import getYearOfColumn from './getYearOfColumn';
+
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -28,12 +33,15 @@ export default function IndexGraph(props) {
   const { selectedMetricShortName } = useParams()
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: 3}).map(() => ''))
   const [selectedRegion, setSelectedRegion] = useState('')
+  const [hoveredPoint, setHoveredPoint] = useState(null)
+
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
   const index = indicator
+  const svgRef = useRef()
   if (indicator.customGraph) {
     return indicator.customGraph
   }
-  console.log(data)
+  // console.log(data)
 
   if (!data) {
     return null
@@ -42,8 +50,8 @@ export default function IndexGraph(props) {
   const dataKey = indicator.key
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
   const graphColumns = getGraphColumnsForKey(data, dataKey)
-  console.log(dataKey, data.columns)
-  console.log(graphColumns)
+  // console.log(dataKey, data.columns)
+  // console.log(graphColumns)
 
   const width = 800
   const height = 800
@@ -72,30 +80,21 @@ export default function IndexGraph(props) {
   })
   const countries = data.filter(d => d.ISO3 !== '')
 
-  console.log(yExtent)
-  // if (selectedMetric['Full name'].includes('Index')) {
-  //   yExtent[0] = Math.min(0, yExtent[0])
-  //   yExtent[1] = Math.max(1, yExtent[1])
-  // }
-
-  console.log(yExtent)
+  // console.log(graphColumns)
 
   const xScale = scaleLinear()
-    .domain(yearExtent)
+    .domain([0, graphColumns.length - 1])
     .range([0, width])
 
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([height, 0])
 
-  console.log(yExtent)
-  // const lineGen = line()
-  //   .x(d => xScale())
-
   const colorScale = scaleQuantize()
     .domain(yExtent)
     .range(colors)
   let selectedDots = []
+  const delaunayData = []
 
   const paths = data.filter(d => d.ISO3 !== '' || d.Country === 'World').map(country => {
     const isWorld = country.Country === 'World'
@@ -104,19 +103,21 @@ export default function IndexGraph(props) {
         return null
       }
     }
-    const data = graphColumns.map(col => {
+    const data = graphColumns.map((col, colIndex) => {
       if (country[col] === '') {
         return null
       }
       const value = +country[col]
       return {
         value,
-        year: +col.substr(col.lastIndexOf('_') + 1)
+        year: getYearOfColumn(col),
+        col,
+        colIndex,
       }
     }).filter(d => d)
 
     const lineGen = line()
-      .x(d => xScale(d.year))
+      .x(d => xScale(d.colIndex))
       .y(d => yScale(d.value))
     if (data.length === 0) {
       return null
@@ -126,6 +127,11 @@ export default function IndexGraph(props) {
     let label = null
     let opacity = 1
     let showLabel = null
+    data.forEach(datum => {
+      const x = xScale(datum.colIndex)
+      const y = yScale(datum.value)
+      delaunayData.push([x, y, {row: country, col: datum.col}])
+    })
     if (countSelectedCountries !== 0 && !isWorld) {
       const isSelected = selectedCountries.includes(country.ISO3)
       opacity = isSelected ? 1 : 0.1
@@ -136,7 +142,7 @@ export default function IndexGraph(props) {
           {data.map(datum => {
             return <circle
               key={datum.year}
-              cx={xScale(datum.year)}
+              cx={xScale(datum.colIndex)}
               cy={yScale(datum.value)}
               r={3}
               fill={stroke}
@@ -151,7 +157,7 @@ export default function IndexGraph(props) {
       opacity = 1
     }
     if (showLabel) {
-      const x = xScale(data[0].year)
+      const x = xScale(data[0].colIndex)
       label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
     }
@@ -171,13 +177,40 @@ export default function IndexGraph(props) {
       </g>
     )
   })
+  const delaunay = Delaunay.from(delaunayData)
 
-  const yearArray = range(yearExtent[0], yearExtent[1] + 1)
+  const columnWidth = xScale(1)
 
-  const years = yearArray.map(year => {
-    const x = xScale(year)
+
+  const years = graphColumns.map((col, yearIndex) => {
+    const year = getYearOfColumn(col)
+    const x = xScale(yearIndex)
+    let consecutive = false
+    if (yearIndex < graphColumns.length - 1) {
+      consecutive = (+getYearOfColumn(graphColumns[yearIndex + 1])) === ((+year) + 1)
+    } else {
+      consecutive = true
+    }
+    let yearRectWidth = consecutive ? columnWidth : columnWidth * 0.8
+    let rectX = -yearRectWidth / 2
+    const fill = consecutive ? '#F7F7F7' : '#EDEFF0'
+    if (yearIndex === 0) {
+      yearRectWidth /= 2
+      rectX = 0
+    }
+    if (yearIndex === graphColumns.length - 1) {
+      yearRectWidth /= 2
+    }
+    const yearRect = <rect
+      width={yearRectWidth}
+      height={height}
+      x={rectX}
+      fill={fill}
+    />
+
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
+        {yearRect}
         <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} strokeDasharray='4,4' />
         <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
       </g>
@@ -238,6 +271,35 @@ export default function IndexGraph(props) {
     />
   )
 
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    // console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
+      // console.log(closestPointIndex)
+      // console.log(delaunayData[closestPointIndex])
+      const x = delaunayData[closestPointIndex][0] + margins.left
+      const y = delaunayData[closestPointIndex][1] + margins.top
+      const clientX = x + svgPosition.left
+      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth, clientX, clientY: event.clientY })
+    }
+  }
+  const mouseLeave = () => {
+    setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    const graph = {
+      type: 'index'
+    }
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={[]} graph={graph} />
+    )
+  }
+
   return (
     <div className='IndexGraph'>
       <div className='graphControls' style={{ marginLeft: margins.left - yScaleBarWidth}}>
@@ -256,16 +318,25 @@ export default function IndexGraph(props) {
         </div>
       </div>
       <div>
-        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
+        <div className='svgContainer'>
 
-          <g transform={`translate(${margins.left}, ${margins.top})`}>
-            <g>{backgroundRects}</g>
-            <g>{yScaleTicks}</g>
-            <g>{selectedDots}</g>
-            <g>{paths}</g>
-            <g>{years}</g>
-          </g>
-        </svg>
+          <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+            onMouseMove={mouseMove}
+            onMouseEnter={mouseMove}
+            onMouseLeave={mouseLeave}
+            ref={svgRef}>
+
+            <g transform={`translate(${margins.left}, ${margins.top})`}>
+              {/* <g>{backgroundRects}</g> */}
+              <g>{years}</g>
+              <g>{yScaleTicks}</g>
+              <g>{selectedDots}</g>
+              <g>{paths}</g>
+            </g>
+          </svg>
+          {tooltip}
+        </div>
+
       </div>
     </div>
   )

@@ -441,19 +441,19 @@ export default function CountryTooltip(props) {
   let tooltipContents = null
   let className = null
   if (index && graph) {
-    if (index.key === 'GDI' && graph.type === 'scatter') {
+    if (index.key === 'GDI'){
       tooltipContents = <GDIScatterTooltip {...props} />
-    } else if (index.key === 'GII' && graph.type === 'scatter') {
+    } else if (index.key === 'GII') {
       tooltipContents = <GIIScatterTooltip {...props} />
-    } else if (index.key === 'IHDI' && graph.type === 'difference') {
+    } else if (index.key === 'IHDI') {
       tooltipContents = <IHDIDifferenceTooltip {...props} />
-    } else if (index.key === 'HDI' && graph.type === 'difference') {
+    } else if (index.key === 'HDI' && (graph.type === 'difference' || graph.type ==='index')) {
       tooltipContents = <HDIDifferenceTooltip {...props} />
     } else if (index.key === 'HDI' && graph.type === 'scatter') {
       tooltipContents = <HDIScatterTooltip {...props} />
-    } else if (index.key === 'MPI' && graph.type === 'bar') {
+    } else if (index.key === 'MPI') {
       tooltipContents = <MPIBarTooltip {...props} />
-    } else if (index.key === 'PHDI' && graph.type === 'bar') {
+    } else if (index.key === 'PHDI') {
       tooltipContents = <PHDIBarTooltip {...props} />
     } else if (index.key === 'HDI' && graph.type === 'hdiIntro') {
       className = 'hdiIntroTooltip'
