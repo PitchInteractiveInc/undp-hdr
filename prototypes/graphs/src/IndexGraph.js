@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import hdiBackgroundRectData from './hdiBackgroundRectData';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
+import RegionFilter from './RegionFilter';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -26,7 +27,9 @@ export default function IndexGraph(props) {
   const { data } = useHDRData()
   const { selectedMetricShortName } = useParams()
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: 3}).map(() => ''))
+  const [selectedRegion, setSelectedRegion] = useState('')
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
+  const index = indicator
   if (indicator.customGraph) {
     return indicator.customGraph
   }
@@ -95,6 +98,12 @@ export default function IndexGraph(props) {
   let selectedDots = []
 
   const paths = data.filter(d => d.ISO3 !== '' || d.Country === 'World').map(country => {
+    const isWorld = country.Country === 'World'
+    if (!isWorld && selectedRegion !== '') {
+      if (country.region !== selectedRegion) {
+        return null
+      }
+    }
     const data = graphColumns.map(col => {
       if (country[col] === '') {
         return null
@@ -112,7 +121,6 @@ export default function IndexGraph(props) {
     if (data.length === 0) {
       return null
     }
-    const isWorld = country.Country === 'World'
     const stroke = isWorld ? 'black' : colorScale(data[0].value)
     const strokeWidth = isWorld ? 2 : 1
     let label = null
@@ -176,11 +184,12 @@ export default function IndexGraph(props) {
     )
   })
 
+  const yScaleBarWidth = 10
+
   const yScaleTicks = colors.map((color, index) => {
     const percentage = index / colors.length
     const y = (colors.length - index - 1) / colors.length * height
     const barHeight = height / colors.length
-    const barWidth = 10
     const value = percentage * (yExtent[1] - yExtent[0]) + yExtent[0]
     let lastLabel = null
     if (index === colors.length - 1) {
@@ -188,8 +197,8 @@ export default function IndexGraph(props) {
       lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{nextValue.toFixed(1)}</text>
     }
     return (
-      <g key={color} transform={`translate(${-barWidth}, ${y})`}>
-        <rect width={barWidth} height={barHeight} fill={color} />
+      <g key={color} transform={`translate(${-yScaleBarWidth}, ${y})`}>
+        <rect width={yScaleBarWidth} height={barHeight} fill={color} />
         <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(2)}</text>
         {lastLabel}
       </g>
@@ -210,8 +219,7 @@ export default function IndexGraph(props) {
     )
   })
 
-  let countrySelectors = null
-  countrySelectors = <ComparisonCountrySelectors
+  const countrySelectors = <ComparisonCountrySelectors
     selectedCountries={selectedCountries}
     setSelectedCountries={setSelectedCountries}
     maxSelectable={3}
@@ -223,12 +231,29 @@ export default function IndexGraph(props) {
     colorScale={colorScale}
   />
 
-  return (
-    <div className='Graph'>
-      <div>
+  const regionFilter = (
+    <RegionFilter
+      selectedRegion={selectedRegion}
+      setSelectedRegion={setSelectedRegion}
+    />
+  )
 
-        <br />
-        {countrySelectors}
+  return (
+    <div className='IndexGraph'>
+      <div className='graphControls' style={{ marginLeft: margins.left - yScaleBarWidth}}>
+        <div className='controls'>
+          {countrySelectors}
+          {regionFilter}
+        </div>
+        <div>
+          <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
+          {index.lowerBetter ?
+
+            <span className='lowerBetter'>
+              {' '}Note: the lower value the country has, the better place it is in {index.key}.
+            </span>
+          : null}
+        </div>
       </div>
       <div>
         <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>

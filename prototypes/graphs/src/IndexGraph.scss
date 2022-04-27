@@ -1,7 +1,16 @@
-.Graph {
-
+.IndexGraph {
   svg {
     .graphPath {
     }
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .lowerBetter {
+    color: #D12800;
+    padding-left: 1em;
   }
 }
