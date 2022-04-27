@@ -9,7 +9,19 @@ export const comparisonColors = [
 ]
 
 export default function ComparisonCountrySelectors(props) {
-  const { selectedCountries, countries, setSelectedCountries, colored, maxSelectable, exclude, syncCountries } = props
+  const { selectedCountries,
+    countries,
+    setSelectedCountries,
+    colored,
+    maxSelectable,
+    exclude,
+    syncCountries,
+    hideSync,
+    colorByIndexValue,
+    indexData,
+    graphColumns,
+    colorScale
+  } = props
   const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
   useEffect(() => {
     setSelectedCountries(Array.from({length: maxSelectable}).map(() => ''))
@@ -27,10 +39,12 @@ export default function ComparisonCountrySelectors(props) {
   }
   return <div className='ComparisonCountrySelectors'>
     <div className='label'>Add Country To Compare
-      <div className={classNames('syncButton', { syncing })} onClick={sync}>
-        <img src={syncButton} alt='' />
-        Sync {selectedCountries.length === 1 ? 'Country' : 'Countries'} with all indexes
-      </div>
+      {hideSync ? null :
+        <div className={classNames('syncButton', { syncing })} onClick={sync}>
+          <img src={syncButton} alt='' />
+          Sync {selectedCountries.length === 1 ? 'Country' : 'Countries'} with all indexes
+        </div>
+      }
     </div>
     <div className='selects'>
       {range(numToShow).map(i => {
@@ -47,7 +61,24 @@ export default function ComparisonCountrySelectors(props) {
         if (hasSelection) {
           style.backgroundColor = color
           style.color = colored ? 'white' : null
+          if (colorByIndexValue) {
+            let colored = false
+            const countryDatum = indexData.find(d => d.ISO3 === value)
+            if (countryDatum) {
+              const firstColumnWithData = graphColumns.find(d => countryDatum[d] !== '')
+              if (firstColumnWithData) {
+                style.backgroundColor = colorScale(countryDatum[firstColumnWithData])
+                style.color = '#fff'
+                colored = true
+              }
+            }
+            if (!colored) {
+              style.backgroundColor = '#000'
+              style.color = '#fff'
+            }
+          }
         }
+
         const countriesSorted = [...countries].sort((a, b) => a.Country.localeCompare(b.Country))
         const placeholder = 'Add a country'.toUpperCase()
         return <span key={i}>

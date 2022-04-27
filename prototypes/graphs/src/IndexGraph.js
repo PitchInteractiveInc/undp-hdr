@@ -8,6 +8,8 @@ import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
 import hdiBackgroundRectData from './hdiBackgroundRectData';
+import ComparisonCountrySelectors from './ComparisonCountrySelectors';
+import getGraphColumnsForKey from './getGraphColumnsForKey';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -21,30 +23,22 @@ export const colors = [
   '#006eb5',
 ]
 export default function IndexGraph(props) {
-  const { data, metadata } = useHDRData()
+  const { data } = useHDRData()
   const { selectedMetricShortName } = useParams()
-  const [selectedCountries, setSelectedCountries] = useState([])
+  const [selectedCountries, setSelectedCountries] = useState(Array.from({length: 3}).map(() => ''))
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
   if (indicator.customGraph) {
     return indicator.customGraph
   }
-  console.log(data, metadata)
+  console.log(data)
 
-  if (!data || !metadata) {
+  if (!data) {
     return null
   }
 
-  const selectedMetric = metadata.find(d => d['Short name'] === selectedMetricShortName)
-  if (!selectedMetric) {
-    return null
-  }
-  const dataKey = selectedMetric['Short name']
+  const dataKey = indicator.key
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
-  const graphColumns = data.columns.filter(key => {
-    const keyRe = new RegExp(`^${dataKey.toLowerCase()}_[0-9]{4}`)
-    return key.toLowerCase().match(keyRe)
-  })
-  console.log(selectedMetric)
+  const graphColumns = getGraphColumnsForKey(data, dataKey)
   console.log(dataKey, data.columns)
   console.log(graphColumns)
 
@@ -55,7 +49,7 @@ export default function IndexGraph(props) {
   const svgHeight = height + margins.top + margins.bottom
 
   const saveSVG = (event) => {
-    exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
+    exportSVG(event.target.closest('svg'), `${indicator.name}.svg`)
   }
 
 
@@ -150,7 +144,7 @@ export default function IndexGraph(props) {
     }
     if (showLabel) {
       const x = xScale(data[0].year)
-      label = <text dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+      label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
     }
     return (
@@ -216,30 +210,25 @@ export default function IndexGraph(props) {
     )
   })
 
-  let countryDropdowns = <div>
-    {range(3).map(i => {
-    const value = selectedCountries[i] || ''
-    const setCountry = (iso) => {
-      const newSelectedCountries = [...selectedCountries]
-      newSelectedCountries[i] = iso
+  let countrySelectors = null
+  countrySelectors = <ComparisonCountrySelectors
+    selectedCountries={selectedCountries}
+    setSelectedCountries={setSelectedCountries}
+    maxSelectable={3}
+    countries={countries}
+    hideSync
+    colorByIndexValue={true}
+    indexData={data}
+    graphColumns={graphColumns}
+    colorScale={colorScale}
+  />
 
-      setSelectedCountries(newSelectedCountries)
-    }
-    return <select key={i} placeholder='Select a country' value={value} onChange={e => setCountry(e.target.value)}>
-        <option value=''>Select a country</option>
-        {countries.map(country => {
-          return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
-        })}
-      </select>
-
-    })}
-  </div>
   return (
     <div className='Graph'>
       <div>
 
         <br />
-        {countryDropdowns}
+        {countrySelectors}
       </div>
       <div>
         <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
@@ -247,9 +236,9 @@ export default function IndexGraph(props) {
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{backgroundRects}</g>
             <g>{yScaleTicks}</g>
+            <g>{selectedDots}</g>
             <g>{paths}</g>
             <g>{years}</g>
-            <g>{selectedDots}</g>
           </g>
         </svg>
       </div>

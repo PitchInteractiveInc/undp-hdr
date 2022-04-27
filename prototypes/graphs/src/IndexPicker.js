@@ -1,6 +1,7 @@
 import useHDRData from "./useHDRData"
 import { useParams, useNavigate, Outlet } from "react-router-dom"
 import indicators from './indicators'
+import './IndexPicker.scss'
 export default function IndexPicker(props) {
   const {data } = useHDRData()
 
@@ -17,7 +18,7 @@ export default function IndexPicker(props) {
   const countries = data.filter(d => d.ISO3 !== '')
   console.log(countries)
   return (
-    <div>
+    <div className='IndexPicker'>
       <div>
         <select value={params.selectedMetricShortName } onChange={e => setIndex(e.target.value)}>
           <option value="">Select an index</option>
