@@ -68,18 +68,18 @@ export default function IndexGraph(props) {
         const year = +col.substr(col.lastIndexOf('_') + 1)
         yearExtent[0] = Math.min(yearExtent[0], year)
         yearExtent[1] = Math.max(yearExtent[1], year)
+        yExtent[0] = Math.min(yExtent[0], value)
+        yExtent[1] = Math.max(yExtent[1], value)
       }
-      yExtent[0] = Math.min(yExtent[0], value)
-      yExtent[1] = Math.max(yExtent[1], value)
     })
   })
   const countries = data.filter(d => d.ISO3 !== '')
 
   console.log(yExtent)
-  if (selectedMetric['Full name'].includes('Index')) {
-    yExtent[0] = Math.min(0, yExtent[0])
-    yExtent[1] = Math.max(1, yExtent[1])
-  }
+  // if (selectedMetric['Full name'].includes('Index')) {
+  //   yExtent[0] = Math.min(0, yExtent[0])
+  //   yExtent[1] = Math.max(1, yExtent[1])
+  // }
 
   console.log(yExtent)
 
@@ -196,7 +196,7 @@ export default function IndexGraph(props) {
     return (
       <g key={color} transform={`translate(${-barWidth}, ${y})`}>
         <rect width={barWidth} height={barHeight} fill={color} />
-        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(1)}</text>
+        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(2)}</text>
         {lastLabel}
       </g>
     )
@@ -205,7 +205,7 @@ export default function IndexGraph(props) {
   const backgroundRects = hdiBackgroundRectData.map(rect => {
     return (
       <rect
-        key={rect.fill}
+        key={`${rect.fill}-${rect.opacity}`}
         fill={rect.fill}
         opacity={rect.opacity}
         x={0}
