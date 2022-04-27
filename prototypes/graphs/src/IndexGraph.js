@@ -15,6 +15,7 @@ import CountryTooltip from './CountryTooltip';
 import { Delaunay } from 'd3-delaunay';
 import { type } from '@testing-library/user-event/dist/type';
 import getYearOfColumn from './getYearOfColumn';
+import HDILabels from './HDILabels';
 
 export const colors = [
   '#d12816',
@@ -53,7 +54,7 @@ export default function IndexGraph(props) {
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
-  const width = 800
+  const width = 1300
   const height = 800
   const margins = { top: 20, right: 20, bottom: 20, left: 40 }
   const svgWidth = width + margins.left + margins.right
@@ -130,7 +131,9 @@ export default function IndexGraph(props) {
     data.forEach(datum => {
       const x = xScale(datum.colIndex)
       const y = yScale(datum.value)
-      delaunayData.push([x, y, {row: country, col: datum.col}])
+      if (countSelectedCountries === 0 || (selectedCountries.includes(country.ISO3) || isWorld))  {
+        delaunayData.push([x, y, {row: country, col: datum.col}])
+      }
     })
     if (countSelectedCountries !== 0 && !isWorld) {
       const isSelected = selectedCountries.includes(country.ISO3)
@@ -181,6 +184,7 @@ export default function IndexGraph(props) {
 
   const columnWidth = xScale(1)
 
+  const isHDIGraph = index.key === 'HDI'
 
   const years = graphColumns.map((col, yearIndex) => {
     const year = getYearOfColumn(col)
@@ -201,7 +205,7 @@ export default function IndexGraph(props) {
     if (yearIndex === graphColumns.length - 1) {
       yearRectWidth /= 2
     }
-    const yearRect = <rect
+    const yearRect = isHDIGraph ? null : <rect
       width={yearRectWidth}
       height={height}
       x={rectX}
@@ -238,7 +242,7 @@ export default function IndexGraph(props) {
     )
   })
 
-  const backgroundRects = hdiBackgroundRectData.map(rect => {
+  const backgroundRects = isHDIGraph ? hdiBackgroundRectData.map(rect => {
     return (
       <rect
         key={`${rect.fill}-${rect.opacity}`}
@@ -250,7 +254,7 @@ export default function IndexGraph(props) {
         height={height * (rect.y1 - rect.y0)}
       />
     )
-  })
+  }) : null
 
   const countrySelectors = <ComparisonCountrySelectors
     selectedCountries={selectedCountries}
@@ -307,7 +311,7 @@ export default function IndexGraph(props) {
           {countrySelectors}
           {regionFilter}
         </div>
-        <div>
+        <div style={{ display: 'flex', justifyContent: isHDIGraph ? 'space-between' : null}}>
           <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
           {index.lowerBetter ?
 
@@ -315,6 +319,7 @@ export default function IndexGraph(props) {
               {' '}Note: the lower value the country has, the better place it is in {index.key}.
             </span>
           : null}
+          {isHDIGraph ? <span>Background color - <HDILabels inline /></span> : null}
         </div>
       </div>
       <div>
@@ -327,7 +332,7 @@ export default function IndexGraph(props) {
             ref={svgRef}>
 
             <g transform={`translate(${margins.left}, ${margins.top})`}>
-              {/* <g>{backgroundRects}</g> */}
+              <g>{backgroundRects}</g>
               <g>{years}</g>
               <g>{yScaleTicks}</g>
               <g>{selectedDots}</g>

@@ -12,6 +12,7 @@ import format from './format';
 import getYearOfColumn from './getYearOfColumn';
 import { scaleSqrt } from 'd3-scale';
 import { arc } from 'd3-shape';
+import HDILabels from './HDILabels';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -303,20 +304,7 @@ export default function ScatterGraph(props) {
 
   let hdiLabels = null
   if (isHDIGraph) {
-    hdiLabels = (
-      <div className='hdiLabels'>
-        <div style={{ marginRight: '1em'}}>HDI classification (value):</div>
-        {hdiBackgroundRectData.map((backgroundRect, i) => {
-          return (
-
-            <div key={i} className='hdiValue' >
-              <div className='background' style={{ opacity: backgroundRect.opacity, backgroundColor: backgroundRect.fill }} />
-              {backgroundRect.label}
-            </div>
-          )
-        })}
-      </div>
-    )
+    hdiLabels = <HDILabels />
   }
 
   return (
