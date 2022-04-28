@@ -147,7 +147,7 @@ function IndexGraph(props) {
       })
       if (countSelectedCountries !== 0 && !isWorld) {
         const isSelected = selectedCountries.includes(country.ISO3)
-        opacity = isSelected ? 1 : 0.1
+        opacity = isSelected ? 1 : 0.3
         showLabel = isSelected
 
         if (isSelected) {
@@ -434,7 +434,7 @@ function IndexGraph(props) {
               <g>{years}</g>
               <g>{yScaleTicks}</g>
               <g>{selectedDots}</g>
-              <g style={{ opacity: hoveredMarks ? 0.3 : 1}}>{paths}</g>
+              <g style={{ opacity: hoveredMarks ? 0.5 : 1}}>{paths}</g>
               {hoveredMarks}
               {hoveredDots}
             </g>
