@@ -18,5 +18,5 @@ export default function format(value, key) {
       decimals = 0
       break
   }
-  return (+value).toLocaleString(undefined, { maximumFractionDigits: decimals })
+  return (+value).toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals })
 }

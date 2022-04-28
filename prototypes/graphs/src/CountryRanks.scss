@@ -1,0 +1,90 @@
+.CountryRanks {
+  text-align: left;
+  max-width: 1200px;
+  margin: 0 auto;
+
+
+  .controls {
+    display: flex;
+    margin: 1em 0;
+    > div + div {
+      margin-left: 2em;
+    }
+
+  }
+
+  .Table {
+    display: flex;
+    font-weight: bold;
+
+    font-size: 0.875em;
+
+    .countryNameAndFlag {
+      display: flex;
+      max-width: 20em;
+      align-items: center;
+      line-height: 1em;
+      .flag {
+        width: 52px;
+        height: 35px;
+        object-fit: contain;
+        padding-right: 1em;
+      }
+
+    }
+    table {
+      border-collapse: collapse;
+      height: fit-content;
+      + table {
+        margin-left: 2em;
+      }
+    }
+    thead {
+      border-bottom: 2px solid black;
+      th {
+        white-space: nowrap;
+        padding-right: 1em;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 0.5px solid #232E3E;
+        &.selected {
+          outline: #D12800 2px solid;
+        }
+        &.nextSelected {
+          border-bottom-color:transparent
+        }
+        td {
+          vertical-align: middle;
+          padding: 0 0.2em;
+          .changeArrow {
+            margin-right: 1em;
+          }
+          .negative .changeArrow {
+            transform: rotate(180deg) translateY(2px);
+          }
+          .positive .changeArrow {
+            transform: translateY(-2px);
+
+          }
+
+          .diffAndLink {
+            display: flex;
+            justify-content: space-between;
+            a {
+              text-decoration: none;
+              color: black;
+              display: flex;
+              align-items: center;
+              svg {
+                margin-left: 0.4em;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

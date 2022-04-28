@@ -1,10 +1,11 @@
-import './App.css';
+import './App.scss';
 import Graph from './IndexGraph'
 import PPAHDIGraph from './PPAHDIGraph'
 import MPIGraph from './MPIGraph'
 import Countries from './Countries'
 import Country from './Country'
 import IndexPicker from './IndexPicker'
+import CountryRanks from './CountryRanks'
 import {   HashRouter,
   Routes,
   Route, NavLink} from 'react-router-dom'
@@ -16,11 +17,11 @@ function App() {
           <NavLink to='/indicies'>Indicies Graphs</NavLink>{' '}
           {/* <NavLink to='/ppaHDI'>Planetary pressures adjusted HDI</NavLink>{' '}
           <NavLink to='/mpi'>MPI</NavLink>{' '} */}
-          <NavLink to='/countries'>Countries</NavLink>
+          <NavLink to='/countries'>Countries</NavLink>{' '}
+          <NavLink to='/ranks'>Country Ranks</NavLink>
         </div>
         <Routes>
-          <Route path='/mpi' element={<MPIGraph />} />
-          <Route path='/ppaHDI' element={<PPAHDIGraph />} />
+          <Route path='/ranks' element={<CountryRanks />} />
           <Route path='/indicies' element={<IndexPicker />}>
             <Route path=':selectedMetricShortName' element={<Graph />} />
           </Route>

@@ -1,4 +1,4 @@
-import './RegionFilter.scss'
+import Dropdown from './Dropdown'
 
 const regions = [
   { id: 'SA', name: 'South America' },
@@ -14,18 +14,12 @@ regions.sort((a, b) => a.name.localeCompare(b.name))
 export default function RegionFilter(props) {
   const { selectedRegion, setSelectedRegion } = props
   return (
-    <div className='RegionFilter'>
-      <div className='label'>
-        Filter by Region
-      </div>
-      <div className='select'>
-        <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)}>
-          <option value=''>All Regions</option>
-          {regions.map(d => {
-            return <option key={d.id} value={d.id}>{d.name}</option>
-          })}
-        </select>
-      </div>
-    </div>
+    <Dropdown
+      label='Filter By Region'
+      values={regions}
+      selected={selectedRegion}
+      setSelected={setSelectedRegion}
+      defaultLabel='All Regions'
+    />
   )
 }
