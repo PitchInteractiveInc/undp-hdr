@@ -6,6 +6,7 @@ import exportSVG from './exportSVG';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import { Delaunay } from 'd3-delaunay';
 import CountryTooltip from './CountryTooltip';
+import format from './format';
 export const mpiColors = {
   'Child mortality': '#1f5a95',
   'Nutrition': '#006eb5',
@@ -68,15 +69,12 @@ export default function MPIGraph(props) {
     let opacity = null
     const hasSelection = countSelectedCountries > 0
     const isSelected = hasSelection && selectedCountries.includes(country.ISO3)
-    if (hasSelection) {
-      const selectedCountry = selectedCountries.includes(country.ISO3)
-      opacity = selectedCountry ? opacity : 0.2
-    }
+
     if (hoveredPoint) {
       if (hoveredPoint.hover[2].row === country) {
         opacity = 1
       } else {
-        opacity = hasSelection ? (isSelected ? 1 : 0.2) : 0.2
+        opacity = 0.2
       }
     }
     const metricBars = metrics.map(metric => {
@@ -96,13 +94,22 @@ export default function MPIGraph(props) {
     })
     const x = countryIndex * rowWidth
     delaunayData.push([x, height / 2, {row: country, col: mpiKey}])
-
+    let label = null
+    if (isSelected) {
+      label = (
+        <g transform={`translate(${barWidth / 2}, ${runningY - 5})`}>
+          <circle cx={0} cy={0} r={2} fill={'black'} />
+          <text fontWeight='600' x={-2} y={-6} fill="black">{country.Country} {format(country[mpiKey])}</text>
+        </g>
+      )
+    }
     return <g opacity={opacity} key={country.ISO3} transform={`translate(${x}, 0)`}>
       {/* <rect x={0}
         width={width} height={barHeight}
         fill={'black'}
       /> */}
       {metricBars}
+      {label}
     </g>
   })
   const delaunay = Delaunay.from(delaunayData)
