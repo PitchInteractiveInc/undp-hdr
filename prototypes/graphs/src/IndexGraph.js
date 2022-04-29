@@ -1,9 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import useHDRData from "./useHDRData";
-import { range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
-import exportSVG from './exportSVG';
 import indicators from './indicators'
 import './IndexGraph.scss'
 import { useParams } from 'react-router-dom';
@@ -13,7 +11,6 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import RegionFilter from './RegionFilter';
 import CountryTooltip from './CountryTooltip';
 import { Delaunay } from 'd3-delaunay';
-import { type } from '@testing-library/user-event/dist/type';
 import getYearOfColumn from './getYearOfColumn';
 import HDILabels from './HDILabels';
 import format from './format';
@@ -67,7 +64,7 @@ function IndexGraph(props) {
   const svgHeight = height + margins.top + margins.bottom
 
 
-  const { yearExtent, yExtent } = useMemo(() => {
+  const { yExtent } = useMemo(() => {
     const yearExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
     const yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
     data.forEach(country => {

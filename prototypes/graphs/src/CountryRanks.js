@@ -1,5 +1,5 @@
 import useHDRData from "./useHDRData"
-import { useParams, useNavigate, Outlet, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import './CountryRanks.scss'
 import { useEffect, useState } from "react"
 import Dropdown from "./Dropdown"
@@ -70,6 +70,7 @@ function Table(props) {
     if (sort === 'rank') {
       return a[`hdi_rank_${columnYear}`] - b[`hdi_rank_${columnYear}`]
     }
+    return 0
   })
   const tables = []
   if (twoColumnLayout) {

@@ -4,7 +4,7 @@ import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
 import format from './format'
 import { mpiColors } from './MPIGraph'
-import {hdiIntroColorScale, hdiRanks} from './HDIIntroGraph'
+import {hdiIntroColorScale} from './HDIIntroGraph'
 
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
@@ -226,9 +226,7 @@ function HDIDifferenceTooltip(props) {
 export function HDIScatterTooltip(props) {
   const { allRows, point, data, index } = props
 
-  const country = point.hover[2].row
   const column = point.hover[2].col
-  const year = getYearOfColumn(column)
   const allColumns = getGraphColumnsForKey(data, index.key)
   const columnIndex = allColumns.indexOf(column)
   const yearKeys = []
@@ -284,8 +282,6 @@ export function HDIScatterTooltip(props) {
 function MPIBarTooltip(props) {
   const { point } = props
   const country = point.hover[2].row
-  const column = point.hover[2].col
-  const year = getYearOfColumn(column)
   const mpiMetrics = Object.keys(mpiColors)
   const svgHeight = 315
   const svgWidth = 373

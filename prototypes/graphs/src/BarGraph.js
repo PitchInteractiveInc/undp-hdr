@@ -1,7 +1,6 @@
 
 import { scaleLinear } from 'd3-scale'
 import './IndexGraph.scss'
-import useMPIData from './useMPIData';
 import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
@@ -9,25 +8,6 @@ import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
-function BarGraphWrapper(props) {
-  const { index } = props
-
-  if (index.key === 'MPI') {
-    return <MPIBarGraphWrapper {...props} />
-  }
-
-  return <BarGraph {...props} />
-}
-
-function MPIBarGraphWrapper(props) {
-  const { country } = props
-  const mpiData = useMPIData()
-  if (!mpiData) {
-    return null
-  }
-  const mpiCountry = mpiData.find(d => d.Country === country.Country)
-  return <BarGraph {...props} data={mpiData} country={mpiCountry} />
-}
 
 export default function BarGraph(props) {
   const { data, country, index, selectedCountries, graph } = props

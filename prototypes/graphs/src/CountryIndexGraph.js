@@ -8,8 +8,6 @@ import DifferenceGraph from './DifferenceGraph'
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import HDIIntroGraph from './HDIIntroGraph';
-import getYearOfColumn from './getYearOfColumn';
-import format from './format';
 import getCountryIndexDescription from './getCountryIndexDescription';
 const countSelectable = 3
 function GraphWrapper(props) {

@@ -1,7 +1,5 @@
 import './App.scss';
 import Graph from './IndexGraph'
-import PPAHDIGraph from './PPAHDIGraph'
-import MPIGraph from './MPIGraph'
 import Countries from './Countries'
 import Country from './Country'
 import IndexPicker from './IndexPicker'

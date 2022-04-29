@@ -12,7 +12,7 @@ export const hdiIntroColorScale = scaleThreshold()
 export const hdiRanks = ['Low', 'Medium', 'High', 'Very high']
 
 export default function HDIIntroGraph(props) {
-  const { graph, data, country, index } = props
+  const { data, country, index } = props
   const selectedCountry = country
   const columns = getGraphColumnsForKey(data, index.key)
   const lastColumn = columns[columns.length - 1]
