@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import useMPIData from "./useMPIData";
 import { range, max } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import exportSVG from './exportSVG';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
-
+import { Delaunay } from 'd3-delaunay';
+import CountryTooltip from './CountryTooltip';
 export const mpiColors = {
   'Child mortality': '#1f5a95',
   'Nutrition': '#006eb5',
@@ -23,7 +24,8 @@ export default function MPIGraph(props) {
   const { index } = props
   const mpiData = useMPIData()
   const [selectedCountries, setSelectedCountries] = useState([])
-
+  const svgRef = useRef()
+  const [hoveredPoint, setHoveredPoint] = useState(null)
   if (!mpiData) {
     return null
   }
@@ -58,14 +60,24 @@ export default function MPIGraph(props) {
     .domain([0, yMax])
     .range([0, height])
 
+  const delaunayData = []
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const totalBarHeight = yScale(country[mpiKey])
 
     let runningY = height
-    let opacity = 1
-    if (countSelectedCountries > 0) {
+    let opacity = null
+    const hasSelection = countSelectedCountries > 0
+    const isSelected = hasSelection && selectedCountries.includes(country.ISO3)
+    if (hasSelection) {
       const selectedCountry = selectedCountries.includes(country.ISO3)
-      opacity = selectedCountry ? 1 : 0.2
+      opacity = selectedCountry ? opacity : 0.2
+    }
+    if (hoveredPoint) {
+      if (hoveredPoint.hover[2].row === country) {
+        opacity = 1
+      } else {
+        opacity = hasSelection ? (isSelected ? 1 : 0.2) : 0.2
+      }
     }
     const metricBars = metrics.map(metric => {
       const y = runningY
@@ -83,6 +95,7 @@ export default function MPIGraph(props) {
       )
     })
     const x = countryIndex * rowWidth
+    delaunayData.push([x, height / 2, {row: country, col: mpiKey}])
 
     return <g opacity={opacity} key={country.ISO3} transform={`translate(${x}, 0)`}>
       {/* <rect x={0}
@@ -92,7 +105,7 @@ export default function MPIGraph(props) {
       {metricBars}
     </g>
   })
-  console.log(sortedCountries)
+  const delaunay = Delaunay.from(delaunayData)
   const yTickArray = yScale.ticks()
   const tickHeight = height / (yTickArray.length - 1)
   const yTicks = yTickArray.map((tick, tickIndex) => {
@@ -105,6 +118,37 @@ export default function MPIGraph(props) {
       <text x={-10} y={0} dy={4} textAnchor={'end'}>{tick}</text>
     </g>
   })
+
+
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    // console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
+      // console.log(closestPointIndex)
+      // console.log(delaunayData[closestPointIndex])
+      const x = delaunayData[closestPointIndex][0] + margins.left
+      const y = mouseY
+      const clientX = x + svgPosition.left
+      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY })
+    }
+  }
+  const mouseLeave = () => {
+    setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    const graph = {
+      type: 'index'
+    }
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={mpiData} allRows={[]} graph={graph} />
+    )
+  }
+
   return (
     <div className='IndexGraph'>
       <div>
@@ -121,7 +165,11 @@ export default function MPIGraph(props) {
       </div>
       <div>
         <div className='svgContainer'>
-          <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} >
+          <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+            onMouseMove={mouseMove}
+            onMouseEnter={mouseMove}
+            onMouseLeave={mouseLeave}
+            ref={svgRef}>
 
             <g transform={`translate(${margins.left}, ${margins.top})`}>
               <line x1={0} y1={0} x2={0} y2={height} stroke='black' strokeWidth='1' />
@@ -132,7 +180,7 @@ export default function MPIGraph(props) {
               <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height})`}>
                 <text id="MPI_rank_from_low_to_high" data-name="MPI rank from low to high" ><tspan x="0" y="13">MPI rank from low to high</tspan></text>
                 <g id="Group_3166" data-name="Group 3166" transform="translate(160 0)">
-                  <line id="Line_11490" data-name="Line 11490" x2="18" transform="translate(0 8)" fill="none" stroke="#000" stroke-width="1"/>
+                  <line id="Line_11490" data-name="Line 11490" x2="18" transform="translate(0 8)" fill="none" stroke="#000" strokeWidth="1"/>
                   <path id="Polygon_1004" data-name="Polygon 1004" d="M5,0l5,8H0Z" transform="translate(18 3) rotate(90)"/>
                 </g>
               </g>
@@ -140,6 +188,7 @@ export default function MPIGraph(props) {
             </g>
 
           </svg>
+          {tooltip}
         </div>
       </div>
     </div>
