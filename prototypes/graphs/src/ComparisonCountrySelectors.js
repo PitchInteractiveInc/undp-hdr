@@ -63,13 +63,15 @@ export default function ComparisonCountrySelectors(props) {
           style.color = colored ? 'white' : null
           if (colorByIndexValue) {
             let colored = false
-            const countryDatum = indexData.find(d => d.ISO3 === value)
-            if (countryDatum) {
-              const firstColumnWithData = graphColumns.find(d => countryDatum[d] !== '')
-              if (firstColumnWithData) {
-                style.backgroundColor = colorScale(countryDatum[firstColumnWithData])
-                style.color = '#fff'
-                colored = true
+            if (indexData) {
+              const countryDatum = indexData.find(d => d.ISO3 === value)
+              if (countryDatum) {
+                const firstColumnWithData = graphColumns.find(d => countryDatum[d] !== '')
+                if (firstColumnWithData) {
+                  style.backgroundColor = colorScale(countryDatum[firstColumnWithData])
+                  style.color = '#fff'
+                  colored = true
+                }
               }
             }
             if (!colored) {

@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, cloneElement } from 'react'
 import useHDRData from "./useHDRData";
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
@@ -31,7 +31,7 @@ export default function IndexGraphWrapper(props) {
   const { selectedMetricShortName } = useParams()
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
   if (indicator.customGraph) {
-    return indicator.customGraph
+    return cloneElement(indicator.customGraph, {index: indicator})
   }
   if (!data) {
     return null
