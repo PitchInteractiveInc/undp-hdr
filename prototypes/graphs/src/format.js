@@ -20,10 +20,6 @@ export default function format(value, key) {
       break
 
     default:
-      if (!warnings[key]) {
-        warnings[key] = true
-        console.warn('unknown format key', key)
-      }
       break
   }
   return (+value).toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals })

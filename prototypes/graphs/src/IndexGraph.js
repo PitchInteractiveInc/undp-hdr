@@ -107,7 +107,9 @@ function IndexGraph(props) {
     const delaunayData = []
     const paths = data.filter(d => d.ISO3 !== '' || d.Country === 'World').map(country => {
       const isWorld = country.Country === 'World'
-      if (!isWorld && selectedRegion !== '') {
+      const isSelected = selectedCountries.includes(country.ISO3)
+
+      if (!isWorld && selectedRegion !== '' && !isSelected) {
         if (country.region !== selectedRegion) {
           return null
         }
@@ -142,7 +144,6 @@ function IndexGraph(props) {
 
       })
       if (countSelectedCountries !== 0 && !isWorld) {
-        const isSelected = selectedCountries.includes(country.ISO3)
         showLabel = isSelected
 
         if (isSelected) {
