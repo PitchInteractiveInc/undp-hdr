@@ -100,12 +100,10 @@ export default function ScatterGraph(props) {
     .x(d => xScale(d.index + 0.5))
     .y(d => yScale(d.value))
 
-  let additionalContent = null
   const delaunayData = []
   const lineData = rowsToPlot.map(row => {
     const dots = []
     const stroke = row.color
-    let hoverLabel = null
     let hoverLine = null
     const rowData = graphColumns.map((col, colIndex) => {
       const year = getYearOfColumn(col)
@@ -121,11 +119,7 @@ export default function ScatterGraph(props) {
       if (hoveredPoint) {
         if (/*hoveredPoint.hover[2].row === row.row &&*/ hoveredPoint.hover[2].col === col) {
           opacity = 1
-          hoverLabel = (
-            <text x={dotX} fontWeight='600' y={dotY + 6} dy='1em' textAnchor='middle' fill={stroke}>
-              {format(value)}
-            </text>
-          )
+
           if (hoveredPoint.hover[2].row === row.row) {
             hoverLine = (
               <line
@@ -133,55 +127,6 @@ export default function ScatterGraph(props) {
                 stroke='#232E3E'
                 strokeDasharray='4,4'
               />
-            )
-          }
-          if (hoveredPoint.hover[2].row === row.row && index.key === 'GDI') {
-            const maleValue = row.row[`hdi_m_${year}`]
-            const femaleValue = row.row[`hdi_f_${year}`]
-            const max = Math.max(maleValue, femaleValue)
-            const radiusScale = scaleSqrt()
-              .domain([0, max])
-              .range([0, 20])
-            const arcGen = arc()
-            const maleRadius = radiusScale(maleValue)
-            const femaleRadius = radiusScale(femaleValue)
-            additionalContent = (
-              <g transform={`translate(${dotX}, ${dotY})`} fontSize='0.875em' fill={stroke}>
-                <path d={arcGen({
-                  innerRadius: 0,
-                  outerRadius: maleRadius,
-                  startAngle: Math.PI,
-                  endAngle: 2 * Math.PI,
-                  })}
-                  fill={stroke}
-                  opacity='0.6'
-                  transform={`translate(0, ${-maleRadius + 6})`}
-                />
-                <path d={arcGen({
-                  innerRadius: 0,
-                  outerRadius: femaleRadius,
-                  startAngle: 0,
-                  endAngle: Math.PI,
-                  })}
-                  fill={stroke}
-                  opacity='0.4'
-                  transform={`translate(0, ${-femaleRadius + 6})`}
-
-                />
-                <g
-                  transform={`translate(-5, ${-maleRadius })`}
-                  textAnchor='end'>
-
-                  <text dy='-2rem'>Male HDI</text>
-                  <text dy='-1rem'>{format(maleValue)}</text>
-                </g>
-                <g
-                  transform={`translate(5, ${-femaleRadius})`}
-                >
-                  <text dy='-2rem'>Female HDI</text>
-                  <text dy='-1rem'>{format(femaleValue)}</text>
-                </g>
-              </g>
             )
           }
 
@@ -213,8 +158,6 @@ export default function ScatterGraph(props) {
         {hoverLine}
         <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
         <g>{dots}</g>
-        {/* {hoverLabel} */}
-        {/* {additionalContent} */}
       </g>
     )
   })
