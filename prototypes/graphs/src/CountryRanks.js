@@ -1,5 +1,5 @@
 import useHDRData from "./useHDRData"
-import { Link } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import './CountryRanks.scss'
 import { useEffect, useState } from "react"
 import Dropdown from "./Dropdown"
@@ -17,7 +17,7 @@ const tableColumns = [
   { label: 'Country', value: (country) => (
     <div className='countryNameAndFlag'>
       <img className='flag' src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`flag`} />
-      {country.Country}
+      <span style={{ fontWeight: 'normal' }}>{country.Country}</span>
    </div>)
   },
   { label: 'HDI Value',
@@ -43,9 +43,9 @@ const tableColumns = [
 
             {format(diff, 'HDI') }
           </span>
-          <Link to={`/countries/${country.ISO3}`}>Visit{' '}
+          <Link to={`/countries/${country.ISO3}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="8.714" height="12.119" viewBox="0 0 8.714 12.119">
-              <path id="Path_32762" data-name="Path 32762" d="M14781.4,13958l5.284,6.5,5.284-6.5" transform="translate(-13957.369 14792.741) rotate(-90)" fill="none" stroke="#eb3828" stroke-width="2"/>
+              <path id="Path_32762" data-name="Path 32762" d="M14781.4,13958l5.284,6.5,5.284-6.5" transform="translate(-13957.369 14792.741) rotate(-90)" fill="none" stroke="#eb3828" strokeWidth="2"/>
             </svg>
           </Link>
         </div>
@@ -90,6 +90,11 @@ function Table(props) {
     }
   }, [selectedCountry])
 
+  const navigate = useNavigate()
+  const clickCountry = (iso3) => () => {
+    navigate(`/countries/${iso3}`, { replace: true })
+  }
+
   return (
     <div className='Table'>
       {tables.map((tableData, i) => {
@@ -105,7 +110,11 @@ function Table(props) {
                 const nextSelected = tableData[i + 1] ? tableData[i + 1].ISO3 === selectedCountry : false
                 const countryClassName = `rankRow${country.ISO3}`
                 return (
-                  <tr key={country.ISO3} className={classNames(countryClassName, { selected: country.ISO3 === selectedCountry, nextSelected})}>
+                  <tr
+                    key={country.ISO3}
+                    className={classNames(countryClassName, { selected: country.ISO3 === selectedCountry, nextSelected})}
+                    onClick={clickCountry(country.ISO3)}
+                  >
                     {tableColumns.map(({ value }, i) => {
                       return <td key={i}>{value(country, columnYear)}</td>
                     })}
@@ -137,7 +146,7 @@ export default function CountryRanks(props) {
   return (
     <div className='CountryRanks'>
       <h2>{year} Global Human Development Index</h2>
-      <div className='description'>Explore human development data from around the world by clicking the visit button of the country below. The list of countries shows only the United Nations member states with the available HDI values</div>
+      <div className='description'>Explore human development data from around the world. The list of countries shows only the United Nations member states with the available HDI values</div>
       <div className='controls'>
         <Dropdown
           label='Sort List'

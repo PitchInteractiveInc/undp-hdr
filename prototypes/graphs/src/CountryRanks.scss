@@ -50,6 +50,10 @@
     tbody {
       tr {
         border-bottom: 0.5px solid #232E3E;
+        cursor: pointer;
+        &:hover {
+          background-color: #F5F5F5;
+        }
         &.selected {
           outline: #D12800 2px solid;
         }
