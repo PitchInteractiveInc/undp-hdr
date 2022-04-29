@@ -137,7 +137,6 @@ function IndexGraph(props) {
       const stroke = isWorld ? 'black' : colorScale(data[0].value)
       const strokeWidth = isWorld ? 2 : 1
       let label = null
-      let opacity = 1
       let showLabel = null
       data.forEach(datum => {
         const x = xScale(datum.colIndex)
@@ -147,7 +146,6 @@ function IndexGraph(props) {
       })
       if (countSelectedCountries !== 0 && !isWorld) {
         const isSelected = selectedCountries.includes(country.ISO3)
-        opacity = isSelected ? 1 : 0.3
         showLabel = isSelected
 
         if (isSelected) {
@@ -159,7 +157,6 @@ function IndexGraph(props) {
                 cy={yScale(datum.value)}
                 r={3}
                 fill={stroke}
-                opacity={opacity}
               />
             })}
           </g>)
@@ -167,7 +164,6 @@ function IndexGraph(props) {
       }
       if (isWorld) {
         showLabel = true
-        opacity = 1
       }
       if (showLabel) {
         const x = xScale(data[0].colIndex)
@@ -177,7 +173,6 @@ function IndexGraph(props) {
       return (
         <g key={country.ISO3}>
           <path
-            opacity={opacity}
             strokeWidth={strokeWidth}
             className='graphPath'
             d={lineGen(data)}
@@ -196,90 +191,98 @@ function IndexGraph(props) {
 
   let hoveredMarks = null
   let hoveredDots = []
+  const marksArray = [
+    ...selectedCountries.filter(d => d !== '').map(iso => data.find(d => d.ISO3 === iso)),
+    data.find(d => d.Country === 'World')
+  ]
+  let hoveredCol = null
+  let hoveredColIndex = null
   if (hoveredPoint) {
     const {col,colIndex, row} = hoveredPoint.hover[2]
-    const hoveredCol = col
-    const x = xScale(colIndex)
-    const marksFor = Array.from(new Set([
-      row,
-      ...selectedCountries.filter(d => d !== '').map(iso => data.find(d => d.ISO3 === iso)),
-      data.find(d => d.Country === 'World')
-    ]))
-    console.log(marksFor)
+    hoveredCol = col
+    hoveredColIndex = colIndex
+    marksArray.unshift(row)
+  }
+  const marksFor = Array.from(new Set(marksArray))
+  hoveredMarks = marksFor.map(country => {
+    const isWorld = country.Country === 'World'
 
-    hoveredMarks = marksFor.map(country => {
-      const isWorld = country.Country === 'World'
-
-      const data = graphColumns.map((col, colIndex) => {
-        if (country[col] === '') {
-          return null
-        }
-        const value = +country[col]
-        const datum = {
-          value,
-          year: getYearOfColumn(col),
-          col,
-          colIndex,
-        }
-        return datum
-      }).filter(d => d)
-
-
-      const stroke = isWorld ? 'black' : colorScale(data[0].value)
-      const strokeWidth = isWorld ? 2 : 1
-      let opacity = 1
-      hoveredDots.push(<g key={`hover-${country.Country}`}>
-        {data.map(datum => {
-          if (isWorld && datum.col !== hoveredCol) {
-            return null
-          }
-          return <circle
-            key={datum.year}
-            cx={xScale(datum.colIndex)}
-            cy={yScale(datum.value)}
-            r={3}
-            fill={stroke}
-            opacity={opacity}
-          />
-        })}
-      </g>)
-
-
-      const lineGen = line()
-        .x(d => xScale(d.colIndex))
-        .y(d => yScale(d.value))
-      if (data.length === 0) {
+    const data = graphColumns.map((col, colIndex) => {
+      if (country[col] === '') {
         return null
       }
-      const labelX = xScale(data[0].colIndex)
-      const label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
+      const value = +country[col]
+      const datum = {
+        value,
+        year: getYearOfColumn(col),
+        col,
+        colIndex,
+      }
+      return datum
+    }).filter(d => d)
+    if (!data[0]) {
+      return null
+    }
+
+    const stroke = isWorld ? 'black' : colorScale(data[0].value)
+    const strokeWidth = 2
+    let opacity = 1
+    hoveredDots.push(<g key={`hover-${country.Country}`}>
+      {data.map(datum => {
+        if (isWorld && (hoveredCol === null || datum.col !== hoveredCol)) {
+          return null
+        }
+        return <circle
+          key={datum.year}
+          cx={xScale(datum.colIndex)}
+          cy={yScale(datum.value)}
+          r={3}
+          fill={stroke}
+          opacity={opacity}
+        />
+      })}
+    </g>)
+
+
+    const lineGen = line()
+      .x(d => xScale(d.colIndex))
+      .y(d => yScale(d.value))
+    if (data.length === 0) {
+      return null
+    }
+    const labelX = xScale(data[0].colIndex)
+    const label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
+    const showValueLabels = hoveredCol !== null
+    let valueLabel = null
+    if (showValueLabels) {
       const value = country[hoveredCol]
-      const valueLabelX = xScale(colIndex)
-      const valueLabel = <text textAnchor='middle'
+      const valueLabelX = xScale(hoveredColIndex)
+      valueLabel = <text textAnchor='middle'
         fill={stroke}
         fontWeight='bold'
         fontSize='1.5em' dy='1.2em'
         x={valueLabelX} y={yScale(value)}>
           {format(value, index.key)}
         </text>
-      return (
-        <g key={country.Country}>
-          <path
-            opacity={opacity}
-            strokeWidth={strokeWidth}
-            className='graphPath'
-            d={lineGen(data)}
-            fill="none"
-            stroke={stroke}
-            strokeDasharray='1,1'
-            style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
-          />
-          {label}
-          {valueLabel}
-        </g>
-      )
-    })
-  }
+    }
+    let strokeDasharray = isWorld ? '1,1' : null
+    return (
+      <g key={country.Country}>
+        <path
+          opacity={opacity}
+          strokeWidth={strokeWidth}
+          className='graphPath'
+          d={lineGen(data)}
+          fill="none"
+          stroke={stroke}
+          strokeDasharray={strokeDasharray}
+          style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
+        />
+        {label}
+        {valueLabel}
+      </g>
+    )
+  })
   const columnWidth = xScale(1)
 
   const isHDIGraph = index.key === 'HDI'
@@ -434,7 +437,7 @@ function IndexGraph(props) {
               <g>{years}</g>
               <g>{yScaleTicks}</g>
               <g>{selectedDots}</g>
-              <g style={{ opacity: hoveredMarks ? 0.5 : 1}}>{paths}</g>
+              <g style={{ opacity: 0.9}}>{paths}</g>
               {hoveredMarks}
               {hoveredDots}
             </g>
