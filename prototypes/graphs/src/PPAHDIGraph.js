@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import useHDRData from "./useHDRData";
-import { range } from 'd3-array'
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import exportSVG from './exportSVG';
 import downArrow from './images/downArrow.svg'
-
+import { Delaunay } from 'd3-delaunay';
+import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import {colors} from './IndexGraph'
+import { extent } from 'd3-array';
 
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
@@ -26,103 +27,89 @@ export default function Graph(props) {
   const hdiKey = 'hdi_2019'
 
 
-  const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '')
+  const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '' && d[ppaKey] !== '')
 
   const sortedCountries = [...countries]
-  sortedCountries.sort((a, b) => b[ppaKey] - a[ppaKey])
+  sortedCountries.sort((a, b) => a[ppaKey] - b[ppaKey])
 
-  const rowHeight = 7
-  const barHeight = 5
   const width = 800
-  const height = countries.length * rowHeight
+  const height = 800
+  const rowWidth = width / sortedCountries.length
+  const barWidth = rowWidth - 2
   const margins = { top: 20, right: 20, bottom: 20, left: 40 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
-  const xScale = scaleLinear()
-    .domain([0, 1])
-    .range([0, width])
+  const phdiExtent = extent(sortedCountries, d => d[ppaKey])
+  const hdiExtent = extent(sortedCountries, d => d[hdiKey])
+  const yScale = scaleLinear()
+    .domain([Math.min(phdiExtent[0], hdiExtent[0]), Math.max(phdiExtent[1], hdiExtent[1])])
+    .range([0, height])
 
-  let countryDropdowns = <div>
-    {range(3).map(i => {
-    const value = selectedCountries[i] || ''
-    const setCountry = (iso) => {
-      const newSelectedCountries = [...selectedCountries]
-      newSelectedCountries[i] = iso
-
-      setSelectedCountries(newSelectedCountries)
-    }
-    return <select key={i} placeholder='Select a country' value={value} onChange={e => setCountry(e.target.value)}>
-        <option value=''>Select a country</option>
-        {countries.map(country => {
-          return <option key={country.ISO3} value={country.ISO3}>{country.Country}</option>
-        })}
-      </select>
-
-    })}
-  </div>
+  let countryDropdowns = <ComparisonCountrySelectors
+    selectedCountries={selectedCountries}
+    setSelectedCountries={setSelectedCountries}
+    countries={countries}
+    hideSync={true}
+    maxSelectable={3}
+    colorByIndexValue={true}
+  />
 
   const colorScale = scaleQuantize()
-    .domain([0, 1])
+    .domain(phdiExtent)
     .range(colors)
 
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const hdiValue = +country[hdiKey]
     const phdiValue = +country[ppaKey]
-
-    const hdiBarWidth = xScale(hdiValue)
-    const phdiBarWidth = xScale(phdiValue)
-    if (hdiBarWidth === 0) {
-      console.log(country)
-    }
-    const y = countryIndex * rowHeight
+    const phdiBarHeight = yScale(phdiValue)
+    const hdiBarHeight = yScale(hdiValue) - phdiBarHeight
+    const x = countryIndex * rowWidth
     let isSelected = selectedCountries.includes(country.ISO3)
     let opacity = 1
     if (countSelectedCountries !== 0) {
       opacity = isSelected ? 1 : 0.2
     }
     return (
-      <g key={country.ISO3} transform={`translate(0, ${y})`} opacity={opacity}>
-        <rect x={0} y={0} width={hdiBarWidth} height={barHeight} fill='black' />
-        <rect x={0} y={0} width={phdiBarWidth} height={barHeight} fill={colorScale(phdiValue)} />
+      <g key={country.ISO3} transform={`translate(${x}, 0)`} opacity={opacity}>
+        <rect x={0} y={height - phdiBarHeight - hdiBarHeight} height={hdiBarHeight} width={barWidth} fill='black' />
+        <rect x={0} y={height - phdiBarHeight} height={phdiBarHeight} width={barWidth} fill={colorScale(phdiValue)} />
       </g>
     )
 
   })
 
+  const yTickArray = yScale.ticks()
+  const tickHeight = height / (yTickArray.length - 1)
+  const yTicks = yTickArray.map((tick, tickIndex) => {
+    const y = height - yScale(tick)
 
-  const xScaleTicks = colors.map((color, index) => {
-    const percentage = index / colors.length
-    const x = (index) / colors.length * width
-    const barWidth = width / colors.length
-    const barHeight = 10
-    const value = percentage // * (yExtent[1] - yExtent[0]) + yExtent[0]
-    let lastLabel = null
-    if (index === colors.length - 1) {
-      let nextValue = (index + 1) / colors.length  //* (yExtent[1] - yExtent[0]) + yExtent[0]
-      lastLabel = <text textAnchor='middle' dy='1em' y={barHeight} x={barWidth}>{nextValue.toFixed(1)}</text>
-    }
-    return (
-      <g key={color} transform={`translate(${x}, ${height})`}>
-        {index % 2 === 1 ? <rect fill='#F7F7F7' height={height} y={-height} width={barWidth} /> : null }
-        <rect width={barWidth} height={barHeight} fill={color} />
-        <text textAnchor='middle' y={barHeight} dy='1em'>{value.toFixed(1)}</text>
-        {lastLabel}
-      </g>
-    )
+    return <g key={tick} transform={`translate(0, ${y})`}>
+      {tickIndex % 2 !== 0 ?
+        <rect width={width} height={tickHeight} fill={'#F7F7F7'} />
+      : null }
+      <text x={-10} y={0} dy={4} textAnchor={'end'}>{tick}</text>
+    </g>
   })
 
-
+  console.log(sortedCountries)
   return (
     <div className='Graph'>
       {countryDropdowns}
       <div>
-        <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight} onContextMenu={saveSVG}>
+        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
           <g transform={`translate(${margins.left}, ${margins.top})`}>
-            <g>{xScaleTicks}</g>
+            <g>{yTicks}</g>
             <g>{countryBars}</g>
-            <text transform={`translate(-16, 0) rotate(90)`}>PHDI rank from high to low</text>
-            <image xlinkHref={downArrow} width={23} height={10} transform={`translate(-8, 120) rotate(90)`} />
+
+
+            <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height})`}>
+              <text id="MPI_rank_from_low_to_high" ><tspan x="0" y="13">PHDI rank from low to high</tspan></text>
+              <g id="Group_3166" data-name="Group 3166" transform="translate(170 0)">
+                <line id="Line_11490" data-name="Line 11490" x2="18" transform="translate(0 8)" fill="none" stroke="#000" strokeWidth="1"/>
+                <path id="Polygon_1004" data-name="Polygon 1004" d="M5,0l5,8H0Z" transform="translate(18 3) rotate(90)"/>
+              </g>
+            </g>
           </g>
         </svg>
       </div>
