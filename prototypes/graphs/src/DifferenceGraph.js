@@ -138,8 +138,8 @@ export default function DifferenceGraph(props) {
         previousYearMarks = (
           <g>
             <rect
-              x={-markWidth / 2}
-              width={markWidth}
+              x={-markWidth / 2 + 1}
+              width={markWidth - 2}
               y={previousIsMore ? prevY - markHeight - (ihdiGraph ? 1 : 0): prevY + (ihdiGraph ? 1 : 0) }
               height={markHeight}
               stroke={stroke}
@@ -148,8 +148,8 @@ export default function DifferenceGraph(props) {
             />
             <rect
               y={Math.min(y, prevY)}
-              x={-markWidth / 2}
-              width={markWidth}
+              x={-markWidth / 2 + 1}
+              width={markWidth - 2}
               height={previousHeight}
               stroke={differenceColor}
               fill={differenceColor}
@@ -195,8 +195,8 @@ export default function DifferenceGraph(props) {
         <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
           {hoverLine}
           <rect
-            x={-markWidth / 2}
-            width={markWidth}
+            x={-markWidth / 2 + 1}
+            width={markWidth - 2}
             stroke={stroke}
             y={previousIsMore ? y : y - markHeight}
             height={markHeight}
