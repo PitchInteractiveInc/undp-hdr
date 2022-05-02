@@ -170,6 +170,8 @@ export default function ScatterGraph(props) {
     const showYearLines = isHDIGraph
     const showYearRects = !isHDIGraph
     const everyOtherLabel = graphColumns.length > 20
+    const nextYearConsecutive = (columnIndex < graphColumns.length - 1) && (+getYearOfColumn(graphColumns[columnIndex + 1]) === year + 1)
+    const yearRectWidth = nextYearConsecutive ? xScale(1) : xScale(1) * 0.8
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {showYearLines ?
@@ -177,10 +179,10 @@ export default function ScatterGraph(props) {
           : null }
         {showYearRects ?
           <rect
-            width={xScale(1)}
-            x={-xScale(1) / 2}
+            width={yearRectWidth}
+            x={-yearRectWidth / 2}
             height={height}
-            fill={columnIndex % 2 === 0 ? '#F6F7F7' : 'transparent'}
+            fill={(columnIndex % 2 === 1 || !nextYearConsecutive) ? (nextYearConsecutive ? '#F6F7F7' : '#FCFCFC') : '#FCFCFC'}
           />
           : null }
         {!everyOtherLabel || columnIndex % 2 === 0  ?

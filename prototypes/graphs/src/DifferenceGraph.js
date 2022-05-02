@@ -232,7 +232,7 @@ export default function DifferenceGraph(props) {
             width={xScale(1)}
             x={-xScale(1) / 2}
             height={height}
-            fill={columnIndex % 2 === 0 ? '#F6F7F7' : 'transparent'}
+            fill={columnIndex % 2 === 0 ? '#F6F7F7' : '#fcfcfc'}
           />
           : null }
         {!everyOtherLabel || columnIndex % 2 === 0  ?
