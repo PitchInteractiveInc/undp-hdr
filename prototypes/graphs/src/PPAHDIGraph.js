@@ -40,8 +40,8 @@ export default function Graph(props) {
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
-  const phdiExtent = extent(sortedCountries, d => d[ppaKey])
-  const hdiExtent = extent(sortedCountries, d => d[hdiKey])
+  const phdiExtent = extent(sortedCountries, d => +d[ppaKey])
+  const hdiExtent = extent(sortedCountries, d => +d[hdiKey])
   const yScale = scaleLinear()
     .domain([Math.min(phdiExtent[0], hdiExtent[0]), Math.max(phdiExtent[1], hdiExtent[1])])
     .range([0, height])
@@ -55,9 +55,10 @@ export default function Graph(props) {
     colorByIndexValue={true}
   />
 
-  const colorScale = scaleQuantize()
-    .domain(phdiExtent)
-    .range(colors)
+  const phdiMidpoint = (phdiExtent[0] + phdiExtent[1]) / 2
+  const colorScale = scaleLinear()
+    .domain([phdiExtent[0], phdiMidpoint, phdiExtent[1]])
+    .range(['#ffbcb7', '#fef17e', '#b8ecb6'])
 
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const hdiValue = +country[hdiKey]
