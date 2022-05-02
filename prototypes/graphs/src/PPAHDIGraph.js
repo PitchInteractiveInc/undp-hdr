@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import useHDRData from "./useHDRData";
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import exportSVG from './exportSVG';
@@ -7,13 +7,47 @@ import { Delaunay } from 'd3-delaunay';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import {colors} from './IndexGraph'
 import { extent } from 'd3-array';
+import CountryTooltip from './CountryTooltip';
+import format from './format';
+
+function TextWithBackground(props) {
+  const textRef = useRef()
+  const [textSize, setTextSize] = useState(null)
+  useEffect(() => {
+    if (textRef.current) {
+      const { width, height } = textRef.current.getBBox()
+      if (textSize === null) {
+        setTextSize({ width, height })
+      } else if (textSize.width !== width || textSize.height !== height) {
+        setTextSize({ width, height })
+      }
+    }
+  })
+  let rect = null
+  if (textSize) {
+    rect = <rect
+      x={-textSize.width}
+      y={-textSize.height}
+      width={textSize.width}
+      height={textSize.height}
+      fill={'#fff'}
+      opacity='0.9'
+    />
+  }
+  return <g>
+    {rect}
+    <text {...props} ref={textRef}>{props.children}</text>
+  </g>
+}
 
 export default function Graph(props) {
   const { data, metadata } = useHDRData()
-  console.log(data, metadata)
+  const { index } = props
+
   const [selectedCountries, setSelectedCountries] = useState([])
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
-
+  const svgRef = useRef()
+  const [hoveredPoint, setHoveredPoint] = useState(null)
   if (!data || !metadata) {
     return null
   }
@@ -59,6 +93,7 @@ export default function Graph(props) {
   const colorScale = scaleLinear()
     .domain([phdiExtent[0], phdiMidpoint, phdiExtent[1]])
     .range(['#ffbcb7', '#fef17e', '#b8ecb6'])
+  const delaunayData = []
 
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const hdiValue = +country[hdiKey]
@@ -68,17 +103,26 @@ export default function Graph(props) {
     const x = countryIndex * rowWidth
     let isSelected = selectedCountries.includes(country.ISO3)
     let opacity = 1
-    if (countSelectedCountries !== 0) {
-      opacity = isSelected ? 1 : 0.2
+    if (hoveredPoint) {
+      opacity = hoveredPoint.hover[2].row === country ? 1 : 0.2
     }
+    delaunayData.push([x, height / 2, { row: country, col: ppaKey}])
+    let label = isSelected ? (
+      <g transform={`translate(${barWidth / 2}, ${height - phdiBarHeight - hdiBarHeight - 5})`}>
+        <TextWithBackground fontWeight='600' x={4} y={-6} textAnchor='end'>{country.Country} {format(phdiValue)}</TextWithBackground>
+        <circle cx={0} cy={0} r={2} fill={'black'} />
+      </g>
+    ) : null
     return (
       <g key={country.ISO3} transform={`translate(${x}, 0)`} opacity={opacity}>
         <rect x={0} y={height - phdiBarHeight - hdiBarHeight} height={hdiBarHeight} width={barWidth} fill='black' />
         <rect x={0} y={height - phdiBarHeight} height={phdiBarHeight} width={barWidth} fill={colorScale(phdiValue)} />
+        {label}
       </g>
     )
 
   })
+  const delaunay = Delaunay.from(delaunayData)
 
   const yTickArray = yScale.ticks()
   const tickHeight = height / (yTickArray.length - 1)
@@ -93,7 +137,35 @@ export default function Graph(props) {
     </g>
   })
 
-  console.log(sortedCountries)
+
+  const mouseMove = (event) => {
+    const svgPosition = svgRef.current.getBoundingClientRect()
+    const mouseX = event.clientX - svgPosition.left
+    const mouseY = event.clientY - svgPosition.top
+    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    // console.log(mouseX, mouseY)
+    if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
+      // console.log(closestPointIndex)
+      // console.log(delaunayData[closestPointIndex])
+      const x = delaunayData[closestPointIndex][0] + margins.left
+      const y = mouseY
+      const clientX = x + svgPosition.left
+      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY })
+    }
+  }
+  const mouseLeave = () => {
+    setHoveredPoint(null)
+  }
+
+  let tooltip = null
+  if (hoveredPoint) {
+    const graph = {
+      type: 'index'
+    }
+    tooltip = (
+      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={[]} graph={graph} />
+    )
+  }
   return (
     <div className='Graph' style={{ width: width + margins.left + margins.right}}>
       {countryDropdowns}
@@ -120,8 +192,12 @@ export default function Graph(props) {
         </svg>
 
       </div>
-      <div>
-        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}>
+      <div className='svgContainer'>
+        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+          onMouseMove={mouseMove}
+          onMouseEnter={mouseMove}
+          onMouseLeave={mouseLeave}
+          ref={svgRef}>
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{yTicks}</g>
             <g>{countryBars}</g>
@@ -136,6 +212,7 @@ export default function Graph(props) {
             </g>
           </g>
         </svg>
+        {tooltip}
       </div>
     </div>
   )
