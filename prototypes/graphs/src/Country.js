@@ -52,7 +52,7 @@ export default function Country(props) {
         <span className='downloadLabel'>Download</span>
         <a href="#">Country Data (csv)</a>
         <a href="#">Metadata (PDF)</a>
-        <a href="#">This page as PDF</a>
+        <a href="#">Print this page</a>
 
       </div>
       <div className='indicies'>
