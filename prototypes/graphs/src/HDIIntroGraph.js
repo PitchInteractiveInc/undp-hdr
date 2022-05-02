@@ -118,7 +118,6 @@ export default function HDIIntroGraph(props) {
         </div>
       </div>
       <div>
-        HDI rank by Human development classification
         <div className='svgContainer'>
           <svg width={width + margins.left + margins.right} height={height + margins.top + margins.bottom}
             onMouseMove={mouseMove}
@@ -132,9 +131,9 @@ export default function HDIIntroGraph(props) {
                 const x = xThresholds[color]
                 return <text key={rank} x={x} y={height} dy='1em' fill={color}>{rank}</text>
               })}</g>
-              <g>
+              {/* <g>
                 <text dy='-0.2em'>{data.length}</text>
-              </g>
+              </g> */}
             </g>
           </svg>
           {tooltip}

@@ -7,7 +7,7 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'hdiIntro',
-        title: ({country}) => `${country}'s Human Development Profile`,
+        title: ({country}) => null,
         noCountrySelection: true,
       },
       {
