@@ -182,6 +182,7 @@ export default function BarGraph(props) {
               {yScaleTicks}
             </g>
             <g>{bars}</g>
+            <text y={height} dy='1em' fontWeight='600'>Countries</text>
           </g>
         </svg>
         {tooltip}
