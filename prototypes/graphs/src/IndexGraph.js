@@ -165,7 +165,7 @@ function IndexGraph(props) {
       }
       if (showLabel) {
         const x = xScale(data[0].colIndex)
-        label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+        label = <text fill={stroke} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
       }
       return (
@@ -249,7 +249,7 @@ function IndexGraph(props) {
       return null
     }
     const labelX = xScale(data[0].colIndex)
-    const label = <text fill={stroke} dx='0.2em' fontWeight='bold' fontSize='1.5em' dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
+    const label = <text fill={stroke} dx='0.2em' fontWeight='bold'  dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
     const showValueLabels = hoveredCol !== null
     let valueLabel = null
     if (showValueLabels) {
@@ -257,8 +257,7 @@ function IndexGraph(props) {
       const valueLabelX = xScale(hoveredColIndex)
       valueLabel = <text textAnchor='middle'
         fill={stroke}
-        fontWeight='bold'
-        fontSize='1.5em' dy='1.2em'
+        fontWeight='bold' dy='1.2em'
         x={valueLabelX} y={yScale(value)}>
           {format(value, index.key)}
         </text>
@@ -335,7 +334,7 @@ function IndexGraph(props) {
     return (
       <g key={color} transform={`translate(${-yScaleBarWidth}, ${y})`}>
         <rect width={yScaleBarWidth} height={barHeight} fill={color} />
-        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{value.toFixed(2)}</text>
+        <text textAnchor='end' y={barHeight} dx='-5' dy='0.3em'>{format(value)}</text>
         {lastLabel}
       </g>
     )
@@ -424,7 +423,7 @@ function IndexGraph(props) {
       <div>
         <div className='svgContainer'>
 
-          <svg fontSize='0.6em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+          <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
             onMouseMove={mouseMove}
             onMouseEnter={mouseMove}
             onMouseLeave={mouseLeave}

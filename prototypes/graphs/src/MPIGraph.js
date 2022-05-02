@@ -42,7 +42,7 @@ export default function MPIGraph(props) {
   const height = 800
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
-  const margins = { top: 20, right: 20, bottom: 20, left: 40 }
+  const margins = { top: 20, right: 20, bottom: 20, left: 50 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -122,7 +122,7 @@ export default function MPIGraph(props) {
       {tickIndex % 2 !== 0 ?
         <rect width={width} height={tickHeight} fill={'#F7F7F7'} />
       : null }
-      <text x={-10} y={0} dy={4} textAnchor={'end'}>{tick}</text>
+      <text x={-10} y={0} dy={4} textAnchor={'end'}>{format(tick)}</text>
     </g>
   })
 

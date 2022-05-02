@@ -8,7 +8,7 @@ import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
-
+import format from './format';
 export default function BarGraph(props) {
   const { data, country, index, selectedCountries, graph } = props
   const selectedCountry = country
@@ -103,7 +103,7 @@ export default function BarGraph(props) {
         showLabel = true
       }
     }
-    let label = showLabel ? <text dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{value.toFixed(2)}</text> : null
+    let label = showLabel ? <text dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{format(value)}</text> : null
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
         <rect
@@ -129,7 +129,7 @@ export default function BarGraph(props) {
     const y = yScale(tick)
     return (
       <g key={tick} transform={`translate(${width}, ${height - y})`}>
-        <text dy='0.3em' dx='0.5em'>{tick}</text>
+        <text dy='0.3em' dx='0.5em'>{format(tick)}</text>
         {/* <line x1={-width - xScale(0.5)} x2={-xScale(0.5)} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} /> */}
       </g>
     )

@@ -248,7 +248,7 @@ export default function DifferenceGraph(props) {
     const y = yScale(tick)
     return (
       <g key={tick} transform={`translate(${width}, ${y})`}>
-        <text dx='0.5em' dy='0.3em'>{tick}</text>
+        <text dx='0.5em' dy='0.3em'>{format(tick)}</text>
         <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray={strokeDasharray} strokeWidth={0.5} />
       </g>
     )

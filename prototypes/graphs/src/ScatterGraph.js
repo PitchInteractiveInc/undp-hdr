@@ -201,7 +201,7 @@ export default function ScatterGraph(props) {
       return (
         <g key={i}>
           <rect width={width} y={y} fill={fill} height={height} key={i} opacity={backgroundRect.opacity} ></rect>
-          <text y={y0} x={width} dy={'0.3em'} dx='0.5em'>{backgroundRect.y0}</text>
+          <text y={y0} x={width} dy={'0.3em'} dx='0.5em'>{format(backgroundRect.y0)}</text>
           {i === hdiBackgroundRectData.length - 1 ? <text y={y1} x={width} dy='0.3em' dx='0.5em'>{backgroundRect.y1}</text> : null}
         </g>
       )
@@ -211,7 +211,7 @@ export default function ScatterGraph(props) {
       const y = yScale(tick)
       return (
         <g key={tick} transform={`translate(${width}, ${y})`}>
-          <text dx='0.5em' dy='0.3em'>{tick}</text>
+          <text dx='0.5em' dy='0.3em'>{format(tick)}</text>
           <line x1={-width} x2={0} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} />
         </g>
       )
