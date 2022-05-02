@@ -5,6 +5,7 @@ import indicators from './indicators'
 import CountryIndexGraph from './CountryIndexGraph'
 import useMPIData from "./useMPIData"
 import { useEffect, useState, useCallback } from "react"
+import getGraphColumnsForKey from "./getGraphColumnsForKey"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -28,6 +29,9 @@ export default function Country(props) {
 
   const country = data.find(d => d.ISO3 === params.country)
 
+  const populationColumns = getGraphColumnsForKey(data, 'pop_total')
+  const lastPopulationColumn = populationColumns[populationColumns.length - 1]
+  const formattedPopulation = (country[lastPopulationColumn] * 1000000).toLocaleString()
   return (
     <div className='CountryDetail'>
       {/* <select value={params.country} onChange={setCountry}>
@@ -40,7 +44,7 @@ export default function Country(props) {
         <img src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`${country.Country} flag`} />
         <div className='countryName'>{country.Country}</div>
       </div>
-      <div className='population'>Population ##,###,###</div>
+      <div className='population'>Population {formattedPopulation}</div>
       <div className='countryIntro'>
         An interactive human development summary for {country.Country}, capturing the achievements in the HDI (assessment of the population’s average longevity, knowledge, and standard of living) and a set of complementary measures that estimate gender gaps, inequality, planetary pressures, and poverty (covering developing countries).
       </div>
