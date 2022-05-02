@@ -5,7 +5,7 @@ import { scaleThreshold } from "d3-scale"
 import { Delaunay } from "d3-delaunay"
 import { useState, useRef } from "react"
 import CountryTooltip from "./CountryTooltip"
-
+import { regions } from "./RegionFilter"
 export const hdiIntroColorScale = scaleThreshold()
   .domain([0.55, 0.7, 0.8, 1])
   .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
@@ -95,6 +95,11 @@ export default function HDIIntroGraph(props) {
     )
   }
 
+  let regionText = '–'
+  if (country.region !== '') {
+    const region = regions.find(r => r.id === country.region)
+    regionText = region.name
+  }
 
   return (
     <div className='HDIIntroGraph'>
@@ -108,8 +113,8 @@ export default function HDIIntroGraph(props) {
           <div className='value' style={{ color: hdiIntroColorScale(country[lastColumn])}}>{country.hdicode}</div>
         </div>
         <div>
-          <div className='label'>Region</div>
-          <div className='value'>{country.region === '' ? 'Not defined' : country.region}</div>
+          <div className='label'>Developing Region</div>
+          <div className='value'>{regionText}</div>
         </div>
       </div>
       <div>

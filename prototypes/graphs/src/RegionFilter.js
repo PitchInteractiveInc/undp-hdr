@@ -1,6 +1,6 @@
 import Dropdown from './Dropdown'
 
-const regions = [
+export const regions = [
   { id: 'SA', name: 'South America' },
   { id: 'SSA', name: 'Sub-Saharan Africa' },
   { id: 'LAC', name: 'Latin American and the Caribbean' },
