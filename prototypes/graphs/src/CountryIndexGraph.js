@@ -81,7 +81,7 @@ function GraphWrapper(props) {
   }
   let missingCountryDisclaimer = null
   let missingCountries = []
-  const potentialCountries = [country, ...selectedCountries.filter(d => d !== '').map(iso => data.find(d => d.ISO3 === iso))]
+  const potentialCountries = Array.from(new Set([country, ...selectedCountries.filter(d => d !== '').map(iso => data.find(d => d.ISO3 === iso))]))
   potentialCountries.forEach(c => {
     if (!data.find(d => d.ISO3 === c.ISO3)) {
       missingCountries.push(c)
@@ -96,12 +96,13 @@ function GraphWrapper(props) {
     }
   })
   if (missingCountries.length) {
-    const verb = missingCountries.length === 1 ? 'is' : 'are'
-    const countryNameLabel = missingCountries.map(d => d.Country).join(', ')
-    const countryLabel = missingCountries.length === 1 ? 'this country' : 'these countries'
+    // join with comma and ampresand for last item only
+    const countryList = missingCountries.map(c => c.Country)
+    const lastCountry = countryList.pop()
+    const joinedCountryList = countryList.join(', ') + (countryList.length ? ' & ' : '') + lastCountry
+
     missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
-      <strong>{countryNameLabel} {verb} not a part of the {index.key} graph below.</strong><br />
-      Due to a lack of relavant data, the {index.key} has not been calculated for {countryLabel}.
+      The {index.key} covers {countries.length} {index.key === 'MPI' ? ' developing ' : ''} countries only, and is not computed for {joinedCountryList}.
     </div>
   }
   return (
