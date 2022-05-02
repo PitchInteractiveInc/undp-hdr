@@ -75,7 +75,7 @@ function GraphWrapper(props) {
   if (index.lowerBetter) {
     lowerBetter = (
       <div className='lowerBetter'>
-        Note: the lower {index.key} value the country has, the better rank it is in {index.key}.
+        Note: the lower {index.key} value results in higher {index.key} rank.
       </div>
     )
   }
@@ -107,9 +107,9 @@ function GraphWrapper(props) {
   return (
     <div className='indexGraph'>
       {titleText}
-      {lowerBetter}
       {missingCountryDisclaimer}
       {countrySelectors}
+      {lowerBetter}
       {graphElement}
     </div>
   )

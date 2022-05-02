@@ -166,7 +166,7 @@ export default function MPIGraph(props) {
         {index.lowerBetter ?
 
           <span className='lowerBetter'>
-            {' '}Note: the lower value the country has, the better place it is in {index.key}.
+            {' '}Note: the lower {index.key} value results in higher {index.key} rank.
           </span>
         : null}
       </div>

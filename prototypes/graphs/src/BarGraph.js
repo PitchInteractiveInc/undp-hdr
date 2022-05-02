@@ -25,7 +25,7 @@ export default function BarGraph(props) {
 
   const width = 700
   const height = 460
-  const margins = { top: 20, right: 30, bottom: 20, left: 0 }
+  const margins = { top: 10, right: 30, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
