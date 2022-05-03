@@ -71,7 +71,7 @@ export default function BarGraph(props) {
 
   }
   const delaunayData = []
-
+  const labels = []
   const bars = sortedData.map((country, i) => {
     const value = +country[graphColumns[0]]
     const x = xScale(i)
@@ -103,7 +103,8 @@ export default function BarGraph(props) {
         showLabel = true
       }
     }
-    let label = showLabel ? <text dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{format(value)}</text> : null
+    let label = showLabel ? <text x={x} key={i} dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{format(value)}</text> : null
+    labels.push(label)
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
         <rect
@@ -113,7 +114,6 @@ export default function BarGraph(props) {
           fill={fill}
           stroke={stroke}
         />
-        {label}
       </g>
     )
   })
@@ -182,6 +182,7 @@ export default function BarGraph(props) {
               {yScaleTicks}
             </g>
             <g>{bars}</g>
+            <g>{labels}</g>
             <text y={height} dy='1em' fontWeight='600'>Countries</text>
           </g>
         </svg>
