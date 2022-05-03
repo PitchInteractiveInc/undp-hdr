@@ -133,7 +133,7 @@ export default function DifferenceGraph(props) {
         const prevValue = datum.prevValue || rowData[datumIndex - 1].value
         prevY = yScale(prevValue)
         previousIsMore = prevValue > datum.value
-        const differenceColor = y < prevY ? '#88E51C' : '#FD9B94'
+        const differenceColor = y < prevY ? '#88E51C' : '#F86969'
         previousHeight = Math.abs(y - prevY)
         previousYearMarks = (
           <g>
@@ -290,8 +290,8 @@ export default function DifferenceGraph(props) {
         <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
         <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
         <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
-        <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#fd9b94"/>
-        <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#fd9b94"/>
+        <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#F86969"/>
+        <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#F86969"/>
         <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
       </svg>
     )
@@ -311,7 +311,7 @@ export default function DifferenceGraph(props) {
           <rect width="22" height="5" stroke="none"/>
           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
         </g>
-        <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#fd9b94" stroke="#ffe17e" strokeWidth="0.5">
+        <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
           <rect width="22" height="5" stroke="none"/>
           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
         </g>
