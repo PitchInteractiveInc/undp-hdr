@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import useMPIData from "./useMPIData";
-import { range, max } from 'd3-array'
+import { range, max, mean, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import exportSVG from './exportSVG';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
@@ -20,17 +20,19 @@ export const mpiColors = {
   'Housing': '#232E3E'
 }
 const metrics = Object.keys(mpiColors)
-
-export default function MPIGraph(props) {
-  const { index } = props
+export default function MPIGraphWrapper(props) {
   const mpiData = useMPIData()
-  const [selectedCountries, setSelectedCountries] = useState([])
-  const svgRef = useRef()
-  const [hoveredPoint, setHoveredPoint] = useState(null)
   if (!mpiData) {
     return null
   }
-
+  return <MPIGraph {...props} mpiData={mpiData} />
+}
+function MPIGraph(props) {
+  const { index, mpiData } = props
+  const [selectedCountries, setSelectedCountries] = useState([])
+  const svgRef = useRef()
+  const [hoveredPoint, setHoveredPoint] = useState(null)
+  const [hoveredMetric, setHoveredMetric] = useState(null)
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
 
   const mpiKey = 'MPI'
@@ -62,6 +64,14 @@ export default function MPIGraph(props) {
     .range([0, height])
 
   const delaunayData = []
+  const averages = useMemo(() => {
+    const averages = {}
+    metrics.forEach(metric => {
+      averages[metric]  = mean(countries , d => d[metric])
+    })
+    return averages
+  }, [countries])
+  console.log(averages)
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const totalBarHeight = yScale(country[mpiKey])
 
@@ -77,11 +87,16 @@ export default function MPIGraph(props) {
         opacity = 0.2
       }
     }
+
     const metricBars = metrics.map(metric => {
       const y = runningY
       const metricPercentage = country[metric]
       const rectHeight = totalBarHeight * (metricPercentage / 100)
       runningY -= rectHeight
+      let barOpacity = 1
+      if (hoveredMetric) {
+        barOpacity = hoveredMetric === metric ? 1 : 0.2
+      }
       return (
         <rect
           key={metric}
@@ -89,6 +104,7 @@ export default function MPIGraph(props) {
           height={rectHeight}
           y={y - rectHeight}
           fill={mpiColors[metric]}
+          opacity={barOpacity}
         />
       )
     })
@@ -156,11 +172,45 @@ export default function MPIGraph(props) {
     )
   }
 
+  const metricGraphHeight = 40
+  const metricGraphBarHeight = 20
+
+  const metricGraphSum = sum(metrics, metric => averages[metric])
+  const metricGraphBarPadding = 5
+  const metricGraphBarTotalPadding = metricGraphBarPadding * (metrics.length - 1)
+  const metricGraphBarWidth = svgWidth - metricGraphBarTotalPadding
+  const metricGraphXScale = scaleLinear()
+    .domain([0, metricGraphSum])
+    .range([0, metricGraphBarWidth])
+
+  let runningX = 0
+  const hoverMetric = (metric) => () => {
+    setHoveredMetric(metric)
+  }
+  const metricGraphBars = metrics.map(metric => {
+    const value = averages[metric]
+    const barWidth = metricGraphXScale(value)
+    const x = runningX
+    runningX += barWidth + metricGraphBarPadding
+    return (
+      <g key={metric} transform={`translate(${x}, 10)`} onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
+        <text fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
+        <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
+        <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
+      </g>
+    )
+  })
   return (
     <div className='IndexGraph'>
       <div>
         {countryDropdowns}
       </div>
+      <div style={{ fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5em'}}>
+        MPI INDICES Performance
+      </div>
+      <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
+        {metricGraphBars}
+      </svg>
       <div>
         <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
         {index.lowerBetter ?
