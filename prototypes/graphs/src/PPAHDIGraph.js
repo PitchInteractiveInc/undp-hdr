@@ -70,7 +70,7 @@ export default function Graph(props) {
   const height = 800
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
-  const margins = { top: 20, right: 0, bottom: 20, left: 50 }
+  const margins = { top: 0, right: 0, bottom: 20, left: 50 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
