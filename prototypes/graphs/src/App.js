@@ -7,6 +7,7 @@ import CountryRanks from './CountryRanks'
 import {   HashRouter,
   Routes,
   Route, NavLink} from 'react-router-dom'
+
 function App() {
   return (
     <div className="App">

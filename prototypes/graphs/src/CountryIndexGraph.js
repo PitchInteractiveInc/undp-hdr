@@ -14,6 +14,7 @@ function GraphWrapper(props) {
   const { graph, data, country, index, syncCountries, forceSelection } = props
   const { type, title, noCountrySelection} = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
+  const [countriesThatFailedToSync, setCountriesThatFailedToSync] = useState(null)
   const countries = useMemo(() => {
     return data.filter(d => d.ISO3 !== '')}, [data])
 
@@ -23,10 +24,19 @@ function GraphWrapper(props) {
         const country = countries.find(c => c.ISO3 === iso)
         return !!country
       })
+      const countriesNotInThisDataset = forceSelection.filter(iso => {
+        const country = countries.find(c => c.ISO3 === iso)
+        return !country
+      })
       const selectionsDifferent = countriesInThisDataset.some(iso => selectedCountries.indexOf(iso) === -1)
         || selectedCountries.some(iso => countriesInThisDataset.indexOf(iso) === -1)
       if (selectionsDifferent) {
         setSelectedCountries(countriesInThisDataset)
+      }
+      if (countriesNotInThisDataset.length > 0) {
+        setCountriesThatFailedToSync(countriesNotInThisDataset)
+      } else {
+        setCountriesThatFailedToSync(null)
       }
     }
   }, [forceSelection, countries, noCountrySelection, selectedCountries])
@@ -41,6 +51,8 @@ function GraphWrapper(props) {
       countries={countries}
       colored={true || countSelectable > 1}
       syncCountries={syncCountries}
+      countriesThatFailedToSync={countriesThatFailedToSync}
+      index={index}
     />
   }
   let graphElement = null

@@ -50,15 +50,46 @@
   .syncButton {
     display: flex;
     align-items: center;
-    color: #D12800;
+    transition: color 0.3s ease-in-out;
+    position: relative;
+
+    .tip {
+      position: absolute;
+      font-weight: normal;
+      text-transform: none;
+      white-space: nowrap;
+      text-align: center;
+      top: 0;
+      left: 0;
+      transform: translate(-33%, -3em);
+      padding: 0.5em;
+      font-size: 0.875em;
+      border: 1px solid black;
+      color: #000;
+      background-color: #fff;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    &:hover .tip {
+      opacity: 1;
+    }
+    &.syncing .tip, &.synced .tip {
+      transition: opacity 0s ease-in-out;
+      opacity: 0;
+    }
+    &:hover, &.syncing, &.synced {
+      color: #D12800;
+    }
     cursor: pointer;
     img {
       margin-right: 0.5em;
     }
 
     &.syncing img {
-      transition: transform 0.5s ease-in-out;
-      transform: rotate(-179deg);
+      transition: transform 1.5s ease-in-out;
+      transform: rotate(-539deg);
     }
   }
 }

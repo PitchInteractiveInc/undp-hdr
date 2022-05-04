@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import xIcon from './images/x.svg'
 import { useEffect, useState } from 'react'
 import syncButton from './images/syncButton.svg'
+import failedSync from './images/failedSync.svg'
 export const comparisonColors = [
   '#813BC7', '#ED9B25', '#00B786'
 ]
@@ -20,7 +21,9 @@ export default function ComparisonCountrySelectors(props) {
     colorByIndexValue,
     indexData,
     graphColumns,
-    colorScale
+    colorScale,
+    countriesThatFailedToSync,
+    index,
   } = props
   const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
   useEffect(() => {
@@ -28,21 +31,34 @@ export default function ComparisonCountrySelectors(props) {
   }, [exclude, maxSelectable, setSelectedCountries])
 
   const [syncing, setSyncing] = useState( false )
+  const [synced, setSynced] = useState(false)
   const sync = () => {
+    ReactTooltip.hide()
     setSyncing( true )
-    const id = setTimeout( () => {
+    let id = setTimeout( () => {
       setSyncing( false )
-    }, 1000)
+      setSynced( true )
+      id = setTimeout(() => {
+        setSynced( false )
+      }, 3000)
+    }, 1600)
     syncCountries(selectedCountries)
     return () => clearTimeout( id )
-
   }
+
   return <div className='ComparisonCountrySelectors'>
     <div className='label'>Add Country To Compare
       {hideSync ? null :
-        <div className={classNames('syncButton', { syncing })} onClick={sync}>
-          <img src={syncButton} alt='' />
-          Sync {selectedCountries.length === 1 ? 'Country' : 'Countries'} with all indexes
+        <div className={classNames('syncButton', { syncing, synced })} onClick={sync}
+          onMouseOut={hideTooltip}
+          >
+          <img src={countriesThatFailedToSync ? failedSync : syncButton} alt='' />
+          {syncing ? 'Syncing...' :
+            synced ? 'Countries Synced' :
+            'Sync'
+          }
+          <div className='tip'>{countriesThatFailedToSync ?
+            `Some countries do not have data for ${index.key} and did not sync` : 'Click To Sync Country Selection'}</div>
         </div>
       }
     </div>

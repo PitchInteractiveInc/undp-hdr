@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27.084" height="24" viewBox="0 0 27.084 24">
+  <g id="Component_65_52" data-name="Component 65 – 52" transform="translate(3.084)">
+    <g id="sync_black_24dp" transform="translate(-0.01)">
+      <path id="Path_30764" data-name="Path 30764" d="M.01,0h24V24H.01V0Z" fill="none"/>
+      <path id="Path_30765" data-name="Path 30765" d="M12,4V1L8,5l4,4V6a6,6,0,0,1,6,6,5.87,5.87,0,0,1-.7,2.8l1.46,1.46A7.986,7.986,0,0,0,12,4Zm0,14a6,6,0,0,1-6-6,5.87,5.87,0,0,1,.7-2.8L5.24,7.74A7.986,7.986,0,0,0,12,20v3l4-4-4-4Z" fill="#d12800"/>
+    </g>
+  </g>
+  <path id="sync_problem_FILL0_wght400_GRAD0_opsz48" d="M15.091,22.76V11.231h2.778V22.76Zm1.3,5.3a1.424,1.424,0,1,1,.972-.417A1.333,1.333,0,0,1,16.388,28.063Z" transform="translate(-14.999 -7.147)" fill="#d12800"/>
+</svg>

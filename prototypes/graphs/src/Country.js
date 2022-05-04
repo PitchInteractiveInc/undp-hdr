@@ -38,6 +38,7 @@ export default function Country(props) {
   const formattedPopulation = (country[lastPopulationColumn] * 1000000).toLocaleString()
   return (
     <div className='CountryDetail'>
+
       {/* <select value={params.country} onChange={setCountry}>
         {data.map(d => {
           return <option key={d.ISO3} value={d.ISO3}>{d.Country}</option>
