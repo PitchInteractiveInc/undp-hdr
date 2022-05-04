@@ -9,6 +9,7 @@ import { Delaunay } from 'd3-delaunay';
 import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
+import { useNavigate } from 'react-router-dom';
 export default function BarGraph(props) {
   const { data, country, index, selectedCountries, graph } = props
   const selectedCountry = country
@@ -159,15 +160,29 @@ export default function BarGraph(props) {
     )
   }
 
+  const navigate = useNavigate()
+
+  const clickGraph = () => {
+    if (hoveredPoint) {
+      const clickedCountry = hoveredPoint.hover[2].row
+      const iso3 = clickedCountry.ISO3
+      if (country && iso3 && country.ISO3 !== iso3) {
+        navigate(`/countries/${iso3}`, { replace: true })
+      }
+    }
+  }
+  const cursor = hoveredPoint && hoveredPoint.hover[2].row.ISO3 && hoveredPoint.hover[2].row.ISO3 !== country.ISO3 ? 'pointer' : 'default'
+
 
   return (
     <div className='BarGraph'>
       <GraphColorLegend rows={legendRows} />
       <div className='svgContainer'>
-        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+        <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
           onMouseLeave={mouseLeave}
+          onClick={clickGraph}
           ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>

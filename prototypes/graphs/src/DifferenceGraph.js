@@ -10,6 +10,7 @@ import CountryTooltip from './CountryTooltip';
 import format from './format';
 import getYearOfColumn from './getYearOfColumn';
 import { line } from 'd3-shape';
+import { useNavigate } from 'react-router-dom';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -43,7 +44,7 @@ export default function DifferenceGraph(props) {
   const margins = { top: 0, right: 20, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
-
+  const navigate = useNavigate()
   // const saveSVG = (event) => {
   //   exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   // }
@@ -343,16 +344,27 @@ export default function DifferenceGraph(props) {
     legend = [legend, legend2]
   }
 
+  const clickGraph = () => {
+    if (hoveredPoint) {
+      const clickedCountry = hoveredPoint.hover[2].row
+      const iso3 = clickedCountry.ISO3
+      if (country && iso3 && country.ISO3 !== iso3) {
+        navigate(`/countries/${iso3}`, { replace: true })
+      }
+    }
+  }
+  const cursor = hoveredPoint && hoveredPoint.hover[2].row.ISO3 && hoveredPoint.hover[2].row.ISO3 !== country.ISO3 ? 'pointer' : 'default'
 
   return (
     <div className='DifferenceGraph'>
       <div className='differenceLegend'>{legend}</div>
 
       <div className='svgContainer'>
-        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+        <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
           onMouseLeave={mouseLeave}
+          onClick={clickGraph}
           ref={svgRef}>
 
 

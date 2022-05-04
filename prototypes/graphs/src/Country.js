@@ -16,13 +16,17 @@ export default function Country(props) {
     setSyncingCountries(countries)
   }, [])
 
+
   useEffect(() => {
     if (syncingCountries) {
       setSyncingCountries(false)
     }
   }, [syncingCountries])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
+  }, [params.country])
   if (!data || !mpiData) {
     return
   }

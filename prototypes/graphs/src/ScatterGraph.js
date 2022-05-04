@@ -13,6 +13,7 @@ import getYearOfColumn from './getYearOfColumn';
 import { scaleSqrt } from 'd3-scale';
 import { arc } from 'd3-shape';
 import HDILabels from './HDILabels';
+import { useNavigate } from 'react-router-dom';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -251,16 +252,27 @@ export default function ScatterGraph(props) {
   if (isHDIGraph) {
     hdiLabels = <HDILabels />
   }
-
+  const navigate = useNavigate()
+  const graphClick = (event) => {
+    if (hoveredPoint) {
+      const clickedCountry = hoveredPoint.hover[2].row
+      const iso3 = clickedCountry.ISO3
+      if (country && iso3 && country.ISO3 !== iso3) {
+        navigate(`/countries/${iso3}`, { replace: true })
+      }
+    }
+  }
+  const cursor = hoveredPoint && hoveredPoint.hover[2].row.ISO3 && hoveredPoint.hover[2].row.ISO3 !== country.ISO3 ? 'pointer' : 'default'
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} />
       {hdiLabels}
       <div className='svgContainer'>
-        <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
+        <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
           onMouseLeave={mouseLeave}
+          onClick={graphClick}
           ref={svgRef}>
 
           <g transform={`translate(${margins.left}, ${margins.top})`}>
