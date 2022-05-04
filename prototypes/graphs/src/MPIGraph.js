@@ -44,7 +44,7 @@ function MPIGraph(props) {
   const height = 800
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
-  const margins = { top: 20, right: 20, bottom: 20, left: 50 }
+  const margins = { top: 20, right: 20, bottom: 25, left: 50 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -234,7 +234,7 @@ function MPIGraph(props) {
               <g>{yTicks}</g>
               <g>{countryBars}</g>
 
-              <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height})`}>
+              <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height + 5})`}>
                 <text id="MPI_rank_from_low_to_high" data-name="MPI rank from low to high" ><tspan x="0" y="13">MPI rank from low to high</tspan></text>
                 <g id="Group_3166" data-name="Group 3166" transform="translate(160 0)">
                   <line id="Line_11490" data-name="Line 11490" x2="18" transform="translate(0 8)" fill="none" stroke="#000" strokeWidth="1"/>
