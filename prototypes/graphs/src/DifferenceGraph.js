@@ -9,6 +9,7 @@ import { useState, useRef } from 'react';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
 import getYearOfColumn from './getYearOfColumn';
+import { line } from 'd3-shape';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -102,7 +103,7 @@ export default function DifferenceGraph(props) {
   const yearWidth = xScale(1)
   const markWidth = (yearWidth * 0.8) / rowsToPlot.length
   const delaunayData = []
-
+  const drawConnectingLines = rowsToPlot.length > 1
   const differenceData = rowsToPlot.map((row, rowIndex) => {
     const stroke = row.color
     const rowData = graphColumns.map((col, colIndex) => {
@@ -121,11 +122,27 @@ export default function DifferenceGraph(props) {
         col
       }
     }).filter(d => d);
+    let markHeight = ihdiGraph ? 5 : 1
+
+    let connectingLine = null
+    if (drawConnectingLines) {
+      const lineGen = line()
+        .x(d => xScale(d.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1)
+        .y(d => yScale(d.value) + markHeight / 2 + 0.5)
+      const path = lineGen(rowData)
+      connectingLine = <path
+        key={`connecting-line-${rowIndex}`}
+        d={path}
+        stroke={stroke}
+        strokeWidth={markHeight }
+        fill='none'
+        opacity={0.5}
+      />
+    }
     const differenceMarks = rowData.map((datum, datumIndex) => {
       const x = xScale(datum.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1
       const y = yScale(datum.value)
       let previousYearMarks = null
-      let markHeight = ihdiGraph ? 5 : 1
       let previousIsMore = false
       let previousHeight = 0
       let prevY = y
@@ -210,6 +227,7 @@ export default function DifferenceGraph(props) {
     return (
       <g key={row.row.Country}>
         {differenceMarks}
+        {connectingLine}
       </g>
     )
   })
