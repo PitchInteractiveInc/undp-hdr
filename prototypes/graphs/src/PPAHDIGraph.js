@@ -170,7 +170,7 @@ export default function Graph(props) {
     <div className='Graph' style={{ width: width + margins.left + margins.right}}>
       {countryDropdowns}
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <span style={{ fontWeight: '600'}}>PHDI Value</span>
+        <span style={{ fontWeight: '600', marginLeft: margins.left}}>PHDI value</span>
         <svg
           xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="652.517" height="20" viewBox="0 0 652.517 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
@@ -201,7 +201,7 @@ export default function Graph(props) {
           <g transform={`translate(${margins.left}, ${margins.top})`}>
             <g>{yTicks}</g>
             <g>{countryBars}</g>
-
+            <line y2={height} stroke='#000' strokeWidth={'0.5'} />
 
             <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height})`}>
               <text id="MPI_rank_from_low_to_high" ><tspan x="0" y="13">PHDI rank from low to high</tspan></text>
