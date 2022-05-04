@@ -33,7 +33,6 @@ export default function ComparisonCountrySelectors(props) {
   const [syncing, setSyncing] = useState( false )
   const [synced, setSynced] = useState(false)
   const sync = () => {
-    ReactTooltip.hide()
     setSyncing( true )
     let id = setTimeout( () => {
       setSyncing( false )
@@ -50,7 +49,6 @@ export default function ComparisonCountrySelectors(props) {
     <div className='label'>Add Country To Compare
       {hideSync ? null :
         <div className={classNames('syncButton', { syncing, synced })} onClick={sync}
-          onMouseOut={hideTooltip}
           >
           <img src={countriesThatFailedToSync ? failedSync : syncButton} alt='' />
           {syncing ? 'Syncing...' :
