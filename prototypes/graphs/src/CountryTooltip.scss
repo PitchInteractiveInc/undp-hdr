@@ -48,6 +48,7 @@
       }
     }
     .value {
+      font-weight: 600;
     }
     .suffix {
       font-size: 0.71em;
@@ -74,7 +75,7 @@
       background-color: #EDEFF0;
       font-size: 0.85em;
       td {
-        white-space: none;
+        white-space: nowrap;
       }
     }
     tbody {
@@ -84,6 +85,9 @@
         }
         td:first-child {
           font-size: 0.85em;
+        }
+        td:not(:first-child) {
+          white-space: nowrap;
         }
       }
     }

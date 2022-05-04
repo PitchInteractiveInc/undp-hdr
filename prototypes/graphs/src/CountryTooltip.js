@@ -5,7 +5,8 @@ import getYearOfColumn from './getYearOfColumn'
 import format from './format'
 import { mpiColors } from './MPIGraph'
 import {hdiIntroColorScale} from './HDIIntroGraph'
-
+import { scaleSqrt } from 'd3-scale'
+import { arc } from 'd3-shape'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -71,15 +72,57 @@ function GenderTable(props) {
         </tr>
       </thead>
       <tbody>
-        {tableKeys.map(({label, key, suffix}) => {
+        {tableKeys.map(({label, key, suffix, colorGenders, showGraph}) => {
           const fValue = country[`${key}_f_${year}`]
           const mValue = country[`${key}_m_${year}`]
           let s = suffix ? (<span className='suffix'>{suffix}</span>) : null
+          const maleColor = colorGenders ? 'rgba(31, 90, 149, 0.5)' : null
+          const femaleColor = colorGenders ? '#1F5A95' : null
+          let graph = null
+          if (showGraph) {
+            const max = Math.max(mValue, fValue)
+            const radiusScale = scaleSqrt()
+              .domain([0, max])
+              .range([0, 20])
+            const arcGen = arc()
+            const maleRadius = radiusScale(mValue)
+            const femaleRadius = radiusScale(fValue)
+            const stroke = '#1F5A95'
+            graph = (
+              <svg width={40} height={40} style={{ padding: '0.5em 1em'}}>
+                <g fontSize='0.875em' fill={stroke} transform={`translate(20, 0)`}>
+                  <path d={arcGen({
+                    innerRadius: 0,
+                    outerRadius: maleRadius,
+                    startAngle: 0,
+                    endAngle: Math.PI,
+
+                    })}
+                    fill={stroke}
+                    opacity='0.5'
+                    transform={`translate(0, ${20 - maleRadius + 20})`}
+                  />
+                  <path d={arcGen({
+                    innerRadius: 0,
+                    outerRadius: femaleRadius,
+                    startAngle: Math.PI,
+                    endAngle: 2 * Math.PI,
+                    })}
+                    fill={stroke}
+                    transform={`translate(0, ${20 -femaleRadius + 20})`}
+
+                  />
+                </g>
+              </svg>
+            )
+          }
           return (
             <tr key={key}>
               <td style={{ width: firstColumnWidth}}>{label}</td>
-              <td>{format(fValue, key)}{s}</td>
-              <td>{format(mValue, key)}{s}</td>
+              <td>
+                <span style={{ fontWeight: '600', color: femaleColor, transform: graph ? 'translateY(-1.5em)' : null, display: 'inline-block'}}>{format(fValue, key)}</span>{s}{graph}
+              </td>
+              <td><span style={{ fontWeight: '600', color: maleColor}}>{format(mValue, key)}</span>{s}</td>
               <td className='negative' style={{ textAlign: 'right'}}>{format(fValue - mValue, key)}{s}</td>
             </tr>
           )
@@ -91,7 +134,7 @@ function GenderTable(props) {
 }
 function GDIScatterTooltip(props) {
   const tableKeys = [
-    { label: 'HDI Value', key: 'hdi' },
+    { label: 'HDI Value', key: 'hdi', colorGenders: true, showGraph: true },
     { label: 'Life Expectancy at Birth', key: 'le', suffix: ' years', },
     { label: 'Expected Years of Schooling', key: 'eys', suffix: ' years', },
     { label: 'Mean Years of Schooling', key: 'mys', suffix: ' years', },
@@ -128,12 +171,12 @@ function GIIScatterTooltip(props) {
       <Stat
         label='Maternal Mortality Ratio'
         value={format(country[`mmr_${year}`], 'mmr')}
-        suffix='death/100,000 live births'
+        suffix=' death/100,000 live births'
       />
       <Stat
         label='Adolescent Birth Rate'
         value={format(country[`abr_${year}`], 'abr')}
-        suffix='births/1,000 women age 15-19'
+        suffix=' births/1,000 women age 15-19'
       />
       <GenderTable firstColumnWidth='20em' tableKeys={tableKeys} {...props} />
     </div>

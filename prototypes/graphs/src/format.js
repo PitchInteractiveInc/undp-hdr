@@ -12,6 +12,9 @@ export default function format(value, key) {
     case 'se':
     case 'lfpr':
     case 'mpi':
+    case 'ineq_le':
+    case 'ineq_edu':
+    case 'ineq_inc':
       decimals = 1
       break
     case 'gnipc':
