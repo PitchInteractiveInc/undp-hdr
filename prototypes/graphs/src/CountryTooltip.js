@@ -458,8 +458,8 @@ function HDIIntroTooltip(props) {
 
 export default function CountryTooltip(props) {
   const { point, index, graph } = props
-
-  let x = point.x
+  let xOffset = 10
+  let x = point.x + xOffset
   let y = point.y
   if (point.columnWidth) {
     x += point.columnWidth / 2
@@ -469,7 +469,7 @@ export default function CountryTooltip(props) {
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
   const flipY = point.clientY > window.innerHeight / 2
   if (flipX) {
-    x = point.x - tooltipWidth
+    x = point.x - tooltipWidth - xOffset
     if (point.columnWidth) {
       x -= point.columnWidth / 2 + 5
     }
