@@ -5,6 +5,9 @@ import { csvParse } from 'd3-dsv'
 import metadataFile from './data/HDR201122web_metadata_040822.csv'
 import dataFile from './data/HDR2020_040722.csv'
 
+const countriesToRemove = [
+  'MCO', 'PRK', 'SOM', 'NRU', 'SMR', 'TUV'
+]
 export default function useHDRData() {
   const [data, setData] = useState(null)
   const [metadata, setMetadata] = useState(null)
@@ -19,7 +22,11 @@ export default function useHDRData() {
       const response = await fetch(dataFile)
       const data = await response.text()
       const parsedData = csvParse(data)
-      setData(parsedData)
+      const filtered = parsedData.filter(country => {
+        return !countriesToRemove.includes(country.ISO3)
+      })
+      filtered.columns = parsedData.columns
+      setData(filtered)
     }
     fetchData()
   }, [])
