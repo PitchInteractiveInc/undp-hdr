@@ -211,7 +211,7 @@ function MPIGraph(props) {
       <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         {metricGraphBars}
       </svg>
-      <div>
+      <div style={{ marginLeft: margins.left}}>
         <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
         {index.lowerBetter ?
 
