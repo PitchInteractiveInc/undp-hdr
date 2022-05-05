@@ -24,6 +24,7 @@ export default function ComparisonCountrySelectors(props) {
     colorScale,
     countriesThatFailedToSync,
     index,
+    hideCountText,
   } = props
   const numToShow = Math.min(maxSelectable, selectedCountries.filter(d => d !== '').length + 1)
   useEffect(() => {
@@ -45,8 +46,10 @@ export default function ComparisonCountrySelectors(props) {
     return () => clearTimeout( id )
   }
 
+  let countText = hideCountText ? null : ` (Up to ${maxSelectable})`
+
   return <div className='ComparisonCountrySelectors'>
-    <div className='label'>Add Country To Compare
+    <div className='label'>Add Country To Compare{countText}
       {hideSync ? null :
         <div className={classNames('syncButton', { syncing, synced })} onClick={sync}
           >

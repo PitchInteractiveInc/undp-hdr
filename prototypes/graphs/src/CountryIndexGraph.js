@@ -11,7 +11,7 @@ import HDIIntroGraph from './HDIIntroGraph';
 import getCountryIndexDescription from './getCountryIndexDescription';
 const countSelectable = 3
 function GraphWrapper(props) {
-  const { graph, data, country, index, syncCountries, forceSelection } = props
+  const { graph, data, country, index, syncCountries, forceSelection, indexIndex } = props
   const { type, title, noCountrySelection} = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const [countriesThatFailedToSync, setCountriesThatFailedToSync] = useState(null)
@@ -53,6 +53,7 @@ function GraphWrapper(props) {
       syncCountries={syncCountries}
       countriesThatFailedToSync={countriesThatFailedToSync}
       index={index}
+      hideCountText={indexIndex !== 0}
     />
   }
   let graphElement = null
@@ -128,7 +129,7 @@ function GraphWrapper(props) {
   )
 }
 export default function CountryIndexGraph(props) {
-  const { data, country, index, syncCountries, forceSelection } = props
+  const { data, country, index, syncCountries, forceSelection, indexIndex } = props
 
 
   let additionalIndexContent = null
@@ -157,6 +158,7 @@ export default function CountryIndexGraph(props) {
               graph={graph}
               syncCountries={syncCountries}
               forceSelection={forceSelection}
+              indexIndex={indexIndex}
             />
           })
         }

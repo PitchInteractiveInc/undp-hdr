@@ -71,6 +71,7 @@ export default function Country(props) {
             country={countryToUse}
             syncCountries={syncCountries}
             forceSelection={syncingCountries}
+            indexIndex={i}
           />
         })}
       </div>
