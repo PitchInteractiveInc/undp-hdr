@@ -187,16 +187,29 @@ function MPIGraph(props) {
   const hoverMetric = (metric) => () => {
     setHoveredMetric(metric)
   }
-  const metricGraphBars = metrics.map(metric => {
+  const masks = []
+  const metricGraphBars = metrics.map((metric, metricIndex) => {
     const value = averages[metric]
     const barWidth = metricGraphXScale(value)
     const x = runningX
     runningX += barWidth + metricGraphBarPadding
+    const maskId = `mpiMask${metricIndex}`
+    masks.push(
+      <clipPath id={maskId} key={metricIndex} >
+        <rect key={metric} x={x} y={0} width={barWidth} height={metricGraphHeight} fill='#333' />
+      </clipPath>
+    )
+    const textOpacity = !hoveredMetric || (hoveredMetric === metric) ? 1 : 0
+    const clipPathId = hoveredMetric && (hoveredMetric === metric) ? null : `url(#${maskId})`
     return (
-      <g key={metric} transform={`translate(${x}, 10)`} onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
-        <text fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
-        <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
-        <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
+      <g key={metric} clipPath={clipPathId}>
+        <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
+
+          <text opacity={textOpacity} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
+
+          <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
+          <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
+        </g>
       </g>
     )
   })
@@ -209,6 +222,10 @@ function MPIGraph(props) {
         MPI INDICES Performance
       </div>
       <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
+        <defs>
+          {masks}
+        </defs>
+
         {metricGraphBars}
       </svg>
       <div style={{ marginLeft: margins.left}}>
