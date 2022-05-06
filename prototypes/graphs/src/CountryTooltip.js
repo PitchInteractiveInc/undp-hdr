@@ -12,7 +12,7 @@ function Stat(props) {
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
   return (
     <div className={classNames('stat', { bold, bottomBorder, negative })}>
-      <div className='label'>{label}</div>
+      <div className='statLabel'>{label}</div>
       <div className={classNames('value', valueClass)}>{value}{s}</div>
     </div>
   )

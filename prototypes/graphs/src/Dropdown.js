@@ -7,7 +7,7 @@ export default function Dropdown(props) {
 
   return (
     <div className='Dropdown'>
-      <div className='label'>
+      <div className='DropdownLabel'>
         {label}
       </div>
       <div className='select'>

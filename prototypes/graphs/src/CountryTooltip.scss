@@ -33,6 +33,8 @@
     display: flex;
     justify-content: space-between;
     padding: 0.2em 0;
+    font-size: initial;
+    line-height: initial;
 
     &.bold {
       font-weight: bold;
@@ -69,7 +71,9 @@
 
   }
   .genderTable {
-
+    svg {
+      box-sizing: content-box;
+    }
     border-collapse: collapse;
     width: 100%;
     thead {

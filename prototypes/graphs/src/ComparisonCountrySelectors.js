@@ -49,7 +49,7 @@ export default function ComparisonCountrySelectors(props) {
   let countText = hideCountText ? null : ` (Up to ${maxSelectable})`
 
   return <div className='ComparisonCountrySelectors'>
-    <div className='label'>Add Country To Compare{countText}
+    <div className='countryComparisonSelectorLabel'>Add Country To Compare{countText}
       {hideSync ? null :
         <div className={classNames('syncButton', { syncing, synced })} onClick={sync}
           >

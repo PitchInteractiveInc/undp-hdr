@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   margin: 0 2em;
-
+  font-size: 16px;
 
   a.active {
     font-weight: bold;
@@ -17,6 +17,25 @@
   .negative {
     color: #F86969;
     fill: #F86969;
+  }
+
+  select {
+    width: initial;
+    margin-bottom: 0;
+    background-origin: border-box;
+  }
+
+  td, th {
+    font-size: initial;
+    line-height: initial;
+    padding: initial;
+    font-weight: initial;
+  }
+  tbody tr {
+    background-color: initial;
+    &:nth-child(2n) {
+      background-color: initial;
+    }
   }
 }
 
