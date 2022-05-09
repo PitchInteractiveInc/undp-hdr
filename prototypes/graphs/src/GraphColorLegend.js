@@ -6,7 +6,6 @@ export default function GraphColorLegend(props) {
   const style = { opacity, display: opacity ? null : 'none' }
   return (
     <div className='GraphColorLegend' style={style}>
-      <div>Color: </div>
       {rows.map((row, i) => {
         const color = row.color
         const country = row.row.Country
