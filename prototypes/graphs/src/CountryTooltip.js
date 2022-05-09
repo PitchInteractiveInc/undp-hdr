@@ -138,7 +138,7 @@ function GDIScatterTooltip(props) {
     { label: 'Life Expectancy at Birth', key: 'le', suffix: ' years', },
     { label: 'Expected Years of Schooling', key: 'eys', suffix: ' years', },
     { label: 'Mean Years of Schooling', key: 'mys', suffix: ' years', },
-    { label: 'Gross National Income Per Capita', key: 'gni_pc' },
+    { label: 'Gross National Income Per Capita (2017 PPP$)', key: 'gni_pc' },
 
   ]
 

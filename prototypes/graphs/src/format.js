@@ -15,10 +15,14 @@ export default function format(value, key) {
     case 'ineq_le':
     case 'ineq_edu':
     case 'ineq_inc':
+    case 'mf':
+    case 'co2_prod':
+    case 'diff_hdi_phdi':
       decimals = 1
       break
     case 'gnipc':
     case 'gni_pc':
+    case 'rankdiff_hdi_phdi':
       decimals = 0
       break
 
@@ -26,4 +30,5 @@ export default function format(value, key) {
       break
   }
   return (+value).toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals })
+
 }
