@@ -218,8 +218,8 @@ function MPIGraph(props) {
       <div>
         {countryDropdowns}
       </div>
-      <div style={{ fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5em'}}>
-        MPI INDICES Performance
+      <div style={{ fontWeight: 'bold', marginBottom: '0.5em'}}>
+        Contribution of deprivation in indicator to overall multidimensional poverty (%)
       </div>
       <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         <defs>
