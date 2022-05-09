@@ -137,6 +137,7 @@ function IndexGraph(props) {
       const strokeWidth = isWorld ? 2 : 1
       let label = null
       let showLabel = null
+
       data.forEach(datum => {
         const x = xScale(datum.colIndex)
         const y = yScale(datum.value)
@@ -176,6 +177,7 @@ function IndexGraph(props) {
             d={lineGen(data)}
             fill="none"
             stroke={stroke}
+            opacity={0.75}
             strokeDasharray='1,1'
             style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
           />
@@ -195,16 +197,22 @@ function IndexGraph(props) {
   ]
   let hoveredCol = null
   let hoveredColIndex = null
+
   if (hoveredPoint) {
     const {col,colIndex, row} = hoveredPoint.hover[2]
     hoveredCol = col
     hoveredColIndex = colIndex
+
     marksArray.unshift(row)
   }
   const marksFor = Array.from(new Set(marksArray))
   hoveredMarks = marksFor.map(country => {
     const isWorld = country.Country === 'World'
-
+    const isSelected = selectedCountries.includes(country.ISO3)
+    let isHovered = false
+    if (hoveredPoint && hoveredPoint.hover[2].row === country) {
+      isHovered = true
+    }
     const data = graphColumns.map((col, colIndex) => {
       if (country[col] === '') {
         return null
@@ -224,7 +232,14 @@ function IndexGraph(props) {
 
     const stroke = isWorld ? 'black' : colorScale(data[0].value)
     const strokeWidth = 2
-    let opacity = 1
+    let opacity = 0.95
+    if (isSelected || isHovered) {
+      opacity = 1
+    } else if (hoveredPoint !== null) {
+      opacity = 0.75
+    } else if (countSelectedCountries > 0) {
+      opacity = 0.85
+    }
     hoveredDots.push(<g key={`hover-${country.Country}`}>
       {data.map(datum => {
         if (isWorld && (hoveredCol === null || datum.col !== hoveredCol)) {
@@ -249,13 +264,14 @@ function IndexGraph(props) {
       return null
     }
     const labelX = xScale(data[0].colIndex)
-    const label = <text fill={stroke} dx='0.2em' fontWeight='bold'  dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
+    const label = <text fill={'black'} dx='0.2em' fontWeight='bold'  dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
     const showValueLabels = hoveredCol !== null
     let valueLabel = null
     if (showValueLabels) {
       const value = country[hoveredCol]
       const valueLabelX = xScale(hoveredColIndex)
-      valueLabel = <text textAnchor='middle'
+      const valueTextAnchor = hoveredColIndex === 0 ? 'start' : hoveredColIndex === graphColumns.length - 1 ? 'end' : 'middle'
+      valueLabel = <text textAnchor={valueTextAnchor}
         fill={stroke}
         fontWeight='bold' dy='1.2em'
         x={valueLabelX} y={yScale(value)}>
