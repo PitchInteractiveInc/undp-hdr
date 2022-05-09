@@ -335,41 +335,48 @@ function MPIBarTooltip(props) {
   const barPadding = 1
   const totalBarPadding = barPadding * (numNonZero - 1)
   const availableHeight = svgHeight - totalBarPadding
+  const minBarHeight = 12
+  let extraBarHeight = 0
+  const rects = mpiMetrics.map(metric => {
+    const value = country[metric]
+    if (value === '' || value === '0') {
+      return null
+    }
+    // console.log(metric, value)
+    let rectHeight = availableHeight * (value / 100)
+    if (rectHeight < minBarHeight) {
+      extraBarHeight += minBarHeight - rectHeight
+      rectHeight = minBarHeight
+    }
+    const rectY = runningY
+    runningY += rectHeight + barPadding
+    return (
+      <g key={metric} transform={`translate(0, ${rectY})`}>
+        <rect
+          width={barWidth}
+          height={rectHeight}
+          fill={mpiColors[metric]}
+        />
+        <text
+          x={barWidth + textPadding}
+          dy='0.85em'
+          fill={mpiColors[metric]}
+          fontWeight='bold'
+        >
+          {metric}: {format(value, 'mpi')}%
+        </text>
+
+      </g>
+    )
+    })
   return (
     <div>
       <ChangeTooltipHeader {...props} />
       <hr />
-      <svg width={svgWidth} height={svgHeight}>
+      <svg width={svgWidth} height={svgHeight + extraBarHeight}>
         <g>
 
-          {mpiMetrics.map(metric => {
-            const value = country[metric]
-            if (value === '' || value === '0') {
-              return null
-            }
-            // console.log(metric, value)
-            const rectHeight = availableHeight * (value / 100)
-            const rectY = runningY
-            runningY += rectHeight + barPadding
-            return (
-              <g key={metric} transform={`translate(0, ${rectY})`}>
-                <rect
-                  width={barWidth}
-                  height={rectHeight}
-                  fill={mpiColors[metric]}
-                />
-                <text
-                  x={barWidth + textPadding}
-                  dy='1em'
-                  fill={mpiColors[metric]}
-                  fontWeight='bold'
-                >
-                  {metric}: {format(value, 'mpi')}%
-                </text>
-
-              </g>
-            )
-            })}
+          {rects}
 
         </g>
       </svg>
