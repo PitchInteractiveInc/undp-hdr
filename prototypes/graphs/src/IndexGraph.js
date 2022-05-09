@@ -410,7 +410,7 @@ function IndexGraph(props) {
           {regionFilter}
         </div>
         <div style={{ display: 'flex', justifyContent: isHDIGraph ? 'space-between' : null}}>
-          <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
+          <span style={{ fontWeight: '600'}}>{index.key} in initial year</span>
           {index.lowerBetter ?
 
             <span className='lowerBetter'>

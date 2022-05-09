@@ -229,7 +229,7 @@ function MPIGraph(props) {
         {metricGraphBars}
       </svg>
       <div style={{ marginLeft: margins.left}}>
-        <span style={{ fontWeight: '600'}}>Line color - {index.key} in initial year</span>
+        <span style={{ fontWeight: '600'}}>{index.key}</span>
         {index.lowerBetter ?
 
           <span className='lowerBetter'>
