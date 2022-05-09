@@ -88,7 +88,11 @@ function GraphWrapper(props) {
   if (index.lowerBetter) {
     lowerBetter = (
       <div className='lowerBetter'>
-        Note: the lower {index.key} value results in higher {index.key} rank.
+        {' '}Note: the lower {index.key} values represent a better performance regarding{' '}
+        {index.key === 'MPI' ? 'multidimensional poverty' :
+          index.key === 'GII' ? 'gender inequality' :
+          index.key
+        }.
       </div>
     )
   }

@@ -414,7 +414,11 @@ function IndexGraph(props) {
           {index.lowerBetter ?
 
             <span className='lowerBetter'>
-              {' '}Note: the lower {index.key} value results in higher {index.key} rank.
+              {' '}Note: the lower {index.key} values represent a better performance regarding{' '}
+              {index.key === 'MPI' ? 'multidimensional poverty' :
+                index.key === 'GII' ? 'gender inequality' :
+                index.key
+              }.
             </span>
           : null}
           {isHDIGraph ? <span>Background color - <HDILabels inline /></span> : null}
