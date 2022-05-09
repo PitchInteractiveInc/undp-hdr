@@ -64,13 +64,14 @@ function MPIGraph(props) {
     .range([0, height])
 
   const delaunayData = []
-  // const averages = useMemo(() => {
-  //   const averages = {}
-  //   metrics.forEach(metric => {
-  //     averages[metric]  = mean(countries , d => d[metric])
-  //   })
-  //   return averages
-  // }, [countries])
+  const averages = useMemo(() => {
+    const averages = {}
+    metrics.forEach(metric => {
+      averages[metric]  = mean(countries , d => d[metric])
+    })
+    return averages
+  }, [countries])
+  console.log(averages)
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const totalBarHeight = yScale(country[mpiKey])
 
@@ -174,44 +175,44 @@ function MPIGraph(props) {
   const metricGraphHeight = 40
   const metricGraphBarHeight = 20
 
-  // const metricGraphSum = sum(metrics, metric => averages[metric])
-  // const metricGraphBarPadding = 5
-  // const metricGraphBarTotalPadding = metricGraphBarPadding * (metrics.length - 1)
-  // const metricGraphBarWidth = svgWidth - metricGraphBarTotalPadding
-  // const metricGraphXScale = scaleLinear()
-  //   .domain([0, metricGraphSum])
-  //   .range([0, metricGraphBarWidth])
+  const metricGraphSum = sum(metrics, metric => averages[metric])
+  const metricGraphBarPadding = 5
+  const metricGraphBarTotalPadding = metricGraphBarPadding * (metrics.length - 1)
+  const metricGraphBarWidth = svgWidth - metricGraphBarTotalPadding
+  const metricGraphXScale = scaleLinear()
+    .domain([0, metricGraphSum])
+    .range([0, metricGraphBarWidth])
 
-  // let runningX = 0
-  // const hoverMetric = (metric) => () => {
-  //   setHoveredMetric(metric)
-  // }
+  let runningX = 0
+  const hoverMetric = (metric) => () => {
+    setHoveredMetric(metric)
+  }
   const masks = []
-  // const metricGraphBars = metrics.map((metric, metricIndex) => {
-  //   const value = averages[metric]
-  //   const barWidth = metricGraphXScale(value)
-  //   const x = runningX
-  //   runningX += barWidth + metricGraphBarPadding
-  //   const maskId = `mpiMask${metricIndex}`
-  //   masks.push(
-  //     <clipPath id={maskId} key={metricIndex} >
-  //       <rect key={metric} x={x} y={0} width={barWidth} height={metricGraphHeight} fill='#333' />
-  //     </clipPath>
-  //   )
-  //   const textOpacity = !hoveredMetric || (hoveredMetric === metric) ? 1 : 0
-  //   const clipPathId = hoveredMetric && (hoveredMetric === metric) ? null : `url(#${maskId})`
-  //   return (
-  //     <g key={metric} clipPath={clipPathId}>
-  //       <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
+  const metricGraphBars = metrics.map((metric, metricIndex) => {
+    const value = averages[metric]
+    const barWidth = metricGraphXScale(value)
+    const x = runningX
+    runningX += barWidth + metricGraphBarPadding
+    const maskId = `mpiMask${metricIndex}`
+    masks.push(
+      <clipPath id={maskId} key={metricIndex} >
+        <rect key={metric} x={x} y={0} width={barWidth} height={metricGraphHeight} fill='#333' />
+      </clipPath>
+    )
+    const textOpacity = !hoveredMetric || (hoveredMetric === metric) ? 1 : 0
+    const clipPathId = hoveredMetric && (hoveredMetric === metric) ? null : `url(#${maskId})`
+    return (
+      <g key={metric} clipPath={clipPathId}>
+        <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
 
-  //         <text opacity={textOpacity} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
+          <text opacity={textOpacity} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
 
-  //         <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
-  //         <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
-  //       </g>
-  //     </g>
-  //   )
-  // })
+          <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
+          <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
+        </g>
+      </g>
+    )
+  })
   return (
     <div className='IndexGraph'>
       <div>
@@ -220,13 +221,13 @@ function MPIGraph(props) {
       <div style={{ fontWeight: 'bold', marginBottom: '0.5em'}}>
         Contribution of deprivation in indicator to overall multidimensional poverty (%)
       </div>
-      {/* <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
+      <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         <defs>
           {masks}
         </defs>
 
         {metricGraphBars}
-      </svg> */}
+      </svg>
       <div style={{ marginLeft: margins.left}}>
         <span style={{ fontWeight: '600'}}>{index.key}</span>
         {index.lowerBetter ?
