@@ -6,6 +6,7 @@ import { Delaunay } from "d3-delaunay"
 import { useState, useRef } from "react"
 import CountryTooltip from "./CountryTooltip"
 import { regions } from "./RegionFilter"
+import { useNavigate } from "react-router-dom"
 export const hdiIntroColorScale = scaleThreshold()
   .domain([0.55, 0.7, 0.8, 1])
   .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
@@ -101,6 +102,21 @@ export default function HDIIntroGraph(props) {
     regionText = region.name
   }
 
+
+  const navigate = useNavigate()
+
+  const clickGraph = () => {
+    if (hoveredPoint) {
+      const clickedCountry = hoveredPoint.hover[2].row
+      const iso3 = clickedCountry.ISO3
+      if (country && iso3 && country.ISO3 !== iso3) {
+        navigate(`/countries/${iso3}`, { replace: true })
+      }
+    }
+  }
+  const cursor = hoveredPoint && hoveredPoint.hover[2].row.ISO3 && hoveredPoint.hover[2].row.ISO3 !== country.ISO3 ? 'pointer' : 'default'
+
+
   return (
     <div className='HDIIntroGraph'>
       <div className='largeStats'>
@@ -123,7 +139,10 @@ export default function HDIIntroGraph(props) {
             onMouseMove={mouseMove}
             onMouseEnter={mouseMove}
             onMouseLeave={mouseLeave}
-            ref={svgRef}>
+            ref={svgRef}
+            onClick={clickGraph}
+            style={{ cursor }}
+            >
             <g transform={`translate(${margins.left}, ${margins.top})`}>
               <g>{countryBars}</g>
               <g>{hdiRanks.map((rank, rankIndex) => {
