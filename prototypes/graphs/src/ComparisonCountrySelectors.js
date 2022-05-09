@@ -59,7 +59,7 @@ export default function ComparisonCountrySelectors(props) {
             'Sync'
           }
           <div className='tip'>{countriesThatFailedToSync ?
-            `Some countries do not have data for ${index.key} and did not sync` : 'Click To Sync Country Selection'}</div>
+            `Some countries do not have data for ${index.key} and did not sync` : 'Click to sync country selection(s)'}</div>
         </div>
       }
     </div>
