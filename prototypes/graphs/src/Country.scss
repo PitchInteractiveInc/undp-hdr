@@ -27,9 +27,10 @@
   }
   .countryIntro {
     font-size: 2em;
-    margin: 1em 0;
+    margin: 0.5em 0 0;
   }
   .downloadLinks {
+    margin-top: 1em;
     .downloadLabel {
       font-weight: bold;
       text-transform: uppercase;
@@ -40,7 +41,7 @@
     }
   }
   .indicies {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 
   a {

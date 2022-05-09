@@ -50,15 +50,15 @@ export default function Country(props) {
         <div className='countryName'>{country.Country}</div>
       </div>
       <div className='population'>Population {formattedPopulation}</div>
-      <div className='countryIntro'>
-        An interactive human development summary for {country.Country}, capturing the achievements in the HDI (assessment of the population’s average longevity, knowledge, and standard of living) and a set of complementary measures that estimate gender gaps, inequality, planetary pressures, and poverty (covering developing countries).
-      </div>
       <div className='downloadLinks'>
         <span className='downloadLabel'>Download</span>
         <a href="#">Country Data (csv)</a>
         <a href="#">Metadata (PDF)</a>
         <a href="#">Print this page</a>
 
+      </div>
+      <div className='countryIntro'>
+        An interactive human development summary for {country.Country}, capturing the achievements in the HDI (assessment of the population’s average longevity, knowledge, and standard of living) and a set of complementary measures that estimate gender gaps, inequality, planetary pressures, and poverty (covering developing countries).
       </div>
       <div className='indicies'>
         {indicators.map((indicator, i) => {
