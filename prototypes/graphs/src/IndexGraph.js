@@ -93,6 +93,7 @@ function IndexGraph(props) {
   const yScale = useMemo(() => scaleLinear()
     .domain(yExtent)
     .range([height, 0])
+    .clamp(true)
   , [yExtent])
 
   const colorScale = useMemo(() => scaleQuantize()
@@ -329,7 +330,7 @@ function IndexGraph(props) {
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {yearRect}
-        <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} strokeDasharray='4,4' />
+        <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} opacity={0.5} strokeDasharray='4,4' />
         <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
       </g>
     )
@@ -357,15 +358,18 @@ function IndexGraph(props) {
   })
 
   const backgroundRects = isHDIGraph ? hdiBackgroundRectData.map(rect => {
+    const y0 = yScale(rect.y0)
+    const y1 = yScale(rect.y1)
+    const barHeight = Math.abs(y0 - y1)
     return (
       <rect
         key={`${rect.fill}-${rect.opacity}`}
         fill={rect.fill}
         opacity={rect.opacity}
         x={0}
-        y={height * (1-rect.y1)}
-        width={width}
-        height={height * (rect.y1 - rect.y0)}
+        y={y1}
+        width={width + margins.right}
+        height={barHeight}
       />
     )
   }) : null
@@ -437,7 +441,7 @@ function IndexGraph(props) {
               }.
             </span>
           : null}
-          {isHDIGraph ? <span>Background color - <HDILabels inline /></span> : null}
+          {isHDIGraph ? <span><HDILabels inline /></span> : null}
         </div>
       </div>
       <div>
