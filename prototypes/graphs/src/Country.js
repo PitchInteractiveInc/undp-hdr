@@ -46,7 +46,7 @@ export default function Country(props) {
       </select> */}
       <div className='dataUpdated'>Data updates as of DD.MM.YYYY</div>
       <div className='countryNameAndFlag'>
-        <img src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`${country.Country} flag`} />
+        <img key={country.ISO3} src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`${country.Country} flag`} />
         <div className='countryName'>{country.Country}</div>
       </div>
       <div className='population'>Population {formattedPopulation}</div>
