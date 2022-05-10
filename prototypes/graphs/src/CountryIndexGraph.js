@@ -61,22 +61,6 @@ function GraphWrapper(props) {
   let graphWidth = printing ? 600 : 700
   let graphHeight = printing ? 360 : 460
 
-  switch(type) {
-    case 'hdiIntro':
-      graphElement = <HDIIntroGraph {...props} width={graphWidth} height={graphHeight}  />
-      break
-    case 'scatter':
-      graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} />
-      break
-    case 'bar':
-      graphElement = <BarGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} />
-      break
-    case 'difference':
-      graphElement = <DifferenceGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} printing={printing} />
-      break
-    default:
-      graphElement = <div>No graph for {type}</div>
-  }
   let titleText = null
   if (title) {
     const columns = getGraphColumnsForKey(data, index.key)
@@ -126,6 +110,25 @@ function GraphWrapper(props) {
       The {index.key} covers {countries.length} {index.key === 'MPI' ? ' developing ' : ''} countries only, and is not computed for {joinedCountryList}.
     </div>
   }
+
+
+  switch(type) {
+    case 'hdiIntro':
+      graphElement = <HDIIntroGraph {...props} width={graphWidth} height={graphHeight}  />
+      break
+    case 'scatter':
+      graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} missingCountries={missingCountries}/>
+      break
+    case 'bar':
+      graphElement = <BarGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} missingCountries={missingCountries} />
+      break
+    case 'difference':
+      graphElement = <DifferenceGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} printing={printing} missingCountries={missingCountries} />
+      break
+    default:
+      graphElement = <div>No graph for {type}</div>
+  }
+
   return (
     <div className={classNames('indexGraph', { pageBreakAfter })}>
       {titleText}

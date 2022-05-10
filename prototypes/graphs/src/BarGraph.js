@@ -11,7 +11,7 @@ import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useNavigate } from 'react-router-dom';
 export default function BarGraph(props) {
-  const { data, country, index, selectedCountries, graph, width, height } = props
+  const { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
   const selectedCountry = country
   const [hoveredPoint, setHoveredPoint] = useState(null)
 
@@ -174,7 +174,7 @@ export default function BarGraph(props) {
 
   return (
     <div className='BarGraph'>
-      <GraphColorLegend rows={legendRows} />
+      <GraphColorLegend rows={legendRows} missingCountries={missingCountries} />
       <div className='svgContainer'>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}

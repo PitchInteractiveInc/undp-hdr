@@ -27,7 +27,7 @@ export const colors = [
   '#006eb5',
 ]
 export default function ScatterGraph(props) {
-  const { data, country, index, selectedCountries, graph, width, height } = props
+  const { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
@@ -263,7 +263,7 @@ export default function ScatterGraph(props) {
   const cursor = hoveredPoint && hoveredPoint.hover[2].row.ISO3 && hoveredPoint.hover[2].row.ISO3 !== country.ISO3 ? 'pointer' : 'default'
   return (
     <div className='ScatterGraph'>
-      <GraphColorLegend rows={rowsToPlot} />
+      <GraphColorLegend rows={rowsToPlot} missingCountries={missingCountries} />
       {hdiLabels}
       <div className='svgContainer'>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}

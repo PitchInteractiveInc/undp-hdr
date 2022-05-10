@@ -24,7 +24,7 @@ export const colors = [
   '#006eb5',
 ]
 export default function DifferenceGraph(props) {
-  let { data, country, index, selectedCountries, graph, width, height, printing } = props
+  let { data, country, index, selectedCountries, graph, width, height, printing, missingCountries } = props
   const selectedCountry = country
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
@@ -295,7 +295,7 @@ export default function DifferenceGraph(props) {
     )
   }
 
-  let legend = <GraphColorLegend key='color' rows={rowsToPlot} />
+  let legend = <GraphColorLegend key='color' rows={rowsToPlot} missingCountries={missingCountries} />
   if (hdiGraph) {
     const legendStyle = {}
     if (printing) {
