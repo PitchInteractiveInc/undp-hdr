@@ -304,7 +304,7 @@ export default function DifferenceGraph(props) {
     legend = (
       <svg xmlns="http://www.w3.org/2000/svg" width="759.5" height="21" viewBox="0 0 759.5 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
         <g style={legendStyle}>
-          <text id="How_to_read_this_chart:" data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
+          <text id="How_to_read_this_chart:" fontWeight='600' data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
           <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
           <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">previous year</tspan></text>
           <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">increase</tspan></text>
