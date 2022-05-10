@@ -88,11 +88,12 @@ export default function Graph(props) {
     maxSelectable={3}
     colorByIndexValue={true}
   />
-
+  const fill = '#b8ecb6'
   const phdiMidpoint = (phdiExtent[0] + phdiExtent[1]) / 2
   const colorScale = scaleLinear()
     .domain([phdiExtent[0], phdiMidpoint, phdiExtent[1]])
-    .range(['#ffbcb7', '#fef17e', '#b8ecb6'])
+    // .range(['#ffbcb7', '#fef17e', '#b8ecb6'])
+    .range([fill, fill, fill])
   const delaunayData = []
 
   const countryBars = sortedCountries.map((country, countryIndex) => {
@@ -183,12 +184,12 @@ export default function Graph(props) {
               <stop offset="1" stop-color="#b9ebb8"/>
             </linearGradient>
           </defs>
-          <text id="PHDI_rank" data-name="PHDI rank" font-size="16" font-weight="600"><tspan x="0" y="15">PHDI rank</tspan></text>
+          {/* <text id="PHDI_rank" data-name="PHDI rank" font-size="16" font-weight="600"><tspan x="0" y="15">PHDI rank</tspan></text> */}
           <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(475.087)" font-size="16" font-weight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
           <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V8.57H0Z" transform="translate(652.517 15) rotate(180)"/>
-          <rect id="Rectangle_25574" data-name="Rectangle 25574" width="300" height="8.57" transform="translate(116 6.43)" fill="url(#linear-gradient)"/>
-          <text id="low" transform="translate(108 1.5)" font-size="14"><tspan x="-21.434" y="13">low</tspan></text>
-          <text id="high" transform="translate(424 1.5)" font-size="14"><tspan x="0" y="13">high</tspan></text>
+          {/* <rect id="Rectangle_25574" data-name="Rectangle 25574" width="300" height="8.57" transform="translate(116 6.43)" fill="url(#linear-gradient)"/> */}
+          {/* <text id="low" transform="translate(108 1.5)" font-size="14"><tspan x="-21.434" y="13">low</tspan></text>
+          <text id="high" transform="translate(424 1.5)" font-size="14"><tspan x="0" y="13">high</tspan></text> */}
         </svg>
 
       </div>
