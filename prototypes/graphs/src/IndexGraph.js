@@ -232,7 +232,7 @@ function IndexGraph(props) {
     }
 
     const stroke = isWorld ? 'black' : colorScale(data[0].value)
-    const strokeWidth = 2
+    const strokeWidth = 3
     let opacity = 0.95
     if (isSelected || isHovered) {
       opacity = 1
