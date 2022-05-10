@@ -27,7 +27,7 @@ export const colors = [
   '#006eb5',
 ]
 export default function ScatterGraph(props) {
-  const { data, country, index, selectedCountries, graph } = props
+  const { data, country, index, selectedCountries, graph, width, height } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
@@ -35,8 +35,6 @@ export default function ScatterGraph(props) {
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
-  const width = 700
-  const height = 460
   const margins = { top: 10, right: 20, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom

@@ -6,6 +6,7 @@ import CountryIndexGraph from './CountryIndexGraph'
 import useMPIData from "./useMPIData"
 import { useEffect, useState, useCallback } from "react"
 import getGraphColumnsForKey from "./getGraphColumnsForKey"
+import useDetectPrint from "./useDetectPrint"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -27,15 +28,25 @@ export default function Country(props) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
   }, [params.country])
+
+  const printing = useDetectPrint()
+  const [printingViaButton, setPrintingViaButton] = useState(false)
   if (!data || !mpiData) {
     return
   }
 
   const country = data.find(d => d.ISO3 === params.country)
-
   const populationColumns = getGraphColumnsForKey(data, 'pop_total')
   const lastPopulationColumn = populationColumns[populationColumns.length - 1]
   const formattedPopulation = (country[lastPopulationColumn] * 1000000).toLocaleString()
+  const print = () => {
+    setPrintingViaButton(true)
+    setTimeout(() => {
+      window.print()
+      setPrintingViaButton(false)
+
+    }, 100)
+  }
   return (
     <div className='CountryDetail'>
 
@@ -54,7 +65,7 @@ export default function Country(props) {
         <span className='downloadLabel'>Download</span>
         <a href="#">Country Data (csv)</a>
         <a href="#">Metadata (PDF)</a>
-        <a href="#">Print this page</a>
+        <button onClick={print}>Print this page</button>
 
       </div>
       <div className='countryIntro'>
@@ -71,6 +82,7 @@ export default function Country(props) {
             syncCountries={syncCountries}
             forceSelection={syncingCountries}
             indexIndex={i}
+            printing={printing || printingViaButton}
           />
         })}
       </div>

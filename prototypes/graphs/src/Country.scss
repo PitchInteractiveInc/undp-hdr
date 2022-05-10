@@ -35,7 +35,7 @@
       font-weight: bold;
       text-transform: uppercase;
     }
-    a {
+    a, button {
       display: inline-block;
       margin: 0 1em;
     }
@@ -44,11 +44,18 @@
     margin-top: 1em;
   }
 
-  a {
+  a, button {
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+
     border-bottom: 2px solid #D12800;
     text-decoration: none;
     color: #000;
   }
+
 
 
   .footnote {

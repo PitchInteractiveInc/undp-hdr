@@ -2,10 +2,14 @@
 
   display: flex;
 
+  .pageBreakAfter, &.pageBreakAfter {
+    break-after: page;
+  }
   .graphTitle {
     font-weight: bold;
     font-size: 1.5em;
     margin-bottom: 0.5em;
+
   }
   + .CountryIndexGraph {
     margin-top: 4em;
@@ -21,9 +25,18 @@
       font-weight: bold;
       font-size: 3em;
       line-height: 1em;
+      @media print {
+        font-size: 2em;
+      }
     }
     .description {
       margin: 1em 0;
+    }
+  }
+
+  .indicatorLink {
+    @media print {
+      display: none;
     }
   }
 
@@ -31,6 +44,8 @@
     width: calc(70% - 4em);
     margin-left: 4em;
     .indexGraph {
+
+
       + .indexGraph {
         margin-top: 2em;
       }
@@ -46,6 +61,7 @@
   }
   .differenceLegend {
     margin-bottom: 0.5em;
+
     svg {
       display: block;
     }

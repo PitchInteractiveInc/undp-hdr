@@ -14,6 +14,7 @@ const indicators =  [
         type: 'difference',
         title: ({country, extent}) => `Trends in ${country}'s HDI ${extent.join(' – ')}`,
         noCountrySelection: true,
+        pageBreakAfter: true,
       },
       {
         type: 'scatter',
@@ -24,6 +25,7 @@ const indicators =  [
   {
     key: 'GDI',
     name: 'Gender Development Index',
+    pageBreakAfter: true,
     countryGraphs: [
       {
         type: 'scatter',
@@ -45,11 +47,11 @@ const indicators =  [
   {
     key: 'GII',
     name: 'Gender Inequality index',
+    pageBreakAfter: true,
     countryGraphs: [
       {
         type: 'scatter',
         title: ({country, extent}) => `GII in comparison ${extent.join(' – ')}`,
-
       }
     ],
     lowerBetter: true,

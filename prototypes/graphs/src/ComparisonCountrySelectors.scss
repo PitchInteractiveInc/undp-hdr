@@ -19,6 +19,9 @@
     text-transform: uppercase;
     font-size: 0.7em;
     max-width: 20em;
+    @media print {
+      max-width: 15em;
+    }
 
     appearance: none;
     padding: 0.6em 2.5em 0.6em 1em;
@@ -52,7 +55,9 @@
     align-items: center;
     transition: color 0.3s ease-in-out;
     position: relative;
-
+    @media print {
+      display: none;
+    }
     .tip {
       position: absolute;
       font-weight: normal;
