@@ -33,6 +33,8 @@
     display: flex;
     justify-content: space-between;
     padding: 0.2em 0;
+    font-size: inherit;
+    line-height: inherit;
 
     &.bold {
       font-weight: bold;
