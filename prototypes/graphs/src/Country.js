@@ -7,6 +7,7 @@ import useMPIData from "./useMPIData"
 import { useEffect, useState, useCallback } from "react"
 import getGraphColumnsForKey from "./getGraphColumnsForKey"
 import useDetectPrint from "./useDetectPrint"
+import { csvFormat } from "d3-dsv"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -47,6 +48,30 @@ export default function Country(props) {
 
     }, 100)
   }
+
+  const download = () => {
+    const merged = { ...country}
+
+    const mpiCountry = mpiData.find(d => d.Country === country.Country)
+    if (mpiCountry) {
+      Object.keys(mpiCountry).forEach(key => {
+        merged[key] = mpiCountry[key]
+      })
+    }
+    const csv = csvFormat([merged])
+    const a = document.createElement("a");
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.href = window.URL.createObjectURL(
+      new Blob([csv], { type: "text/csv" })
+    );
+    a.setAttribute("download", `${country.Country}.csv`);
+    a.click();
+
+    window.URL.revokeObjectURL(a.href);
+    document.body.removeChild(a);
+
+  }
   return (
     <div className='CountryDetail'>
 
@@ -63,7 +88,7 @@ export default function Country(props) {
       <div className='population'>Population {formattedPopulation}</div>
       <div className='downloadLinks'>
         <span className='downloadLabel'>Download</span>
-        <a href="#">Country Data (csv)</a>
+        <button onClick={download}>Country Data (csv)</button>
         <a href="#">Metadata (PDF)</a>
         <button onClick={print}>Print this page</button>
 
