@@ -7,18 +7,20 @@ import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import { Delaunay } from 'd3-delaunay';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
+
 export const mpiColors = {
-  'Child mortality': '#1f5a95',
-  'Nutrition': '#006eb5',
-  'Sanitation': '#3288ce',
-  'Years of schooling': '#4f95dd',
-  'School attendance': '#6babeb',
-  'Drinking water': '#94c4f5',
-  'Electricity': '#b5d5f5',
-  'Cooking fuel': '#a9b1b7',
-  'Assets': '#55606f',
-  'Housing': '#232E3E'
+  'Nutrition': '#1f5a95',
+  'Years of schooling': '#006eb5',
+  'School attendance': '#3288ce',
+  'Child mortality': '#4f95dd',
+  'Cooking fuel': '#6babeb',
+  'Housing': '#94c4f5',
+  'Sanitation': '#b5d5f5',
+  'Electricity': '#a9b1b7',
+  'Drinking water': '#55606f',
+  'Assets': '#232E3E'
 }
+
 const metrics = Object.keys(mpiColors)
 export default function MPIGraphWrapper(props) {
   const mpiData = useMPIData()
