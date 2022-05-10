@@ -33,8 +33,6 @@
     display: flex;
     justify-content: space-between;
     padding: 0.2em 0;
-    font-size: initial;
-    line-height: initial;
 
     &.bold {
       font-weight: bold;
@@ -54,7 +52,7 @@
       font-weight: 600;
     }
     .suffix {
-      font-size: 0.71em;
+      font-size: 0.85em;
     }
   }
 
@@ -70,6 +68,10 @@
     margin-top: -0.25em;
 
   }
+
+  td, th {
+    font-size: inherit;
+  }
   .genderTable {
     svg {
       box-sizing: content-box;
@@ -78,7 +80,6 @@
     width: 100%;
     thead {
       background-color: #EDEFF0;
-      font-size: 0.85em;
       td {
         white-space: nowrap;
       }
