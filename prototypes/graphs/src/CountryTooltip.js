@@ -66,7 +66,7 @@ function GenderTable(props) {
       <thead>
         <tr>
           <td />
-          <td>Female</td>
+          <td style={{ paddingRight: '0.3em'}}>Female </td>
           <td>Male</td>
           <td className='negative'>Gender gap</td>
         </tr>
@@ -135,7 +135,7 @@ function GenderTable(props) {
 function GDIScatterTooltip(props) {
   const tableKeys = [
     { label: 'HDI Value', key: 'hdi', colorGenders: true, showGraph: true },
-    { label: 'Life Expectancy at Birth', key: 'le', suffix: ' years', },
+    { label: <>Life Expectancy at<br />Birth</>, key: 'le', suffix: ' years', },
     { label: 'Expected Years of Schooling', key: 'eys', suffix: ' years', },
     { label: 'Mean Years of Schooling', key: 'mys', suffix: ' years', },
     { label: 'Gross National Income Per Capita (2017 PPP$)', key: 'gni_pc' },

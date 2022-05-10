@@ -4,10 +4,7 @@ const useDetectPrint = () => {
   const [isPrinting, setIsPrinting] = useState(false);
   const handleBeforeprint = () => setIsPrinting(true);
   const handleAfterprint = () => setIsPrinting(false);
-  console.log(isPrinting)
-  const handleChange = (e) => {
-    console.log(e)
-  }
+
   useEffect(() => {
     window.addEventListener("beforeprint", handleBeforeprint);
     window.addEventListener("afterprint", handleAfterprint);
