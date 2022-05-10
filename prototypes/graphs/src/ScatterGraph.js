@@ -35,7 +35,7 @@ export default function ScatterGraph(props) {
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
-  const margins = { top: 10, right: 20, bottom: 20, left: 0 }
+  const margins = { top: 10, right: 50, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -264,7 +264,9 @@ export default function ScatterGraph(props) {
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} missingCountries={missingCountries} />
-      {hdiLabels}
+      <div style={{ marginRight: margins.right + 26, float: 'right'}}>
+        {hdiLabels}
+      </div>
       <div className='svgContainer'>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}

@@ -24,7 +24,7 @@ export default function BarGraph(props) {
     && (d.ISO3 !== '' || d.Country === 'World'))
   // console.log(filteredData)
 
-  const margins = { top: 10, right: 30, bottom: 20, left: 0 }
+  const margins = { top: 10, right: 50, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 

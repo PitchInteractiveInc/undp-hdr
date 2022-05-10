@@ -39,7 +39,7 @@ export default function DifferenceGraph(props) {
   }
   const ihdiGraph = index.key === 'IHDI'
 
-  const margins = { top: 0, right: 20, bottom: 20, left: 0 }
+  const margins = { top: 0, right: 50, bottom: 20, left: 0 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
   const navigate = useNavigate()
