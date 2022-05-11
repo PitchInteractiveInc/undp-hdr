@@ -27,7 +27,7 @@ export const colors = [
   '#006eb5',
 ]
 export default function ScatterGraph(props) {
-  const { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
+  let { data, country, index, selectedCountries, graph, width, height, missingCountries, printing } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
@@ -36,9 +36,10 @@ export default function ScatterGraph(props) {
   // console.log(graphColumns)
 
   const margins = { top: 10, right: 50, bottom: 20, left: 0 }
+  width -= margins.left + margins.right
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
-
+  const showEveryOtherYLabel = width < 500
   // const saveSVG = (event) => {
   //   exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   // }
@@ -168,7 +169,9 @@ export default function ScatterGraph(props) {
     const x = xScale(columnIndex + 0.5)
     const showYearLines = isHDIGraph
     const showYearRects = !isHDIGraph
-    const everyOtherLabel = graphColumns.length > 20
+    let everyOtherLabel = graphColumns.length > 20
+    let labelModulo = showEveryOtherYLabel && everyOtherLabel ? 4 : 2
+    everyOtherLabel |= showEveryOtherYLabel
     const nextYearConsecutive = (columnIndex < graphColumns.length - 1) && (+getYearOfColumn(graphColumns[columnIndex + 1]) === year + 1)
     const yearRectWidth = nextYearConsecutive ? xScale(1) : xScale(1) * 0.8
     return (
@@ -184,7 +187,7 @@ export default function ScatterGraph(props) {
             fill={(columnIndex % 2 === 1 || !nextYearConsecutive) ? (nextYearConsecutive ? '#F6F7F7' : '#FCFCFC') : '#FCFCFC'}
           />
           : null }
-        {!everyOtherLabel || columnIndex % 2 === 0  ?
+        {!everyOtherLabel || columnIndex % labelModulo === 0  ?
           <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
           : null }
       </g>
@@ -264,7 +267,10 @@ export default function ScatterGraph(props) {
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} missingCountries={missingCountries} />
-      <div style={{ marginRight: margins.right + 26, float: 'right'}}>
+      <div style={{ marginRight: printing ? null : margins.right, float: 'right',
+        transform: printing ? 'scale(0.8)' : null,
+        transformOrigin: 'right'
+      }}>
         {hdiLabels}
       </div>
       <div className='svgContainer'>

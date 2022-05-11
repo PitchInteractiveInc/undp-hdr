@@ -13,6 +13,9 @@
         font-size: 2em;
         font-weight: bold;
         line-height: 1em;
+        @media print {
+          font-size: 1.5em;
+        }
       }
     }
   }

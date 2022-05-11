@@ -12,7 +12,7 @@ function App() {
   return (
     <div className="App">
       <HashRouter>
-        <div>
+        <div className='nav'>
           <NavLink to='/indicies'>Indicies Graphs</NavLink>{' '}
           {/* <NavLink to='/ppaHDI'>Planetary pressures adjusted HDI</NavLink>{' '}
           <NavLink to='/mpi'>MPI</NavLink>{' '} */}

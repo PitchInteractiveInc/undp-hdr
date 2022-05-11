@@ -8,6 +8,9 @@ import { useEffect, useState, useCallback } from "react"
 import getGraphColumnsForKey from "./getGraphColumnsForKey"
 import useDetectPrint from "./useDetectPrint"
 import { csvFormat } from "d3-dsv"
+import {useWindowSize} from 'react-use';
+import classNames from "classnames"
+
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -18,6 +21,15 @@ export default function Country(props) {
     setSyncingCountries(countries)
   }, [])
 
+  const windowSize = useWindowSize()
+  const maxBlockSize = 1392
+  const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
+  const singleColumnLayout = windowWidth <= 700
+  const maxGraphWidth = maxBlockSize * 0.7 - 64;
+  const measuredGraphWidth = windowWidth * 0.7 - 64;
+  const potentialMultiColumnGraphWidth = Math.min(maxGraphWidth, measuredGraphWidth)
+  const graphWidth = singleColumnLayout ?  windowWidth : potentialMultiColumnGraphWidth
+  console.log(graphWidth)
 
   useEffect(() => {
     if (syncingCountries) {
@@ -73,7 +85,7 @@ export default function Country(props) {
 
   }
   return (
-    <div className='CountryDetail'>
+    <div className={ classNames('CountryDetail', { singleColumnLayout })}>
 
       {/* <select value={params.country} onChange={setCountry}>
         {data.map(d => {
@@ -108,6 +120,7 @@ export default function Country(props) {
             forceSelection={syncingCountries}
             indexIndex={i}
             printing={printing || printingViaButton}
+            graphWidth={graphWidth}
           />
         })}
       </div>

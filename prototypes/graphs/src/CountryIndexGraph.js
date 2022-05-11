@@ -12,7 +12,7 @@ import getCountryIndexDescription from './getCountryIndexDescription';
 import classNames from 'classnames';
 const countSelectable = 3
 function GraphWrapper(props) {
-  const { graph, data, country, index, syncCountries, forceSelection, indexIndex, printing } = props
+  const { graph, data, country, index, syncCountries, forceSelection, indexIndex, printing, graphWidth } = props
   const { type, title, noCountrySelection, pageBreakAfter } = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const [countriesThatFailedToSync, setCountriesThatFailedToSync] = useState(null)
@@ -58,8 +58,9 @@ function GraphWrapper(props) {
     />
   }
   let graphElement = null
-  let graphWidth = printing ? 600 : 700
-  let graphHeight = printing ? 360 : 460
+  const printWidth = 500
+  let width = printing ? printWidth : graphWidth
+  let graphHeight = printing ? 230 : 460
 
   let titleText = null
   if (title) {
@@ -114,16 +115,16 @@ function GraphWrapper(props) {
 
   switch(type) {
     case 'hdiIntro':
-      graphElement = <HDIIntroGraph {...props} width={graphWidth} height={graphHeight}  />
+      graphElement = <HDIIntroGraph {...props} width={width} height={graphHeight}  />
       break
     case 'scatter':
-      graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} missingCountries={missingCountries}/>
+      graphElement = <ScatterGraph {...props} selectedCountries={selectedCountries} width={width} height={graphHeight} missingCountries={missingCountries}/>
       break
     case 'bar':
-      graphElement = <BarGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} missingCountries={missingCountries} />
+      graphElement = <BarGraph {...props} selectedCountries={selectedCountries} width={width} height={graphHeight} missingCountries={missingCountries} />
       break
     case 'difference':
-      graphElement = <DifferenceGraph {...props} selectedCountries={selectedCountries} width={graphWidth} height={graphHeight} printing={printing} missingCountries={missingCountries} />
+      graphElement = <DifferenceGraph {...props} selectedCountries={selectedCountries} width={width} height={graphHeight} printing={printing} missingCountries={missingCountries} />
       break
     default:
       graphElement = <div>No graph for {type}</div>
@@ -140,7 +141,7 @@ function GraphWrapper(props) {
   )
 }
 export default function CountryIndexGraph(props) {
-  const { data, country, index, syncCountries, forceSelection, indexIndex, printing } = props
+  const { data, country, index, syncCountries, forceSelection, indexIndex, printing, graphWidth } = props
 
   const { pageBreakAfter } = index
   let additionalIndexContent = null
@@ -171,6 +172,7 @@ export default function CountryIndexGraph(props) {
               forceSelection={forceSelection}
               indexIndex={indexIndex}
               printing={printing}
+              graphWidth={graphWidth}
             />
           })
         }

@@ -69,10 +69,11 @@ export default function getCountryIndexDescription(country, index, data) {
     } else if (index.key === 'GDI') {
       const femaleHdi = format(country[`hdi_f_${latestYear}`], 'hdi_f')
       const maleHdi = format(country[`hdi_m_${latestYear}`], 'hdi_m')
-
+      const group = country[`gdi_group_2019`]
+      const groupText = group !== '' ? `, placing it into Group ${group}` : ''
       description = (
         <p>
-          {defaults[index.key]} The {latestYear} female HDI value for {country.Country} is {femaleHdi} in contrast with {maleHdi} for males, resulting in a GDI value of {latestValueFormatted}, placing it into Group {country[`gdi_group_${latestYear}`]}.
+          {defaults[index.key]} The {latestYear} female HDI value for {country.Country} is {femaleHdi} in contrast with {maleHdi} for males, resulting in a GDI value of {latestValueFormatted}{groupText}.
         </p>
       )
     } else if (index.key === 'GII') {

@@ -34,15 +34,17 @@ export default function DifferenceGraph(props) {
   // console.log(graphColumns)
 
   const hdiGraph = index.key === 'HDI'
-  if (hdiGraph) {
+  if (hdiGraph && ! printing) {
     height = 292
   }
   const ihdiGraph = index.key === 'IHDI'
 
   const margins = { top: 0, right: 50, bottom: 20, left: 0 }
+  width -= margins.left + margins.right
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
   const navigate = useNavigate()
+  const showEveryOtherYLabel = width < 500
   // const saveSVG = (event) => {
   //   exportSVG(event.target.closest('svg'), `${selectedMetric['Full name']}.svg`)
   // }
@@ -238,7 +240,9 @@ export default function DifferenceGraph(props) {
     const x = xScale(columnIndex + 0.5)
     const showYearLines = false
     const showYearRects = true
-    const everyOtherLabel = graphColumns.length > 20
+    let everyOtherLabel = graphColumns.length > 20
+    let labelModulo = showEveryOtherYLabel && everyOtherLabel ? 4 : 2
+    everyOtherLabel |= showEveryOtherYLabel
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {showYearLines ?
@@ -252,7 +256,7 @@ export default function DifferenceGraph(props) {
             fill={columnIndex % 2 === 0 ? '#F6F7F7' : '#fcfcfc'}
           />
           : null }
-        {!everyOtherLabel || columnIndex % 2 === 0  ?
+        {!everyOtherLabel || columnIndex % labelModulo === 0  ?
           <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
           : null }
       </g>
@@ -298,11 +302,15 @@ export default function DifferenceGraph(props) {
   let legend = <GraphColorLegend key='color' rows={rowsToPlot} missingCountries={missingCountries} />
   if (hdiGraph) {
     const legendStyle = {}
-    if (printing) {
-      legendStyle.transform = 'scale(0.9)'
+    const svgStyle = { overflow: 'visible '}
+    let legendWidth = null
+    if (printing || width < 600) {
+      legendWidth = 760
+      svgStyle.width = 760
+      legendStyle.transform = 'scale(0.65)'
     }
     legend = (
-      <svg xmlns="http://www.w3.org/2000/svg" width="759.5" height="21" viewBox="0 0 759.5 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
+      <svg  style={svgStyle} width={legendWidth} height="21" xmlns="http://www.w3.org/2000/svg" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
         <g style={legendStyle}>
           <text id="How_to_read_this_chart:" fontWeight='600' data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
           <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
@@ -319,28 +327,34 @@ export default function DifferenceGraph(props) {
       </svg>
     )
   } else if (ihdiGraph) {
+    const legendStyle = {}
+    if (printing || width < 600) {
+      legendStyle.transform = 'scale(0.65)'
+    }
     const legend2 = (
-      <svg key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
-        <text id="Line:" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Line:</tspan></text>
-        <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
-        <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
-        <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
-        <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
-        <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
-          <rect width="22" height="5" stroke="none"/>
-          <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-        </g>
-        <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
-          <rect width="22" height="5" stroke="none"/>
-          <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-        </g>
-        <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
-          <rect width="22" height="5" stroke="none"/>
-          <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-        </g>
-        <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
-          <rect width="22" height="5" stroke="none"/>
-          <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+      <svg style={{ overflow: 'visible '}} key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
+        <g style={legendStyle}>
+          <text id="Line:" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Line:</tspan></text>
+          <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
+          <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
+          <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
+          <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
+          <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
+            <rect width="22" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+          </g>
+          <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
+            <rect width="22" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+          </g>
+          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
+            <rect width="22" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+          </g>
+          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
+            <rect width="22" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+          </g>
         </g>
       </svg>
 

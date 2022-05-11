@@ -11,7 +11,9 @@
   z-index: 10;
   width: 423px;
   opacity: 0.9;
-
+  @media print {
+    display: none;
+  }
   box-sizing: border-box;
   &.hdiIntroTooltip {
     width: 274px;

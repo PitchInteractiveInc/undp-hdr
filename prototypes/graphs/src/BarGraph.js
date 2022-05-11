@@ -11,7 +11,7 @@ import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useNavigate } from 'react-router-dom';
 export default function BarGraph(props) {
-  const { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
+  let { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
   const selectedCountry = country
   const [hoveredPoint, setHoveredPoint] = useState(null)
 
@@ -25,6 +25,7 @@ export default function BarGraph(props) {
   // console.log(filteredData)
 
   const margins = { top: 10, right: 50, bottom: 20, left: 0 }
+  width -= margins.left + margins.right
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 

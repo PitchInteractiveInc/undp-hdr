@@ -1,6 +1,5 @@
 .Countries {
   text-align: left;
-  max-width: 1200px;
   margin: 0 auto;
 
   select.countrySelect {
@@ -23,6 +22,9 @@
       text-transform: none;
     }
 
+    @media print {
+      display: none;
+    }
   }
 
 }

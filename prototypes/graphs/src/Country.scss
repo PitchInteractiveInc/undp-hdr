@@ -1,6 +1,5 @@
 .CountryDetail {
   text-align: left;
-  max-width: 1200px;
   margin: 0 auto;
 
   .dateUpdated {
@@ -28,12 +27,24 @@
   .countryIntro {
     font-size: 2em;
     margin: 0.5em 0 0;
+    @media print {
+      font-size: 1.5em;
+    }
   }
   .downloadLinks {
     margin-top: 1em;
+    @media print {
+      display: none;
+    }
     .downloadLabel {
       font-weight: bold;
       text-transform: uppercase;
+      @media (max-width: 600px) {
+        display: block;
+        + * {
+          margin-left: 0;
+        }
+      }
     }
     a, button {
       display: inline-block;
