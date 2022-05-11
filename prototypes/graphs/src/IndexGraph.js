@@ -14,6 +14,7 @@ import { Delaunay } from 'd3-delaunay';
 import getYearOfColumn from './getYearOfColumn';
 import HDILabels from './HDILabels';
 import format from './format';
+import { useWindowSize } from 'react-use';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -57,9 +58,14 @@ function IndexGraph(props) {
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
-  const width = 1300
+
+  const windowSize = useWindowSize()
+  const maxBlockSize = 1392
+  const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
+  let width = windowWidth
   const height = 800
-  const margins = { top: 20, right: 20, bottom: 20, left: 40 }
+  const margins = { top: 20, right: 20, bottom: 20, left: 55 }
+  width -= margins.left + margins.right
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
@@ -188,7 +194,7 @@ function IndexGraph(props) {
     })
     const delaunay = Delaunay.from(delaunayData)
     return { paths, delaunay, delaunayData, selectedDots }
-  }, [selectedCountries, selectedRegion, graphColumns, data, xScale, yScale, colorScale, countSelectedCountries])
+  }, [selectedCountries, selectedRegion, graphColumns, data, xScale, yScale, colorScale, countSelectedCountries, width])
 
   let hoveredMarks = null
   let hoveredDots = []
@@ -300,7 +306,7 @@ function IndexGraph(props) {
   const columnWidth = xScale(1)
 
   const isHDIGraph = index.key === 'HDI'
-
+  const showEveryOtherYLabel = width < 600
   const years = graphColumns.map((col, yearIndex) => {
     const year = getYearOfColumn(col)
     const x = xScale(yearIndex)
@@ -327,11 +333,19 @@ function IndexGraph(props) {
       fill={fill}
     />
 
+    let everyOtherLabel = graphColumns.length > 20
+    let labelModulo = showEveryOtherYLabel && everyOtherLabel ? 4 : 2
+    everyOtherLabel |= showEveryOtherYLabel
+
+
     return (
       <g key={year} transform={`translate(${x}, 0)`}>
         {yearRect}
         <line y1={height} stroke='#A9B1B7' strokeWidth={0.5} opacity={0.5} strokeDasharray='4,4' />
-        <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
+        {!everyOtherLabel || yearIndex % labelModulo === 0  ?
+
+          <text y={height} dy={'1em'} textAnchor='middle'>{year}</text>
+        : null }
       </g>
     )
   })
@@ -429,7 +443,7 @@ function IndexGraph(props) {
           {countrySelectors}
           {regionFilter}
         </div>
-        <div style={{ display: 'flex', justifyContent: isHDIGraph ? 'space-between' : null}}>
+        <div className='graphLabels' style={{ display: 'flex', justifyContent: isHDIGraph ? 'space-between' : null}}>
           <span style={{ fontWeight: '600'}}>{index.key} in initial year</span>
           {index.lowerBetter ?
 

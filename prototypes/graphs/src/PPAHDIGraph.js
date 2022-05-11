@@ -9,7 +9,7 @@ import {colors} from './IndexGraph'
 import { extent } from 'd3-array';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
-
+import { useWindowSize } from 'react-use'
 function TextWithBackground(props) {
   const textRef = useRef()
   const [textSize, setTextSize] = useState(null)
@@ -48,6 +48,8 @@ export default function Graph(props) {
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
   const svgRef = useRef()
   const [hoveredPoint, setHoveredPoint] = useState(null)
+  const windowSize = useWindowSize()
+
   if (!data || !metadata) {
     return null
   }
@@ -66,11 +68,15 @@ export default function Graph(props) {
   const sortedCountries = [...countries]
   sortedCountries.sort((a, b) => a[ppaKey] - b[ppaKey])
 
-  const width = 800
+  const maxBlockSize = 1392
+  const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
+  let width = windowWidth
   const height = 800
+  const margins = { top: 0, right: 0, bottom: 20, left: 50 }
+  width -= margins.left + margins.right
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
-  const margins = { top: 0, right: 0, bottom: 20, left: 50 }
+
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 

@@ -7,7 +7,7 @@ import ComparisonCountrySelectors from './ComparisonCountrySelectors';
 import { Delaunay } from 'd3-delaunay';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
-
+import { useWindowSize } from 'react-use';
 export const mpiColors = {
   'Nutrition': '#1f5a95',
   'Years of schooling': '#006eb5',
@@ -42,11 +42,15 @@ function MPIGraph(props) {
   const sortedCountries = [...countries]
   sortedCountries.sort((a, b) => b[mpiKey] - a[mpiKey])
 
-  const width = 800
+  const windowSize = useWindowSize()
+  const maxBlockSize = 1392
+  const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
+  let width = windowWidth
   const height = 800
+  const margins = { top: 20, right: 20, bottom: 10, left: 50 }
+  width -= margins.left + margins.right
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
-  const margins = { top: 20, right: 20, bottom: 10, left: 50 }
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 
