@@ -8,6 +8,7 @@ import getGraphColumnsForKey from "./getGraphColumnsForKey"
 import getYearOfColumn from "./getYearOfColumn"
 import format from "./format"
 import classNames from "classnames"
+import { useWindowSize } from "react-use"
 const sortOptions = [
   { id: 'a-z', name: 'A-Z' },
   { id: 'rank', name: 'Rank' },
@@ -59,8 +60,9 @@ function Table(props) {
   const graphColumns = getGraphColumnsForKey(data, 'HDI')
   const lastColumn = graphColumns[graphColumns.length - 1]
   const columnYear = getYearOfColumn(lastColumn)
-  const columnWidth = 600
-  const twoColumnLayout = window.innerWidth >= columnWidth * 2
+  const columnWidth = 510
+  const windowSize = useWindowSize()
+  const twoColumnLayout = windowSize.width >= columnWidth * 2
   const sorted = data.filter(d => d.ISO3 !== '')
     .filter(country => selectedRegion === '' || country.region === selectedRegion)
   sorted.sort((a, b) => {
