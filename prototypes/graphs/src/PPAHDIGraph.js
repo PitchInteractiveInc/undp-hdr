@@ -40,9 +40,19 @@ function TextWithBackground(props) {
   </g>
 }
 
-export default function Graph(props) {
+export default function GraphWrapper(props) {
+
   const { data, metadata } = useHDRData()
-  const { index } = props
+
+  if (!data || !metadata) {
+    return null
+  }
+
+  return <Graph {...props} data={data} metadata={metadata} />
+}
+
+function Graph(props) {
+  const { index, data, metadata } = props
 
   const [selectedCountries, setSelectedCountries] = useState([])
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
@@ -50,9 +60,6 @@ export default function Graph(props) {
   const [hoveredPoint, setHoveredPoint] = useState(null)
   const windowSize = useWindowSize()
 
-  if (!data || !metadata) {
-    return null
-  }
 
 
   const saveSVG = (event) => {
@@ -160,9 +167,23 @@ export default function Graph(props) {
       setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY })
     }
   }
+
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {

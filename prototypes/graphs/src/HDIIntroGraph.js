@@ -3,7 +3,7 @@ import getYearOfColumn from "./getYearOfColumn"
 import './HDIIntroGraph.scss'
 import { scaleThreshold } from "d3-scale"
 import { Delaunay } from "d3-delaunay"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import CountryTooltip from "./CountryTooltip"
 import { regions } from "./RegionFilter"
 import { useNavigate } from "react-router-dom"
@@ -84,9 +84,23 @@ export default function HDIIntroGraph(props) {
       setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: 10, clientX: event.clientX, clientY: event.clientY })
     }
   }
+
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {

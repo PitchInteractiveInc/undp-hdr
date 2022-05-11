@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, cloneElement } from 'react'
+import { useState, useRef, useMemo, cloneElement, useEffect } from 'react'
 import useHDRData from "./useHDRData";
 import { scaleLinear, scaleQuantize } from 'd3-scale'
 import { line } from 'd3-shape'
@@ -422,9 +422,23 @@ function IndexGraph(props) {
       setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth, clientX, clientY: event.clientY })
     }
   }
+
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {

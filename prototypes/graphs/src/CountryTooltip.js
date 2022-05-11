@@ -7,6 +7,7 @@ import { mpiColors } from './MPIGraph'
 import {hdiIntroColorScale} from './HDIIntroGraph'
 import { scaleSqrt } from 'd3-scale'
 import { arc } from 'd3-shape'
+import { useEffect, useState } from 'react'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -462,9 +463,22 @@ function HDIIntroTooltip(props) {
     </div>
   )
 }
+export default function TooltipWrapper(props) {
+  const {point} = props
+  const { unmount } = point
+  // console.log(props)
+  const [opacity, setOpacity] = useState(0)
+  useEffect(() => {
+    setOpacity(unmount ? 0 : 0.9)
+  }, [unmount])
 
-export default function CountryTooltip(props) {
-  const { point, index, graph } = props
+  return (
+    <CountryTooltip {...props}  opacity={opacity} />
+  )
+}
+function CountryTooltip(props) {
+  const { point, index, graph, opacity } = props
+
   let xOffset = 10
   let x = point.x + xOffset
   let y = point.y
@@ -482,7 +496,9 @@ export default function CountryTooltip(props) {
     }
   }
   const style = {
-    transform: `translate(${x}px, ${y}px) ${flipY ? 'translateY(-100%)' : ''}`
+    transform: `translate(${x}px, ${y}px) ${flipY ? 'translateY(-100%)' : ''}`,
+    opacity,
+    transition: point.unmount ? 'opacity 0.3s ease-in-out' : null
   }
   let tooltipContents = null
   let className = null

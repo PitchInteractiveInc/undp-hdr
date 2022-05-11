@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import useMPIData from "./useMPIData";
 import { range, max, mean, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
@@ -77,7 +77,6 @@ function MPIGraph(props) {
     })
     return averages
   }, [countries])
-  console.log(averages)
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const totalBarHeight = yScale(country[mpiKey])
 
@@ -164,9 +163,23 @@ function MPIGraph(props) {
       setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY })
     }
   }
+
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {

@@ -6,7 +6,7 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
 
 import { Delaunay } from 'd3-delaunay';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useNavigate } from 'react-router-dom';
@@ -95,7 +95,7 @@ export default function BarGraph(props) {
 
     let labelFill = fill
     let stroke = null
-    if (hoveredPoint) {
+    if (hoveredPoint && !hoveredPoint.unmount) {
       if (hoveredPoint.hover[2].row === country && fill === '#EDEFF0') {
         stroke = '#000'
         fill = 'none'
@@ -143,14 +143,26 @@ export default function BarGraph(props) {
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       const x = delaunayData[closestPointIndex][0] + barWidth / 2
-      console.log(event)
       const clientX = x + svgPosition.left
       setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: Math.max(30, columnWidth), clientX, clientY: event.clientY })
     }
   }
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {

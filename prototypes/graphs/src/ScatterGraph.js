@@ -5,7 +5,7 @@ import { comparisonColors } from './ComparisonCountrySelectors';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import GraphColorLegend from './GraphColorLegend';
 import { Delaunay } from 'd3-delaunay';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import CountryTooltip from './CountryTooltip';
 import hdiBackgroundRectData from './hdiBackgroundRectData';
 import format from './format';
@@ -238,9 +238,23 @@ export default function ScatterGraph(props) {
       setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth, clientX, clientY: event.clientY })
     }
   }
+
   const mouseLeave = () => {
-    setHoveredPoint(null)
+    if (hoveredPoint) {
+      setHoveredPoint({... hoveredPoint, unmount: true })
+    }
   }
+  useEffect(() => {
+    let id = null
+    if (hoveredPoint && hoveredPoint.unmount) {
+      id = setTimeout(() => {
+        setHoveredPoint(null)
+      }, 500)
+    }
+    return () => {
+      clearTimeout(id)
+    }
+  }, [hoveredPoint])
 
   let tooltip = null
   if (hoveredPoint) {
