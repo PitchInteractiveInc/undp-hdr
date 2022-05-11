@@ -14,6 +14,40 @@ import { scaleSqrt } from 'd3-scale';
 import { arc } from 'd3-shape';
 import HDILabels from './HDILabels';
 import { useNavigate } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+import { useSpring, animated } from '@react-spring/web'
+
+
+function Circle(props) {
+  const positionSpring  = useSpring({
+    to: {
+      cx: props.cx,
+      cy: props.cy,
+    },
+  })
+  return (
+    <animated.circle
+      opacity={props.opacity}
+      r={props.r}
+      cx={positionSpring.cx}
+      cy={positionSpring.cy}
+      fill={props.fill}
+    />
+  )
+}
+
+function Path(props) {
+  const pathSpring = useSpring({
+    to: {
+      d: props.d,
+    },
+  })
+  return (
+    <animated.path
+      opacity={props.opacity} d={pathSpring.d} stroke={props.stroke} fill='none'
+    />
+  )
+}
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -26,12 +60,83 @@ export const colors = [
   '#3288ce',
   '#006eb5',
 ]
+
+function AnimatedDotAndLine(props) {
+  const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale } = props
+  const [pointsAnimated, setPointsAnimated] = useState(-1)
+
+  const lineGenerator = line()
+    .x(d => xScale(d.index + 0.5))
+    .y((d, i) => i > pointsAnimated ? yScale.range()[0] : yScale(d.value))
+    .defined(d => d.value != null)
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+
+      if (inviewOnce && pointsAnimated < data.length) {
+        setPointsAnimated(pointsAnimated + 1)
+      }
+    }, 20)
+    return () => clearTimeout(id)
+
+  }, [pointsAnimated, data.length, inviewOnce])
+  const dots = []
+  data.forEach((row, i) => {
+    if (row.value == null) {
+      return null
+    }
+    const dotX = lineGenerator.x()(row, i)
+    const dotY = lineGenerator.y()(row, i)
+    let opacity = null
+
+      if (hoveredPoint) {
+        if (/*hoveredPoint.hover[2].row === row.row &&*/ hoveredPoint.hover[2].col === row.col) {
+          opacity = 1
+        } else {
+          if (hoveredPoint.hover[2].row === row.row) {
+            opacity = 0.5
+          } else {
+            opacity = 0.3
+          }
+        }
+      }
+    dots.push(
+      <Circle
+        key={row.index}
+        r={6}
+        cx={dotX}
+        cy={dotY}
+        fill={stroke}
+        opacity={opacity}
+      />
+    )
+  })
+  return (
+    <>
+       <Path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(data)} stroke={stroke} fill='none' />
+      <g>{dots}</g>
+    </>
+  )
+
+}
+
 export default function ScatterGraph(props) {
   let { data, country, index, selectedCountries, graph, width, height, missingCountries, printing } = props
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
   const [hoveredPoint, setHoveredPoint] = useState(null)
+
+  const [ref, inView] = useInView()
+  const [inviewOnce, setInviewOnce] = useState(false)
+  useEffect(() => {
+    if (inView && !inviewOnce) {
+      setInviewOnce(true)
+    }
+  }, [inView, inviewOnce])
+
+
+
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
 
@@ -96,9 +201,6 @@ export default function ScatterGraph(props) {
     rowsToPlot.push({ row: regionData, color: '#A9B1B7'})
   }
 
-  const lineGenerator = line()
-    .x(d => xScale(d.index + 0.5))
-    .y(d => yScale(d.value))
 
   const delaunayData = []
   const lineData = rowsToPlot.map(row => {
@@ -108,7 +210,11 @@ export default function ScatterGraph(props) {
     const rowData = graphColumns.map((col, colIndex) => {
       const year = getYearOfColumn(col)
       if (row.row[col] === '') {
-        return null
+        return {
+          index: colIndex,
+          value: null,
+          col,
+        }
       }
       const value = +row.row[col]
       const dotX = xScale(colIndex + 0.5)
@@ -138,26 +244,36 @@ export default function ScatterGraph(props) {
           }
         }
       }
-      dots.push(
-        <circle
-          opacity={opacity}
-          r={6}
-          key={year}
-          cx={dotX}
-          cy={dotY}
-          fill={stroke}
-        />
-      )
+      // dots.push(
+      //   <Circle
+      //     opacity={opacity}
+      //     r={6}
+      //     key={year}
+      //     cx={dotX}
+      //     cy={dotY}
+      //     fill={stroke}
+      //   />
+      // )
       return {
         index: colIndex,
         value,
+        col,
       }
-    }).filter(d => d)
+    })
     return (
       <g key={row.row.Country}>
         {hoverLine}
-        <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
-        <g>{dots}</g>
+        <AnimatedDotAndLine
+          data={rowData}
+          stroke={stroke}
+          hoveredPoint={hoveredPoint}
+          yScale={yScale}
+          xScale={xScale}
+          inviewOnce={inviewOnce}
+          // lineOpacity={hoveredPoint ? 0.5 : 1}
+        />
+        {/* <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
+        <g>{dots}</g> */}
       </g>
     )
   })
@@ -287,7 +403,7 @@ export default function ScatterGraph(props) {
       }}>
         {hdiLabels}
       </div>
-      <div className='svgContainer'>
+      <div className='svgContainer' ref={ref}>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
