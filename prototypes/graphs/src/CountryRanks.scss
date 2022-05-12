@@ -42,14 +42,17 @@
       width: 100%;
     }
     thead {
+      border: 0;
       border-bottom: 2px solid black;
       th {
         white-space: nowrap;
         padding-right: 1em;
+        background-color: #fff;
       }
     }
 
     tbody {
+      border: 0;
       tr {
         border-bottom: 0.5px solid #232E3E;
         cursor: pointer;
