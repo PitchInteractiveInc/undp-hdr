@@ -147,8 +147,8 @@ export default function CountryRanks(props) {
   }
   return (
     <div className='CountryRanks'>
-      <h2>{year} Global Human Development Index</h2>
-      <div className='description'>Explore human development data from around the world. The list of countries shows only the United Nations member states with the available HDI values</div>
+      {/* <h2>{year} Global Human Development Index</h2>
+      <div className='description'>Explore human development data from around the world. The list of countries shows only the United Nations member states with the available HDI values</div> */}
       <div className='controls'>
         <Dropdown
           label='Sort List'
