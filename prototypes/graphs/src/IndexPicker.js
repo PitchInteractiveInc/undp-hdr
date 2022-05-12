@@ -7,7 +7,6 @@ export default function IndexPicker(props) {
 
   const params = useParams()
   const navigate = useNavigate()
-  console.log(params)
 
   const setIndex = (key) => {
     navigate(`/indicies/${key}`, {replace: true})
@@ -16,7 +15,6 @@ export default function IndexPicker(props) {
     return null
   }
   const countries = data.filter(d => d.ISO3 !== '')
-  console.log(countries)
   return (
     <div className='IndexPicker'>
       <div className='indexPickerNav'>

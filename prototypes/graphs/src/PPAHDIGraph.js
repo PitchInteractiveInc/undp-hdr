@@ -204,16 +204,10 @@ function Graph(props) {
           xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="652.517" height="20" viewBox="0 0 652.517 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
           transform='translate(0, 5)'
+          fontSize='16'
           >
-          <defs>
-            <linearGradient id="linear-gradient" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
-              <stop offset="0" stop-color="#febcb8"/>
-              <stop offset="0.493" stop-color="#fee085"/>
-              <stop offset="1" stop-color="#b9ebb8"/>
-            </linearGradient>
-          </defs>
           {/* <text id="PHDI_rank" data-name="PHDI rank" font-size="16" font-weight="600"><tspan x="0" y="15">PHDI rank</tspan></text> */}
-          <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(475.087)" font-size="16" font-weight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
+          <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(475.087)" fontWeight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
           <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V8.57H0Z" transform="translate(652.517 15) rotate(180)"/>
           {/* <rect id="Rectangle_25574" data-name="Rectangle 25574" width="300" height="8.57" transform="translate(116 6.43)" fill="url(#linear-gradient)"/> */}
           {/* <text id="low" transform="translate(108 1.5)" font-size="14"><tspan x="-21.434" y="13">low</tspan></text>
