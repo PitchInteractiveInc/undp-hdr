@@ -19,7 +19,7 @@ export default function IndexPicker(props) {
   console.log(countries)
   return (
     <div className='IndexPicker'>
-      <div>
+      <div className='indexPickerNav'>
         <select value={params.selectedMetricShortName } onChange={e => setIndex(e.target.value)}>
           <option value="">Select an index</option>
           {indicators.map((d, i) => {

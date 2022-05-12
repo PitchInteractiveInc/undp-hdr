@@ -7,10 +7,12 @@ import CountryRanks from './CountryRanks'
 import {   HashRouter,
   Routes,
   Route, NavLink} from 'react-router-dom'
+import classNames from 'classnames';
 
 function App() {
+  const hideReactNav = 'drupalSettings' in window
   return (
-    <div className="App">
+    <div className={ classNames("App", { hideReactNav })}>
       <HashRouter>
         <div className='nav'>
           <NavLink to='/indicies'>Indicies Graphs</NavLink>{' '}

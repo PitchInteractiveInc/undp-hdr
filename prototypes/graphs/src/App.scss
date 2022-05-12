@@ -29,6 +29,10 @@
     @media print {
       display: none;
     }
+
+  }
+  &.hideReactNav .nav {
+    display: none;
   }
 
   select {

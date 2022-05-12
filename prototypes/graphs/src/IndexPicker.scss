@@ -1,4 +1,10 @@
 .IndexPicker {
   margin: 0 auto;
   text-align: left;
+
+  .indexPickerNav {
+    .hideReactNav & {
+      display: none;
+    }
+  }
 }
