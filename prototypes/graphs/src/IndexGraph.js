@@ -87,7 +87,9 @@ function IndexGraph(props) {
     })
     return { yearExtent, yExtent }
   }, [data, graphColumns])
-  const countries = data.filter(d => d.ISO3 !== '')
+  const countries = data.filter(d => d.ISO3 !== '' &&
+    graphColumns.some(col => d[col] !== '')
+  )
 
   // console.log(graphColumns)
 
