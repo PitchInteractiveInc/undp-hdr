@@ -10,11 +10,40 @@ import { useState, useRef, useEffect } from 'react';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useNavigate } from 'react-router-dom';
+
+import { useInView } from 'react-intersection-observer';
+import { useSpring, animated } from '@react-spring/web'
+function Rect(props) {
+  const rectSpring = useSpring({
+    to: {
+      y: props.y,
+      height: props.height,
+    },
+    delay: props.index * 10,
+  })
+  return (
+    <animated.rect
+      width={props.width}
+      fill={props.fill}
+      stroke={props.stroke}
+      y={rectSpring.y}
+      height={rectSpring.height}
+    />
+  )
+}
 export default function BarGraph(props) {
   let { data, country, index, selectedCountries, graph, width, height, missingCountries } = props
   const selectedCountry = country
   const [hoveredPoint, setHoveredPoint] = useState(null)
 
+  const [ref, inView] = useInView({ threshold: 0.5 })
+
+  const [inviewOnce, setInviewOnce] = useState(false)
+  useEffect(() => {
+    if (inView && !inviewOnce) {
+      setInviewOnce(true)
+    }
+  }, [inView, inviewOnce])
 
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
@@ -75,7 +104,7 @@ export default function BarGraph(props) {
   const bars = sortedData.map((country, i) => {
     const value = +country[graphColumns[0]]
     const x = xScale(i)
-    const y = yScale(value)
+    const y = inviewOnce ?  yScale(value) : 0
     let fill = '#EDEFF0'
     let showLabel = false
     if (selectedCountry && country.Country === selectedCountry.Country) {
@@ -107,12 +136,13 @@ export default function BarGraph(props) {
     labels.push(label)
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
-        <rect
+        <Rect
           width={barWidth}
           y={height - y}
           height={y}
           fill={fill}
           stroke={stroke}
+          index={i}
         />
       </g>
     )
@@ -188,7 +218,7 @@ export default function BarGraph(props) {
   return (
     <div className='BarGraph'>
       <GraphColorLegend rows={legendRows} missingCountries={missingCountries} />
-      <div className='svgContainer'>
+      <div className='svgContainer' ref={ref}>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
