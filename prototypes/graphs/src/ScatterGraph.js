@@ -26,7 +26,7 @@ function Circle(props) {
       cx: props.cx,
       cy: props.cy,
     },
-    config,
+    // config,
   })
   return (
     <animated.circle
@@ -44,7 +44,7 @@ function Path(props) {
     to: {
       d: props.d,
     },
-    config,
+    // config,
   })
   // console.log(props.d)
   return (
@@ -101,7 +101,7 @@ function AnimatedDotAndLine(props) {
     const id = setTimeout(() => {
 
       if (inviewOnce && pointsAnimated < data.length) {
-        const delta = Math.ceil(data.length / 10)
+        const delta = 1// Math.ceil(data.length / 10)
         setPointsAnimated(pointsAnimated + delta)
       }
     }, 1)
