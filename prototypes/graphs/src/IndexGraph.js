@@ -63,9 +63,10 @@ function IndexGraph(props) {
   const maxBlockSize = 1392
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
   let width = windowWidth
-  const height = 800
+  let height = Math.max(windowSize.height * 0.7, 200)
   const margins = { top: 20, right: 20, bottom: 20, left: 55 }
   width -= margins.left + margins.right
+  height -= margins.top + margins.bottom
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
 

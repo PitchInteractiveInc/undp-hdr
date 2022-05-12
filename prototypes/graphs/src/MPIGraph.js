@@ -46,9 +46,10 @@ function MPIGraph(props) {
   const maxBlockSize = 1392
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
   let width = windowWidth
-  const height = 800
+  let height = Math.max(windowSize.height * 0.65, 200)
   const margins = { top: 20, right: 20, bottom: 10, left: 50 }
   width -= margins.left + margins.right
+  height -= margins.top + margins.bottom
   const rowWidth = width / sortedCountries.length
   const barWidth = rowWidth - 2
   const svgWidth = width + margins.left + margins.right
