@@ -173,7 +173,7 @@ function IndexGraph(props) {
       }
       if (showLabel) {
         const x = xScale(data[0].colIndex)
-        label = <text fill={stroke} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+        label = <text fill={'black'} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
       }
       return (
@@ -279,7 +279,7 @@ function IndexGraph(props) {
       const valueLabelX = xScale(hoveredColIndex)
       const valueTextAnchor = hoveredColIndex === 0 ? 'start' : hoveredColIndex === graphColumns.length - 1 ? 'end' : 'middle'
       valueLabel = <text textAnchor={valueTextAnchor}
-        fill={stroke}
+        fill={'black'}
         fontWeight='bold' dy='1.2em'
         x={valueLabelX} y={yScale(value)}>
           {format(value, index.key)}
