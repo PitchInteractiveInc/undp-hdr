@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { useSpring, animated } from '@react-spring/web'
 
+const config = { mass: 1, tension: 210, friction: 20 }
+
 
 function Circle(props) {
   const positionSpring  = useSpring({
@@ -24,6 +26,7 @@ function Circle(props) {
       cx: props.cx,
       cy: props.cy,
     },
+    config,
   })
   return (
     <animated.circle
@@ -41,7 +44,9 @@ function Path(props) {
     to: {
       d: props.d,
     },
+    config,
   })
+  // console.log(props.d)
   return (
     <animated.path
       opacity={props.opacity} d={pathSpring.d} stroke={props.stroke} fill='none'
@@ -63,20 +68,43 @@ export const colors = [
 
 function AnimatedDotAndLine(props) {
   const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale } = props
-  const [pointsAnimated, setPointsAnimated] = useState(-1)
+  const [pointsAnimated, setPointsAnimated] = useState(0)
 
   const lineGenerator = line()
-    .x(d => xScale(d.index + 0.5))
-    .y((d, i) => i > pointsAnimated ? yScale.range()[0] : yScale(d.value))
+    .x((d, i, data) => {
+      if (i > pointsAnimated) {
+        return xScale(data[pointsAnimated].index + 0.5)
+      }
+      return xScale(d.index + 0.5)
+    })
+    .y((d, i) => {
+      if (i > pointsAnimated) {
+        let latestDataFound = null
+        for (let i = pointsAnimated; i >= 0; i--) {
+          const datum = data[i]
+          if (datum.value != null) {
+            latestDataFound = datum
+            break
+          }
+        }
+        if (latestDataFound) {
+          return yScale(latestDataFound.value)
+        } else {
+          return 0
+        }
+      }
+      return yScale(d.value)
+    })
     .defined(d => d.value != null)
 
   useEffect(() => {
     const id = setTimeout(() => {
 
       if (inviewOnce && pointsAnimated < data.length) {
-        setPointsAnimated(pointsAnimated + 1)
+        const delta = Math.ceil(data.length / 10)
+        setPointsAnimated(pointsAnimated + delta)
       }
-    }, 20)
+    }, 1)
     return () => clearTimeout(id)
 
   }, [pointsAnimated, data.length, inviewOnce])
@@ -85,8 +113,8 @@ function AnimatedDotAndLine(props) {
     if (row.value == null) {
       return null
     }
-    const dotX = lineGenerator.x()(row, i)
-    const dotY = lineGenerator.y()(row, i)
+    const dotX = lineGenerator.x()(row, i, data)
+    const dotY = lineGenerator.y()(row, i, data)
     let opacity = null
 
       if (hoveredPoint) {
@@ -127,7 +155,7 @@ export default function ScatterGraph(props) {
   const graphColumns = getGraphColumnsForKey(data, dataKey)
   const [hoveredPoint, setHoveredPoint] = useState(null)
 
-  const [ref, inView] = useInView()
+  const [ref, inView] = useInView({ threshold: 0.5 })
   const [inviewOnce, setInviewOnce] = useState(false)
   useEffect(() => {
     if (inView && !inviewOnce) {

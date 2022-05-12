@@ -29,7 +29,6 @@ export default function Country(props) {
   const measuredGraphWidth = windowWidth * 0.7 - 64;
   const potentialMultiColumnGraphWidth = Math.min(maxGraphWidth, measuredGraphWidth)
   const graphWidth = singleColumnLayout ?  windowWidth : potentialMultiColumnGraphWidth
-  console.log(graphWidth)
 
   useEffect(() => {
     if (syncingCountries) {

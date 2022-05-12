@@ -5,7 +5,6 @@ export default function Countries(props) {
   const {data} = useHDRData()
   const params = useParams()
   const navigate = useNavigate()
-  console.log(params)
 
   const setCountry = (country) => {
     navigate(`/countries/${country}`, {replace: true})
