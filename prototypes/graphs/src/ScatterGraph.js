@@ -21,19 +21,18 @@ const config = { mass: 1, tension: 210, friction: 20 }
 
 
 function Circle(props) {
-  const positionSpring  = useSpring({
+  const spring  = useSpring({
     to: {
-      cx: props.cx,
-      cy: props.cy,
+      r: props.r,
     },
     // config,
   })
   return (
     <animated.circle
       opacity={props.opacity}
-      r={props.r}
-      cx={positionSpring.cx}
-      cy={positionSpring.cy}
+      r={spring.r}
+      cx={props.cx}
+      cy={props.cy}
       fill={props.fill}
     />
   )
@@ -67,32 +66,32 @@ export const colors = [
 ]
 
 function AnimatedDotAndLine(props) {
-  const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale } = props
+  const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale, index } = props
   const [pointsAnimated, setPointsAnimated] = useState(0)
 
   const lineGenerator = line()
     .x((d, i, data) => {
-      if (i > pointsAnimated) {
-        return xScale(data[pointsAnimated].index + 0.5)
-      }
+      // if (i > pointsAnimated) {
+      //   return xScale(data[pointsAnimated].index + 0.5)
+      // }
       return xScale(d.index + 0.5)
     })
     .y((d, i) => {
-      if (i > pointsAnimated) {
-        let latestDataFound = null
-        for (let i = pointsAnimated; i >= 0; i--) {
-          const datum = data[i]
-          if (datum.value != null) {
-            latestDataFound = datum
-            break
-          }
-        }
-        if (latestDataFound) {
-          return yScale(latestDataFound.value)
-        } else {
-          return 0
-        }
-      }
+      // if (i > pointsAnimated) {
+      //   let latestDataFound = null
+      //   for (let i = pointsAnimated; i >= 0; i--) {
+      //     const datum = data[i]
+      //     if (datum.value != null) {
+      //       latestDataFound = datum
+      //       break
+      //     }
+      //   }
+      //   if (latestDataFound) {
+      //     return yScale(latestDataFound.value)
+      //   } else {
+      //     return 0
+      //   }
+      // }
       return yScale(d.value)
     })
     .defined(d => d.value != null)
@@ -104,7 +103,7 @@ function AnimatedDotAndLine(props) {
         const delta = 1// Math.ceil(data.length / 10)
         setPointsAnimated(pointsAnimated + delta)
       }
-    }, 1)
+    }, 16)
     return () => clearTimeout(id)
 
   }, [pointsAnimated, data.length, inviewOnce])
@@ -117,21 +116,22 @@ function AnimatedDotAndLine(props) {
     const dotY = lineGenerator.y()(row, i, data)
     let opacity = null
 
-      if (hoveredPoint) {
-        if (/*hoveredPoint.hover[2].row === row.row &&*/ hoveredPoint.hover[2].col === row.col) {
-          opacity = 1
+    if (hoveredPoint) {
+      if (/*hoveredPoint.hover[2].row === row.row &&*/ hoveredPoint.hover[2].col === row.col) {
+        opacity = 1
+      } else {
+        if (hoveredPoint.hover[2].row === row.row) {
+          opacity = 0.5
         } else {
-          if (hoveredPoint.hover[2].row === row.row) {
-            opacity = 0.5
-          } else {
-            opacity = 0.3
-          }
+          opacity = 0.3
         }
       }
+    }
+    const r = i > pointsAnimated ? 0 : 6
     dots.push(
       <Circle
         key={row.index}
-        r={6}
+        r={r}
         cx={dotX}
         cy={dotY}
         fill={stroke}
@@ -139,10 +139,22 @@ function AnimatedDotAndLine(props) {
       />
     )
   })
+  const clipPathId = `scatterClipPath-${index.key}-${data[0].row.ISO3}`
+  const clipSpring = useSpring({
+    to: {
+      width: xScale(pointsAnimated)
+    }
+  })
   return (
     <>
-       <Path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(data)} stroke={stroke} fill='none' />
-      <g>{dots}</g>
+        <clipPath id={clipPathId}>
+          <animated.rect
+            width={clipSpring.width}
+            height={yScale.range()[0]}
+          />
+        </clipPath>
+        <path clipPath={`url(#${clipPathId})`} opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(data)} stroke={stroke} fill='none' />
+        <g>{dots}</g>
     </>
   )
 
@@ -242,6 +254,7 @@ export default function ScatterGraph(props) {
           index: colIndex,
           value: null,
           col,
+          row: row.row,
         }
       }
       const value = +row.row[col]
@@ -286,6 +299,7 @@ export default function ScatterGraph(props) {
         index: colIndex,
         value,
         col,
+        row: row.row,
       }
     })
     return (
@@ -298,6 +312,7 @@ export default function ScatterGraph(props) {
           yScale={yScale}
           xScale={xScale}
           inviewOnce={inviewOnce}
+          index={index}
           // lineOpacity={hoveredPoint ? 0.5 : 1}
         />
         {/* <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
