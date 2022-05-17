@@ -101,7 +101,7 @@ export default function Country(props) {
       <div className='downloadLinks'>
         <span className='downloadLabel'>Download</span>
         <button onClick={download}>Country Data (csv)</button>
-        <a href="#">Metadata (PDF)</a>
+        <a href="/data-center/documentation-and-downloads">Metadata</a>
         <button onClick={print}>Print this page</button>
 
       </div>
