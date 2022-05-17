@@ -152,10 +152,10 @@ export default function CountryIndexGraph(props) {
   const useDrupalNodeLink = inDrupal &&
     window.drupalSettings.hdro_app &&
     window.drupalSettings.hdro_app.all_pages_with_app_elements &&
-    window.drupalSettings.hdro_app.all_pages_with_app_elements.countries &&
-    window.drupalSettings.hdro_app.all_pages_with_app_elements.countries[index.key.toLowerCase()]
+    window.drupalSettings.hdro_app.all_pages_with_app_elements[index.key.toLowerCase()] &&
+    window.drupalSettings.hdro_app.all_pages_with_app_elements[index.key.toLowerCase()].url
 
-  const url = () => useDrupalNodeLink ? `${window.drupalSettings.hdro_app.all_pages_with_app_elements.countries[index.key.toLowerCase()]}` : `/indicies/${index.key}`
+  const url = () => useDrupalNodeLink ? `${window.drupalSettings.hdro_app.all_pages_with_app_elements[index.key.toLowerCase()].url}` : `/indicies/${index.key}`
 
   const A = (props) => <a {...props}>{props.children}</a>
   const Tag = useDrupalNodeLink ? A : Link
