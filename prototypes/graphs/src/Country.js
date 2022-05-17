@@ -92,7 +92,7 @@ export default function Country(props) {
           return <option key={d.ISO3} value={d.ISO3}>{d.Country}</option>
         })}
       </select> */}
-      <div className='dataUpdated'>Data updates as of DD.MM.YYYY</div>
+      <div className='dataUpdated'>Data updates as of December 15th, 2020</div>
       <div className='countryNameAndFlag'>
         <img key={country.ISO3} src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`${country.Country} flag`} />
         <div className='countryName'>{country.Country}</div>
