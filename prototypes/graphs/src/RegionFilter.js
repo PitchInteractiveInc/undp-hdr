@@ -15,7 +15,7 @@ export default function RegionFilter(props) {
   const { selectedRegion, setSelectedRegion } = props
   return (
     <Dropdown
-      label='Filter By Region'
+      label='Filter By Developing Region'
       values={regions}
       selected={selectedRegion}
       setSelected={setSelectedRegion}

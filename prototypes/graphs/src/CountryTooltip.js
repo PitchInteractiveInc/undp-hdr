@@ -453,7 +453,7 @@ function HDIIntroTooltip(props) {
         </div>
         <div style={{ width: '50%'}}>
           <div>
-            Region
+            Developing Region
           </div>
           <div style={{ fontWeight: 'bold'}}>
             {country.region === '' ? 'Not defined' : country.region}
