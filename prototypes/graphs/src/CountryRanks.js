@@ -32,7 +32,7 @@ const tableColumns = [
   },
   { label: 'HDI Value',
     value: (country, year) => {
-      const value = country[`hdi_${year}`]
+      const value = format(country[`hdi_${year}`])
       return value
     }
   },
