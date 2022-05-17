@@ -1,4 +1,4 @@
-﻿import { csvParse } from 'd3-dsv';
+﻿import { csvParse, csvFormat } from 'd3-dsv';
 
 const renames = csvParse(`Full name,Short name
 ISO3,iso3
@@ -42,7 +42,7 @@ Gender Inequality Index (value),GII
 "Labour force participation rate, female (% ages 15 and older)",LFPR_f
 "Labour force participation rate, male (% ages 15 and older)",LFPR_m
 HDI Rank,HDI_rank
-Planetary pressures–adjusted Human Development Index (value),PHDI
+Planetary pressures-adjusted Human Development Index (value),PHDI
 HDI,HDI
 Difference from HDI value (%),Diff_HDI_PHDI
 Difference from HDI rank,Rankdiff_HDI_PHDI
@@ -70,7 +70,7 @@ const getCSVColumnName = shortName => {
   }
 }
 
-export default function renameColumns(dataObject) {
+function renameColumns(dataObject) {
   const newDataObject = {}
   Object.keys(dataObject).forEach(key => {
     const newKey = getCSVColumnName(key)
@@ -78,4 +78,33 @@ export default function renameColumns(dataObject) {
   })
 
   return newDataObject
+}
+
+function removePopulationColumns(row) {
+  const newDataObject = {}
+  Object.keys(row).forEach(key => {
+    if (key.indexOf('Population') === -1) {
+      newDataObject[key] = row[key]
+    }
+  })
+  return newDataObject
+}
+
+function transpose(row) {
+  const transposed = []
+  Object.keys(row).forEach(key => {
+    transposed.push({
+      key,
+      value: row[key],
+    })
+  })
+  return transposed
+}
+
+export default function formatCSV(dataRow) {
+  const renamed = renameColumns(dataRow)
+  const filtered = removePopulationColumns(renamed)
+  const transposed = transpose(filtered)
+  // console.log(transposed)
+  return csvFormat(transposed)
 }

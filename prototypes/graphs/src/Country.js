@@ -10,7 +10,7 @@ import useDetectPrint from "./useDetectPrint"
 import { csvFormat } from "d3-dsv"
 import {useWindowSize} from 'react-use';
 import classNames from "classnames"
-import renameColumns from './data/metricCSVRenames.js'
+import formatCSV from './data/metricCSVRenames.js'
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -69,8 +69,8 @@ export default function Country(props) {
         merged[key] = mpiCountry[key]
       })
     }
-    const csvWithRenames = renameColumns(merged)
-    const csv = csvFormat([csvWithRenames])
+    const csv = formatCSV(merged)
+    // console.log(csv)
     const a = document.createElement("a");
     a.style.display = "none";
     document.body.appendChild(a);
