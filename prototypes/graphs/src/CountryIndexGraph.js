@@ -112,7 +112,7 @@ function GraphWrapper(props) {
     const joinedCountryList = countryList.join(', ') + (countryList.length ? ' & ' : '') + lastCountry
 
     missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
-      The {index.key} covers {countries.length} {index.key === 'MPI' ? ' developing ' : ''} countries only, and is not computed for {joinedCountryList}.
+      The {index.key} covers {countries.length} {index.key === 'MPI' ? ' developing countries (as of the latest update in October 2021)' : 'countries only'}. The {index.key} is not computed for {joinedCountryList}.
     </div>
   }
 
