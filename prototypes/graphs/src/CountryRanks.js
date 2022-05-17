@@ -13,6 +13,15 @@ const sortOptions = [
   { id: 'a-z', name: 'A-Z' },
   { id: 'rank', name: 'Rank' },
 ]
+
+const inDrupal = 'drupalSettings' in window
+const useDrupalNodeLink = inDrupal &&
+  window.drupalSettings.hdro_app &&
+  window.drupalSettings.hdro_app.all_pages_with_app_elements &&
+  window.drupalSettings.hdro_app.all_pages_with_app_elements.countries &&
+  window.drupalSettings.hdro_app.all_pages_with_app_elements.countries.url
+const url = (iso3) => useDrupalNodeLink ? `${window.drupalSettings.hdro_app.all_pages_with_app_elements.countries.url}/${iso3}` : `/countries/${iso3}`
+
 const tableColumns = [
   { label: 'Rank', value: (country, year) => country[`hdi_rank_${year}`] },
   { label: 'Country', value: (country) => (
@@ -35,6 +44,15 @@ const tableColumns = [
       const diff = yearValue - yearValuePrev
 
       const className = diff >= 0 ? 'positive' : 'negative'
+      const A = (props) => <a {...props}>{props.children}</a>
+      const Tag = useDrupalNodeLink ? A : Link
+      const link = url(country.ISO3)
+      const tagProps = {}
+      if (useDrupalNodeLink) {
+        tagProps.href = link
+      } else {
+        tagProps.to = link
+      }
       return (
         <div className='diffAndLink'>
           <span className={className}>
@@ -44,11 +62,11 @@ const tableColumns = [
 
             {format(diff, 'HDI') }
           </span>
-          <Link to={`/countries/${country.ISO3}`}>
+          <Tag {...tagProps}>
             <svg xmlns="http://www.w3.org/2000/svg" width="8.714" height="12.119" viewBox="0 0 8.714 12.119">
               <path id="Path_32762" data-name="Path 32762" d="M14781.4,13958l5.284,6.5,5.284-6.5" transform="translate(-13957.369 14792.741) rotate(-90)" fill="none" stroke="#eb3828" strokeWidth="2"/>
             </svg>
-          </Link>
+          </Tag>
         </div>
       )
     }
@@ -94,7 +112,11 @@ function Table(props) {
 
   const navigate = useNavigate()
   const clickCountry = (iso3) => () => {
-    navigate(`/countries/${iso3}`, { replace: true })
+    if (useDrupalNodeLink) {
+      window.location = url(iso3)
+      return
+    }
+    navigate(url(iso3), { replace: true })
   }
 
   return (

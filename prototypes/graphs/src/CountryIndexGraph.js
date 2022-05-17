@@ -10,6 +10,10 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import HDIIntroGraph from './HDIIntroGraph';
 import getCountryIndexDescription from './getCountryIndexDescription';
 import classNames from 'classnames';
+
+const inDrupal = 'drupalSettings' in window
+
+
 const countSelectable = 3
 function GraphWrapper(props) {
   const { graph, data, country, index, syncCountries, forceSelection, indexIndex, printing, graphWidth } = props
@@ -145,7 +149,24 @@ export default function CountryIndexGraph(props) {
 
   const { pageBreakAfter } = index
   let additionalIndexContent = null
+  const useDrupalNodeLink = inDrupal &&
+    window.drupalSettings.hdro_app &&
+    window.drupalSettings.hdro_app.all_pages_with_app_elements &&
+    window.drupalSettings.hdro_app.all_pages_with_app_elements.countries &&
+    window.drupalSettings.hdro_app.all_pages_with_app_elements.countries[index.key.toLowerCase()]
 
+  const url = () => useDrupalNodeLink ? `${window.drupalSettings.hdro_app.all_pages_with_app_elements.countries[index.key.toLowerCase()]}` : `/indicies/${index.key}`
+
+  const A = (props) => <a {...props}>{props.children}</a>
+  const Tag = useDrupalNodeLink ? A : Link
+  const link = url()
+  const tagProps = {}
+
+  if (useDrupalNodeLink) {
+    tagProps.href = link
+  } else {
+    tagProps.to = link
+  }
   return (
     <div className={classNames('CountryIndexGraph', { pageBreakAfter })}>
       <div className='indexText'>
@@ -155,7 +176,7 @@ export default function CountryIndexGraph(props) {
           {getCountryIndexDescription(country, index, data)}
         </div>
         <div className='indicatorLink'>
-          <Link to={`/indicies/${index.key}`}>More Insights on {index.key}</Link>
+          <Tag {...tagProps}>More Insights on {index.key}</Tag>
         </div>
         {additionalIndexContent}
       </div>
