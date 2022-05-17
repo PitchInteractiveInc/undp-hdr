@@ -3,7 +3,7 @@ import Dropdown from './Dropdown'
 export const regions = [
   { id: 'SA', name: 'South Asia' },
   { id: 'SSA', name: 'Sub-Saharan Africa' },
-  { id: 'LAC', name: 'Latin American and the Caribbean' },
+  { id: 'LAC', name: 'Latin America and the Caribbean' },
   { id: 'ECA', name: 'Europe and Central Asia' },
   { id: 'EAP', name: 'East Asia and the Pacific' },
   { id: 'AS', name: 'Arab States' },
