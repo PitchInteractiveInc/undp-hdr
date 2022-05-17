@@ -368,7 +368,7 @@ function IndexGraph(props) {
     let lastLabel = null
     if (index === colorsToUse.length - 1) {
       let nextValue = (index + 1) / colorsToUse.length * (yScale.domain()[1] - yScale.domain()[0]) + yScale.domain()[0]
-      lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{nextValue.toFixed(1)}</text>
+      lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{format(nextValue)}</text>
     }
     return (
       <g key={color} transform={`translate(${-yScaleBarWidth}, ${y})`}>
