@@ -24,6 +24,67 @@ export const colors = [
   '#3288ce',
   '#006eb5',
 ]
+function DifferenceGraphMark(props) {
+  const { x, markX, width, stroke, y, height, fill, previousMarkData } = props
+  const hoverLine = null
+  const hoverLabel = null
+  let previousYearMarks = null
+  let opacity = null
+  if (previousMarkData) {
+    previousYearMarks = (
+      <g>
+        <rect
+          x={previousMarkData.markerX}
+          width={previousMarkData.markerWidth}
+          y={previousMarkData.markerY }
+          height={previousMarkData.markerHeight}
+          stroke={previousMarkData.markStroke}
+          strokeDasharray={previousMarkData.markStrokeDasharray}
+          fill='none'
+        />
+        <rect
+          y={previousMarkData.differenceBarY}
+          x={previousMarkData.differenceBarX}
+          width={previousMarkData.differenceBarWidth}
+          height={previousMarkData.differenceBarHeight}
+          stroke={previousMarkData.differenceBarStroke}
+          fill={previousMarkData.differenceBarStroke}
+        />
+      </g>
+    )
+  }
+  return (
+    <g transform={`translate(${x}, 0)`} opacity={opacity}>
+      {hoverLine}
+      <rect
+        x={markX}
+        width={width}
+        stroke={stroke}
+        y={y}
+        height={height}
+        fill={fill}
+      />
+      {previousYearMarks}
+      {hoverLabel}
+    </g>
+  )
+}
+function DifferenceGraphSeries(props) {
+  const { differenceData }  = props
+  return (
+    <g>
+      {differenceData.map((d, i) => {
+        return (
+          <DifferenceGraphMark
+            key={i}
+            {...d}
+          />
+        )
+      })}
+    </g>
+  )
+}
+
 export default function DifferenceGraph(props) {
   let { data, country, index, selectedCountries, graph, width, height, printing, missingCountries } = props
   const selectedCountry = country
@@ -126,112 +187,151 @@ export default function DifferenceGraph(props) {
     }).filter(d => d);
     let markHeight = ihdiGraph ? 5 : 1
 
-    let connectingLine = null
+    let connectingLineData = null
     if (drawConnectingLines) {
-      const lineGen = line()
-        .x(d => xScale(d.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1)
-        .y(d => yScale(d.value) + markHeight / 2 + 0.5)
-      const path = lineGen(rowData)
-      connectingLine = <path
-        key={`connecting-line-${rowIndex}`}
-        d={path}
-        stroke={stroke}
-        strokeWidth={markHeight }
-        fill='none'
-        opacity={0.5}
-      />
+      connectingLineData = {
+        data: rowData,
+        stroke,
+        strokeWidth: markHeight,
+      }
+      // const lineGen = line()
+      //   .x(d => xScale(d.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1)
+      //   .y(d => yScale(d.value) + markHeight / 2 + 0.5)
+      // const path = lineGen(rowData)
+
+      // connectingLine = <path
+      //   key={`connecting-line-${rowIndex}`}
+      //   d={path}
+      //   stroke={stroke}
+      //   strokeWidth={markHeight }
+      //   fill='none'
+      //   opacity={0.5}
+      // />
     }
-    const differenceMarks = rowData.map((datum, datumIndex) => {
+    const differenceMarkData = rowData.map((datum, datumIndex) => {
       const x = xScale(datum.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1
       const y = yScale(datum.value)
       let previousYearMarks = null
       let previousIsMore = false
       let previousHeight = 0
       let prevY = y
+      let previousMarkData = null
       if (datumIndex > 0 || datum.prevValue) {
         const prevValue = datum.prevValue || rowData[datumIndex - 1].value
         prevY = yScale(prevValue)
         previousIsMore = prevValue > datum.value
         const differenceColor = y < prevY ? '#88E51C' : '#F86969'
         previousHeight = Math.abs(y - prevY)
-        previousYearMarks = (
-          <g>
-            <rect
-              x={-markWidth / 2 + 1}
-              width={markWidth - 2}
-              y={previousIsMore ? prevY - markHeight - (ihdiGraph ? 1 : 0): prevY + (ihdiGraph ? 1 : 0) }
-              height={markHeight}
-              stroke={stroke}
-              strokeDasharray={ihdiGraph ? null : '3,3'}
-              fill='none'
-            />
-            <rect
-              y={Math.min(y, prevY)}
-              x={-markWidth / 2 + 1}
-              width={markWidth - 2}
-              height={previousHeight}
-              stroke={differenceColor}
-              fill={differenceColor}
-            />
-          </g>
-        )
+        previousMarkData = {
+          markerX: -markWidth / 2 + 1,
+          markerWidth: markWidth - 2,
+          markerY: previousIsMore ? prevY - markHeight - (ihdiGraph ? 1 : 0): prevY + (ihdiGraph ? 1 : 0),
+          markerHeight: markHeight,
+          markStroke: stroke,
+          markStrokeDasharray: ihdiGraph ? null : '3,3',
+          differenceBarY: Math.min(y, prevY),
+          differenceBarX: -markWidth / 2 + 1,
+          differenceBarWidth: markWidth - 2,
+          differenceBarHeight: previousHeight,
+          differenceBarStroke: differenceColor,
+          differenceBarFill: differenceColor,
+        }
+        // previousYearMarks = (
+        //   <g>
+        //     <rect
+        //       x={-markWidth / 2 + 1}
+        //       width={markWidth - 2}
+        //       y={previousIsMore ? prevY - markHeight - (ihdiGraph ? 1 : 0): prevY + (ihdiGraph ? 1 : 0) }
+        //       height={markHeight}
+        //       stroke={stroke}
+        //       strokeDasharray={ihdiGraph ? null : '3,3'}
+        //       fill='none'
+        //     />
+        //     <rect
+        //       y={Math.min(y, prevY)}
+        //       x={-markWidth / 2 + 1}
+        //       width={markWidth - 2}
+        //       height={previousHeight}
+        //       stroke={differenceColor}
+        //       fill={differenceColor}
+        //     />
+        //   </g>
+        // )
       }
       const delaunayY = rowsToPlot.length === 1 ? (height / 2) : ((y + prevY) / 2)
       delaunayData.push([x, delaunayY, {row: row.row, col: datum.col}])
 
-      let opacity = null
-      let hoverLabel = null
-      let hoverLine = null
-      if (hoveredPoint) {
-        if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
-          opacity = 1
-          hoverLine = (
-            <line
-              y1={0}
-              y2={height}
-              stroke='#232E3E'
-              strokeDasharray='4,4'
-            />
-          )
-        } else {
-          opacity = 0.3
-        }
-        if (index.key === 'IHDI' && hoveredPoint.hover[2].col === datum.col) {
-          const year = getYearOfColumn(datum.col)
-          hoverLabel = (
-            <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
-              <text fontWeight={'600'} fill={stroke} textAnchor='middle' dy='1em' >
-                {format(datum.value)}
-              </text>
-              <text fontWeight='600' fill='#D12800' textAnchor='middle' dy='2em' >
-                {format(row.row[`loss_${year}`], 'loss')}% loss
-              </text>
-            </g>
-          )
-        }
+      // let opacity = null
+      // let hoverLabel = null
+      // let hoverLine = null
+      // if (hoveredPoint) {
+      //   if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
+      //     opacity = 1
+      //     hoverLine = (
+      //       <line
+      //         y1={0}
+      //         y2={height}
+      //         stroke='#232E3E'
+      //         strokeDasharray='4,4'
+      //       />
+      //     )
+      //   } else {
+      //     opacity = 0.3
+      //   }
+      //   if (index.key === 'IHDI' && hoveredPoint.hover[2].col === datum.col) {
+      //     const year = getYearOfColumn(datum.col)
+      //     hoverLabel = (
+      //       <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
+      //         <text fontWeight={'600'} fill={stroke} textAnchor='middle' dy='1em' >
+      //           {format(datum.value)}
+      //         </text>
+      //         <text fontWeight='600' fill='#D12800' textAnchor='middle' dy='2em' >
+      //           {format(row.row[`loss_${year}`], 'loss')}% loss
+      //         </text>
+      //       </g>
+      //     )
+      //   }
+      // }
+      return {
+        x,
+        markX: -markWidth / 2 + 1,
+        width: markWidth - 2,
+        stroke: stroke,
+        y: previousIsMore ? y : y-markHeight,
+        height: markHeight,
+        fill: ihdiGraph ? stroke : 'none',
+        previousMarkData,
+        hoveredPoint,
       }
-      return (
-        <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
-          {hoverLine}
-          <rect
-            x={-markWidth / 2 + 1}
-            width={markWidth - 2}
-            stroke={stroke}
-            y={previousIsMore ? y : y - markHeight}
-            height={markHeight}
-            fill={ihdiGraph ? stroke : 'none'}
-          />
-          {previousYearMarks}
-          {hoverLabel}
-        </g>
-      )
+      // return (
+      //   <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
+      //     {hoverLine}
+      //     <rect
+      //       x={-markWidth / 2 + 1}
+      //       width={markWidth - 2}
+      //       stroke={stroke}
+      //       y={previousIsMore ? y : y - markHeight}
+      //       height={markHeight}
+      //       fill={ihdiGraph ? stroke : 'none'}
+      //     />
+      //     {previousYearMarks}
+      //     {hoverLabel}
+      //   </g>
+      // )
     })
     return (
-      <g key={row.row.Country}>
-        {differenceMarks}
-        {connectingLine}
-      </g>
+      <DifferenceGraphSeries
+        key={row.row.Country}
+        differenceData={differenceMarkData}
+        connectingLineData={connectingLineData}
+      />
     )
+    // return (
+    //   <g key={row.row.Country}>
+    //     {differenceMarks}
+    //     {connectingLine}
+    //   </g>
+    // )
   })
   const delaunay = Delaunay.from(delaunayData)
 
