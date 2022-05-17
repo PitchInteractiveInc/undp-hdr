@@ -11,6 +11,7 @@ import { csvFormat } from "d3-dsv"
 import {useWindowSize} from 'react-use';
 import classNames from "classnames"
 import formatCSV from './data/metricCSVRenames.js'
+import getYearOfColumn from "./getYearOfColumn"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
@@ -51,6 +52,7 @@ export default function Country(props) {
   const populationColumns = getGraphColumnsForKey(data, 'pop_total')
   const lastPopulationColumn = populationColumns[populationColumns.length - 1]
   const formattedPopulation = (country[lastPopulationColumn] * 1000000).toLocaleString()
+  const populationYear = getYearOfColumn(lastPopulationColumn)
   const print = () => {
     setPrintingViaButton(true)
     setTimeout(() => {
@@ -97,7 +99,7 @@ export default function Country(props) {
         <img key={country.ISO3} src={`${process.env.PUBLIC_URL}/flags/${country.ISO3}.GIF`} alt={`${country.Country} flag`} />
         <div className='countryName'>{country.Country}</div>
       </div>
-      <div className='population'>Population {formattedPopulation}</div>
+      <div className='population'>Population {formattedPopulation} ({populationYear})</div>
       <div className='downloadLinks'>
         <span className='downloadLabel'>Download</span>
         <button onClick={download}>Country Data (csv)</button>
