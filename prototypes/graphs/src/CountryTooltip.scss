@@ -84,12 +84,15 @@
     width: 100%;
     thead {
       background-color: #EDEFF0;
+      border: 0;
       td {
         white-space: nowrap;
       }
     }
     tbody {
+      border: 0;
       tr {
+        border: 0;
         + tr {
           border-top: 0.5px solid #232E3E;
         }
