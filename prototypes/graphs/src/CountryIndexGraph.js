@@ -10,6 +10,7 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import HDIIntroGraph from './HDIIntroGraph';
 import getCountryIndexDescription from './getCountryIndexDescription';
 import classNames from 'classnames';
+import useHDRData from './useHDRData';
 
 const inDrupal = 'drupalSettings' in window
 
@@ -20,8 +21,11 @@ function GraphWrapper(props) {
   const { type, title, noCountrySelection, pageBreakAfter } = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const [countriesThatFailedToSync, setCountriesThatFailedToSync] = useState(null)
+  const graphColumns = getGraphColumnsForKey(data, index.key)
+  const allCountries = useHDRData()
   const countries = useMemo(() => {
-    return data.filter(d => d.ISO3 !== '')}, [data])
+    return data.filter(d => d.ISO3 !== '' && graphColumns.some(col => d[col] !== ''))
+  }, [data])
 
   useEffect(() => {
     if (forceSelection && !noCountrySelection) {
@@ -105,9 +109,18 @@ function GraphWrapper(props) {
       }
     }
   })
+  if (countriesThatFailedToSync && allCountries && allCountries.data) {
+    countriesThatFailedToSync.forEach(iso => {
+      const country = allCountries.data.find(c => c.ISO3 === iso)
+      if (country) {
+        missingCountries.push(country)
+      }
+    })
+  }
   if (missingCountries.length) {
     // join with comma and ampresand for last item only
     const countryList = missingCountries.map(c => c.Country)
+    countryList.sort()
     const lastCountry = countryList.pop()
     const joinedCountryList = countryList.join(', ') + (countryList.length ? ' & ' : '') + lastCountry
 
