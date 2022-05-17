@@ -162,7 +162,7 @@ function GIIScatterTooltip(props) {
   const tableKeys = [
     { label: 'Share of seats in parliament', key: 'pr', suffix: '%' },
     { label: <>Population with at least some<br />secondary education<br />(age 25 and older)</>, key: 'se', suffix: '%' },
-    { label: <>Labour force participation rate<br />(age 25 and older)</>, key: 'lfpr', suffix: '%' },
+    { label: <>Labour force participation rate<br />(age 15 and older)</>, key: 'lfpr', suffix: '%' },
 
   ]
   return (
