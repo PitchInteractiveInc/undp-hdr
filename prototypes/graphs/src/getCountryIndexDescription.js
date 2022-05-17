@@ -46,10 +46,11 @@ export default function getCountryIndexDescription(country, index, data) {
       const mysIncrease = format(country[`mys_${latestYear}`] - country[`mys_${firstYear}`], 'mys')
       const eysIncrease = format(country[`eys_${latestYear}`] - country[`eys_${firstYear}`], 'eys')
       const gnipcPercentIncreaseIncrease = ((country[`gnipc_${latestYear}`] - country[`gnipc_${firstYear}`]) / country[`gnipc_${firstYear}`] * 100).toFixed(1)
+      const countCountries = data.filter(d => d.ISO3 !== '').length
       description = (
         <>
           <p>
-            {defaults[index.key]} {getCountryWithApostrophe(country.Country)} HDI value for {latestYear} is {latestValueFormatted}— which put the country in the {country.hdicode} human development category—positioning it at {country[`hdi_rank_${latestYear}`]} out of {data.length} countries and territories.
+            {defaults[index.key]} {getCountryWithApostrophe(country.Country)} HDI value for {latestYear} is {latestValueFormatted}— which put the country in the {country.hdicode} human development category—positioning it at {country[`hdi_rank_${latestYear}`]} out of {countCountries} countries and territories.
           </p>
           <p>
             Between {firstYear} and {latestYear}, {getCountryWithApostrophe(country.Country)} HDI value increased from {firstValueFormatted} to {latestValueFormatted}, an increase of {percentChangeFormatted} percent.
