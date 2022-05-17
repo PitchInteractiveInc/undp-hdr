@@ -314,67 +314,67 @@ export default function DifferenceGraph(props) {
   }
 
   let legend = <GraphColorLegend key='color' rows={rowsToPlot} missingCountries={missingCountries} />
-  if (hdiGraph) {
-    const legendStyle = {}
-    const svgStyle = { overflow: 'visible '}
-    let legendWidth = null
-    if (printing || width < 600) {
-      legendWidth = 760
-      svgStyle.width = 760
-      legendStyle.transform = 'scale(0.65)'
-    }
-    legend = (
-      <svg  style={svgStyle} width={legendWidth} height="21" xmlns="http://www.w3.org/2000/svg" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
-        <g style={legendStyle}>
-          <text id="How_to_read_this_chart:" fontWeight='600' data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
-          <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
-          <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">previous year</tspan></text>
-          <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">increase</tspan></text>
-          <text id="decrease" transform="translate(631.5 1)" fill="#232e3e"><tspan x="0" y="15">decrease</tspan></text>
-          <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
-          <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
-          <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
-          <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#F86969"/>
-          <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#F86969"/>
-          <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
-        </g>
-      </svg>
-    )
-  } else if (ihdiGraph) {
-    const legendStyle = {}
-    if (printing || width < 600) {
-      legendStyle.transform = 'scale(0.65)'
-    }
-    const legend2 = (
-      <svg style={{ overflow: 'visible '}} key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
-        <g style={legendStyle}>
-          <text id="Line:" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Line:</tspan></text>
-          <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
-          <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
-          <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
-          <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
-          <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-          <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-        </g>
-      </svg>
+  // if (hdiGraph) {
+  //   const legendStyle = {}
+  //   const svgStyle = { overflow: 'visible '}
+  //   let legendWidth = null
+  //   if (printing || width < 600) {
+  //     legendWidth = 760
+  //     svgStyle.width = 760
+  //     legendStyle.transform = 'scale(0.65)'
+  //   }
+  //   legend = (
+  //     <svg  style={svgStyle} width={legendWidth} height="21" xmlns="http://www.w3.org/2000/svg" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
+  //       <g style={legendStyle}>
+  //         <text id="How_to_read_this_chart:" fontWeight='600' data-name="How to read this chart:" fill="#232e3e"><tspan x="0" y="15">How to read this chart:</tspan></text>
+  //         <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">current year</tspan></text>
+  //         <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">previous year</tspan></text>
+  //         <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">increase</tspan></text>
+  //         <text id="decrease" transform="translate(631.5 1)" fill="#232e3e"><tspan x="0" y="15">decrease</tspan></text>
+  //         <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
+  //         <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
+  //         <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
+  //         <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#F86969"/>
+  //         <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#F86969"/>
+  //         <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
+  //       </g>
+  //     </svg>
+  //   )
+  // } else if (ihdiGraph) {
+  //   const legendStyle = {}
+  //   if (printing || width < 600) {
+  //     legendStyle.transform = 'scale(0.65)'
+  //   }
+  //   const legend2 = (
+  //     <svg style={{ overflow: 'visible '}} key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
+  //       <g style={legendStyle}>
+  //         <text id="Line:" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Line:</tspan></text>
+  //         <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
+  //         <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
+  //         <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
+  //         <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
+  //         <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
+  //           <rect width="22" height="5" stroke="none"/>
+  //           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+  //         </g>
+  //         <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
+  //           <rect width="22" height="5" stroke="none"/>
+  //           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+  //         </g>
+  //         <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
+  //           <rect width="22" height="5" stroke="none"/>
+  //           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+  //         </g>
+  //         <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
+  //           <rect width="22" height="5" stroke="none"/>
+  //           <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+  //         </g>
+  //       </g>
+  //     </svg>
 
-    )
-    legend = [legend, legend2]
-  }
+  //   )
+  //   legend = [legend, legend2]
+  // }
 
   const clickGraph = () => {
     if (hoveredPoint) {
