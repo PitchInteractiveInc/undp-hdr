@@ -386,6 +386,10 @@ export default function ScatterGraph(props) {
     const svgPosition = svgRef.current.getBoundingClientRect()
     const mouseX = event.clientX - svgPosition.left
     const mouseY = event.clientY - svgPosition.top
+    if (mouseX > width) {
+      mouseLeave()
+      return
+    }
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     // console.log(mouseX, mouseY)
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {

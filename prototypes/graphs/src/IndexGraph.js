@@ -417,7 +417,11 @@ function IndexGraph(props) {
 
   const mouseMove = (event) => {
     const svgPosition = svgRef.current.getBoundingClientRect()
-    const mouseX = event.clientX - svgPosition.left
+    const mouseX = event.clientX - svgPosition.left - margins.left
+    if (mouseX < 0 || mouseX > width) {
+      mouseLeave()
+      return
+    }
     const mouseY = event.clientY - svgPosition.top
     const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
     // console.log(mouseX, mouseY)
