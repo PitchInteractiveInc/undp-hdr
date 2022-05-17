@@ -102,7 +102,7 @@ function IndexGraph(props) {
   const yScale = useMemo(() => scaleLinear()
     .domain(yExtent)
     .range([height, 0])
-    .clamp(true)
+    .nice()
   , [yExtent])
 
   const colorsToUse = [...colors]
@@ -111,9 +111,9 @@ function IndexGraph(props) {
   }
 
   const colorScale = useMemo(() => scaleQuantize()
-    .domain(yExtent)
+    .domain(yScale.domain())
     .range(colorsToUse)
-  , [yExtent])
+  , [yScale])
   const {paths, delaunay, delaunayData, selectedDots} = useMemo(() => {
 
 
@@ -364,10 +364,10 @@ function IndexGraph(props) {
     const percentage = index / colorsToUse.length
     const y = (colorsToUse.length - index - 1) / colorsToUse.length * height
     const barHeight = height / colorsToUse.length
-    const value = percentage * (yExtent[1] - yExtent[0]) + yExtent[0]
+    const value = percentage * (yScale.domain()[1] - yScale.domain()[0]) + yScale.domain()[0]
     let lastLabel = null
     if (index === colorsToUse.length - 1) {
-      let nextValue = (index + 1) / colorsToUse.length * (yExtent[1] - yExtent[0]) + yExtent[0]
+      let nextValue = (index + 1) / colorsToUse.length * (yScale.domain()[1] - yScale.domain()[0]) + yScale.domain()[0]
       lastLabel = <text textAnchor='end' dx='-5' dy='0.3em'>{nextValue.toFixed(1)}</text>
     }
     return (
