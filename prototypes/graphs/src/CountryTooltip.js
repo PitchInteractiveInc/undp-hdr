@@ -486,17 +486,32 @@ function CountryTooltip(props) {
     x += point.columnWidth / 2
   }
   const tooltipWidth = graph.type === 'hdiIntro' ? 274 : 423
-  const scrollBarPadding = 40
+  const scrollBarPadding = 80
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
-  const flipY = point.clientY > window.innerHeight / 2
+  const flipY = point.clientY < window.innerHeight / 3 ? 'bottom' : point.clientY <  2 * window.innerHeight / 3 ? 'middle' : 'top'
   if (flipX) {
     x = point.x - tooltipWidth - xOffset
     if (point.columnWidth) {
       x -= point.columnWidth / 2 + 5
     }
   }
+  let flipYTransform = null
+  console.log(flipY)
+  switch(flipY) {
+    case 'top':
+      flipYTransform = `translateY(-100%)`
+      break
+    case 'middle':
+      flipYTransform = `translateY(-50%)`
+      break
+    case 'bottom':
+    default:
+      flipYTransform = `translateY(0)`
+      break
+  }
+
   const style = {
-    transform: `translate(${x}px, ${y}px) ${flipY ? 'translateY(-100%)' : ''}`,
+    transform: `translate(${x}px, ${y}px) ${flipYTransform}`,
     opacity,
     transition: point.unmount ? 'opacity 0.3s ease-in-out' : null
   }
