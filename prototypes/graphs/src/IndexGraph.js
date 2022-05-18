@@ -74,7 +74,7 @@ function IndexGraph(props) {
 
   const { yExtent } = useMemo(() => {
     const yearExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
-    const yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+    let yExtent = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
     data.forEach(country => {
       graphColumns.forEach(col => {
         const value = +country[col]
@@ -87,6 +87,9 @@ function IndexGraph(props) {
         }
       })
     })
+    if (index.key === 'HDI') {
+      yExtent = [0.2, 1.0]
+    }
     return { yearExtent, yExtent }
   }, [data, graphColumns])
   const countries = data.filter(d => d.ISO3 !== '' &&
@@ -100,12 +103,16 @@ function IndexGraph(props) {
     .range([0, width])
   , [graphColumns.length, width])
 
-  const yScale = useMemo(() => scaleLinear()
-    .domain(yExtent)
-    .range([height, 0])
-    .nice()
-    .clamp(true)
-  , [yExtent, height])
+  const yScale = useMemo(() => {
+    const scale = scaleLinear()
+      .domain(yExtent)
+      .range([height, 0])
+      .clamp(true)
+    if (index.key !== 'HDI') {
+      scale.nice()
+    }
+    return scale
+  }, [yExtent, height])
 
 
   const colorsToUse = useMemo(() => {
@@ -121,8 +128,6 @@ function IndexGraph(props) {
     .range(colorsToUse)
   , [yScale, colorsToUse])
   const {paths, delaunay, delaunayData, selectedDots} = useMemo(() => {
-
-
     let selectedDots = []
 
     const delaunayData = []
