@@ -7,6 +7,9 @@
   font-size: 16px;
   max-width: 1392px;
   padding: 0 1em;
+  &.hideReactNav {
+    padding: 0;
+  }
   @media print {
     padding: 0;
   }

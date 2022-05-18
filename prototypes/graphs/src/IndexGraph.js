@@ -61,10 +61,11 @@ function IndexGraph(props) {
 
   const windowSize = useWindowSize()
   const maxBlockSize = 1392
-  const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
+  let windowWidth = Math.min(maxBlockSize, windowSize.width - 48 - 20)
+
   let width = windowWidth
   let height = Math.max(windowSize.height * 0.7, 200)
-  const margins = { top: 20, right: 20, bottom: 20, left: 55 }
+  const margins = { top: 20, right: dataKey === 'HDI' ? 20 : 0, bottom: 20, left: 55 }
   width -= margins.left + margins.right
   height -= margins.top + margins.bottom
   const svgWidth = width + margins.left + margins.right
@@ -103,6 +104,7 @@ function IndexGraph(props) {
     .domain(yExtent)
     .range([height, 0])
     .nice()
+    .clamp(true)
   , [yExtent, height])
 
 
