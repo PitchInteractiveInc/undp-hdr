@@ -79,7 +79,7 @@ function Graph(props) {
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
   let width = windowWidth
   let height = Math.max(windowSize.height * 0.7, 200)
-  const margins = { top: 0, right: 0, bottom: 20, left: 50 }
+  const margins = { top: 5, right: 0, bottom: 20, left: 50 }
   width -= margins.left + margins.right
   height -= margins.top + margins.bottom
   const rowWidth = width / sortedCountries.length
@@ -208,7 +208,7 @@ function Graph(props) {
           >
           {/* <text id="PHDI_rank" data-name="PHDI rank" font-size="16" font-weight="600"><tspan x="0" y="15">PHDI rank</tspan></text> */}
           <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(475.087)" fontWeight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
-          <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V8.57H0Z" transform="translate(652.517 15) rotate(180)"/>
+          <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V5.1H0Z" transform="translate(652.517 12) rotate(180)"/>
           {/* <rect id="Rectangle_25574" data-name="Rectangle 25574" width="300" height="8.57" transform="translate(116 6.43)" fill="url(#linear-gradient)"/> */}
           {/* <text id="low" transform="translate(108 1.5)" font-size="14"><tspan x="-21.434" y="13">low</tspan></text>
           <text id="high" transform="translate(424 1.5)" font-size="14"><tspan x="0" y="13">high</tspan></text> */}
