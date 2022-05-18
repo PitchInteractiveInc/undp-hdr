@@ -169,25 +169,26 @@ function IndexGraph(props) {
         showLabel = isSelected
 
         if (isSelected) {
-          selectedDots.push(<g key={country.ISO3}>
-            {data.map(datum => {
-              return <circle
-                key={datum.year}
-                cx={xScale(datum.colIndex)}
-                cy={yScale(datum.value)}
-                r={3}
-                fill={stroke}
-              />
-            })}
-          </g>)
+          // selectedDots.push(<g key={country.ISO3}>
+          //   {data.map(datum => {
+          //     return <circle
+          //       key={datum.year}
+          //       cx={xScale(datum.colIndex)}
+          //       cy={yScale(datum.value)}
+          //       r={3}
+          //       fill={stroke}
+          //     />
+          //   })}
+          // </g>)
         }
       }
       if (isWorld) {
         showLabel = true
+        return null
       }
       if (showLabel) {
-        const x = xScale(data[0].colIndex)
-        label = <text fill={'black'} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
+        // const x = xScale(data[0].colIndex)
+        // label = <text fill={'black'} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
       }
       return (
@@ -254,12 +255,15 @@ function IndexGraph(props) {
     const stroke = isWorld ? 'black' : colorScale(data[0].value)
     const strokeWidth = 3
     let opacity = 0.95
-    if (isSelected || isHovered) {
-      opacity = 1
-    } else if (hoveredPoint !== null) {
-      opacity = 0.75
-    } else if (countSelectedCountries > 0) {
-      opacity = 0.85
+    // if (isHovered) {
+    //   opacity = 1
+    // } else if (hoveredPoint !== null) {
+    //   opacity = 0.75
+    // } else if (countSelectedCountries > 0) {
+    //   opacity = 0.85
+    // }
+    if (hoveredPoint && !isHovered) {
+      opacity = 0.1
     }
     hoveredDots.push(<g key={`hover-${country.Country}`}>
       {data.map(datum => {
@@ -285,7 +289,7 @@ function IndexGraph(props) {
       return null
     }
     const labelX = xScale(data[0].colIndex)
-    const label = <text fill={'black'} dx='0.2em' fontWeight='bold'  dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
+    const label = <text opacity={opacity} fill={'black'} dx='0.2em' fontWeight='bold'  dy='-1em' x={labelX} y={yScale(data[0].value)}>{country.Country}</text>
     const showValueLabels = hoveredCol !== null
     let valueLabel = null
     if (showValueLabels) {
@@ -295,6 +299,7 @@ function IndexGraph(props) {
       valueLabel = <text textAnchor={valueTextAnchor}
         fill={'black'}
         fontWeight='bold' dy='1.2em'
+        opacity={opacity}
         x={valueLabelX} y={yScale(value)}>
           {format(value, index.key)}
         </text>
