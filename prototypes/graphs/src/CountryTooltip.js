@@ -488,7 +488,9 @@ function CountryTooltip(props) {
   const tooltipWidth = graph.type === 'hdiIntro' ? 274 : 423
   const scrollBarPadding = 80
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
-  const flipY = point.clientY < window.innerHeight / 3 ? 'bottom' : point.clientY <  2 * window.innerHeight / 3 ? 'middle' : 'top'
+  const headerHeight = 112
+  const clientY = point.clientY - headerHeight * 0.5
+  const flipY = clientY < window.innerHeight / 3 ? 'bottom' : clientY <  2 * window.innerHeight / 3 ? 'middle' : 'top'
   if (flipX) {
     x = point.x - tooltipWidth - xOffset
     if (point.columnWidth) {
