@@ -97,23 +97,27 @@ function IndexGraph(props) {
   const xScale = useMemo(() => scaleLinear()
     .domain([0, graphColumns.length - 1])
     .range([0, width])
-  , [graphColumns.length])
+  , [graphColumns.length, width])
 
   const yScale = useMemo(() => scaleLinear()
     .domain(yExtent)
     .range([height, 0])
     .nice()
-  , [yExtent])
+  , [yExtent, height])
 
-  const colorsToUse = [...colors]
-  if (index.lowerBetter) {
-    colorsToUse.reverse()
-  }
+
+  const colorsToUse = useMemo(() => {
+    const colorsToUse = [...colors]
+    if (index.lowerBetter) {
+      colorsToUse.reverse()
+    }
+    return colorsToUse
+  }, [index.lowerBetter])
 
   const colorScale = useMemo(() => scaleQuantize()
     .domain(yScale.domain())
     .range(colorsToUse)
-  , [yScale])
+  , [yScale, colorsToUse])
   const {paths, delaunay, delaunayData, selectedDots} = useMemo(() => {
 
 
@@ -202,7 +206,7 @@ function IndexGraph(props) {
     })
     const delaunay = Delaunay.from(delaunayData)
     return { paths, delaunay, delaunayData, selectedDots }
-  }, [selectedCountries, selectedRegion, graphColumns, data, xScale, yScale, colorScale, countSelectedCountries, width])
+  }, [selectedCountries, selectedRegion, graphColumns, data, xScale, yScale, colorScale, countSelectedCountries])
 
   let hoveredMarks = null
   let hoveredDots = []

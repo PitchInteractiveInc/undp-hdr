@@ -428,7 +428,7 @@ export default function ScatterGraph(props) {
 
   let hdiLabels = null
   if (isHDIGraph) {
-    hdiLabels = <HDILabels />
+    hdiLabels = <HDILabels width={width} />
   }
   const navigate = useNavigate()
   const graphClick = (event) => {
@@ -444,9 +444,8 @@ export default function ScatterGraph(props) {
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} missingCountries={missingCountries} />
-      <div style={{ marginRight: printing ? null : margins.right, float: 'right',
-        transform: printing ? 'scale(0.8)' : null,
-        transformOrigin: 'right'
+      <div style={{
+        float: 'right'
       }}>
         {hdiLabels}
       </div>

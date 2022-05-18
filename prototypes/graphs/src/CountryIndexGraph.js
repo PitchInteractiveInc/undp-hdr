@@ -21,11 +21,11 @@ function GraphWrapper(props) {
   const { type, title, noCountrySelection, pageBreakAfter } = graph
   const [selectedCountries, setSelectedCountries] = useState(Array.from({length: countSelectable}).map(() => ''))
   const [countriesThatFailedToSync, setCountriesThatFailedToSync] = useState(null)
-  const graphColumns = getGraphColumnsForKey(data, index.key)
   const allCountries = useHDRData()
   const countries = useMemo(() => {
+    const graphColumns = getGraphColumnsForKey(data, index.key)
     return data.filter(d => d.ISO3 !== '' && graphColumns.some(col => d[col] !== ''))
-  }, [data])
+  }, [data, index.key])
 
   useEffect(() => {
     if (forceSelection && !noCountrySelection) {
@@ -50,6 +50,11 @@ function GraphWrapper(props) {
     }
   }, [forceSelection, countries, noCountrySelection, selectedCountries])
 
+  let graphElement = null
+  const printWidth = 500
+  let width = printing ? printWidth : graphWidth
+  let graphHeight = printing ? 230 : 460
+
   let countrySelectors = null
   if (countSelectable > 0 && !noCountrySelection) {
     countrySelectors = <ComparisonCountrySelectors
@@ -63,13 +68,9 @@ function GraphWrapper(props) {
       countriesThatFailedToSync={countriesThatFailedToSync}
       index={index}
       hideCountText={indexIndex !== 0}
+      width={width - 50}
     />
   }
-  let graphElement = null
-  const printWidth = 500
-  let width = printing ? printWidth : graphWidth
-  let graphHeight = printing ? 230 : 460
-
   let titleText = null
   if (title) {
     const columns = getGraphColumnsForKey(data, index.key)

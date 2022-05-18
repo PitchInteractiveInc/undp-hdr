@@ -76,6 +76,16 @@
   td, th {
     font-size: inherit;
   }
+  thead {
+    border: 0;
+    background-color: #EDEFF0;
+  }
+  tbody {
+    border: 0;
+    tr {
+      border: 0;
+    }
+  }
   .genderTable {
     svg {
       box-sizing: content-box;

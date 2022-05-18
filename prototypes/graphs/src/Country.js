@@ -108,7 +108,8 @@ export default function Country(props) {
 
       </div>
       <div className='countryIntro'>
-        Human development summary capturing achievements in the HDI and complementary metrics that estimate gender gaps, inequality, planetary pressures and poverty.      </div>
+        Human development summary capturing achievements in the HDI and complementary metrics that estimate gender gaps, inequality, planetary pressures and poverty.
+      </div>
       <div className='indicies'>
         {indicators.map((indicator, i) => {
           let dataToUse = indicator.key === 'MPI' ? mpiData : data
