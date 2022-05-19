@@ -115,7 +115,8 @@ function AnimatedDotAndLine(props) {
         }
       }
     }
-    const r = i > pointsAnimated  && !printing ? 0 : 6
+    const radius = window.innerWidth < 600 ? 2.5 : 6
+    const r = i > pointsAnimated  && !printing ? 0 : radius
     dots.push(
       <Circle
         key={row.index}
