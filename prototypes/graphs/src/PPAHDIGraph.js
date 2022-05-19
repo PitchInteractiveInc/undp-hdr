@@ -79,7 +79,7 @@ function Graph(props) {
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
   let width = windowWidth
   let height = Math.max(windowSize.height * 0.7, 200)
-  const margins = { top: 5, right: 0, bottom: 20, left: 50 }
+  const margins = { top: 25, right: 0, bottom: 20, left: 50 }
   width -= margins.left + margins.right
   height -= margins.top + margins.bottom
   const rowWidth = width / sortedCountries.length
@@ -199,7 +199,7 @@ function Graph(props) {
     <div className='Graph' style={{ width: width + margins.left + margins.right}}>
       {countryDropdowns}
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <span style={{ fontWeight: '600', marginLeft: margins.left}}>PHDI value</span>
+        <span style={{ fontWeight: '600', marginLeft: margins.left, transform: 'translateY(20px)'}}>PHDI value</span>
         <svg
           xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="652.517" height="20" viewBox="0 0 652.517 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
