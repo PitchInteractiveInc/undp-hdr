@@ -21,6 +21,10 @@ function Rect(props) {
     },
     delay: props.index * 10,
   })
+  if (props.printing) {
+    return <rect {...props} />
+  }
+
   return (
     <animated.rect
       width={props.width}
@@ -104,7 +108,7 @@ export default function BarGraph(props) {
   const bars = sortedData.map((country, i) => {
     const value = +country[graphColumns[0]]
     const x = xScale(i)
-    const y = inviewOnce ?  yScale(value) : 0
+    const y = inviewOnce || props.printing ?  yScale(value) : 0
     let fill = '#EDEFF0'
     let showLabel = false
     if (selectedCountry && country.Country === selectedCountry.Country) {
@@ -143,6 +147,7 @@ export default function BarGraph(props) {
           fill={fill}
           stroke={stroke}
           index={i}
+          printing={props.printing}
         />
       </g>
     )
