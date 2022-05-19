@@ -498,7 +498,6 @@ function CountryTooltip(props) {
     }
   }
   let flipYTransform = null
-  console.log(flipY)
   switch(flipY) {
     case 'top':
       flipYTransform = `translateY(-100%)`

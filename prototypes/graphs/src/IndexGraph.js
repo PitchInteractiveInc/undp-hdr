@@ -14,7 +14,7 @@ import { Delaunay } from 'd3-delaunay';
 import getYearOfColumn from './getYearOfColumn';
 import HDILabels from './HDILabels';
 import format from './format';
-import { useWindowSize } from 'react-use';
+import { useScrollbarWidth, useWindowSize } from 'react-use';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -61,7 +61,8 @@ function IndexGraph(props) {
 
   const windowSize = useWindowSize()
   const maxBlockSize = 1392
-  let windowWidth = Math.min(maxBlockSize, windowSize.width - 48 - 20)
+  const scrollbarWidth = useScrollbarWidth()
+  let windowWidth = Math.min(maxBlockSize, windowSize.width - 48 - scrollbarWidth)
 
   let width = windowWidth
   let height = Math.max(windowSize.height * 0.7, 200)
