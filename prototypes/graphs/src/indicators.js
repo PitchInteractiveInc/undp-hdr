@@ -12,13 +12,13 @@ const indicators =  [
       },
       {
         type: 'difference',
-        title: ({country, extent}) => `Trends in ${country}'s HDI ${extent.join(' – ')}`,
+        title: ({country, extent}) => <>Trends in {country}'s HDI<br className='mobileBreak' /> {extent.join(' – ')}</>,
         noCountrySelection: true,
         pageBreakAfter: true,
       },
       {
         type: 'scatter',
-        title: ({country, extent}) => `HDI in comparison ${extent.join(' – ')}`,
+        title: ({country, extent}) =>  <>HDI in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
       }
     ],
   },
@@ -29,7 +29,7 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'scatter',
-        title: ({country, extent}) => `GDI in comparison ${extent.join(' – ')}`,
+        title: ({country, extent}) =>  <>GDI in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
 
       }
     ],
@@ -40,7 +40,7 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'difference',
-        title: ({country, extent}) => `IHDI in comparison ${extent.join(' – ')}`,
+        title: ({country, extent}) =>  <>IHDI in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
       }
     ],
   },
@@ -51,7 +51,7 @@ const indicators =  [
     countryGraphs: [
       {
         type: 'scatter',
-        title: ({country, extent}) => `GII in comparison ${extent.join(' – ')}`,
+        title: ({country, extent}) =>  <>GII in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
       }
     ],
     lowerBetter: true,
