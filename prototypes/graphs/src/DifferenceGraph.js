@@ -327,54 +327,97 @@ export default function DifferenceGraph(props) {
       svgStyle.width = 760
       legendStyle.transform = 'scale(0.65)'
     }
-    legend = (
-      <svg  style={svgStyle} width={legendWidth} height="21" xmlns="http://www.w3.org/2000/svg" fontFamily='proxima-nova, "Proxima Nova", sans-serif' >
-        <g style={legendStyle} transform="translate(-175)">
-          <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">Current year</tspan></text>
-          <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">Previous year</tspan></text>
-          <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">Increase</tspan></text>
-          <text id="decrease" transform="translate(631.5 1)" fill="#232e3e"><tspan x="0" y="15">Decrease</tspan></text>
-          <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
-          <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
-          <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
-          <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#F86969"/>
-          <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#F86969"/>
-          <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
-        </g>
-      </svg>
-    )
+    if (window.innerWidth > 600) {
+      legend = (
+        <svg  style={svgStyle} width={legendWidth} height="21" xmlns="http://www.w3.org/2000/svg" >
+          <g style={legendStyle} transform="translate(-175)">
+            <text id="current_year" data-name="current year" transform="translate(217.292)" fill="#232e3e"><tspan x="0" y="15">Current year</tspan></text>
+            <text id="previous_year" data-name="previous year" transform="translate(359.588)" fill="#232e3e"><tspan x="0" y="15">Previous year</tspan></text>
+            <text id="increase" transform="translate(511.5 1)" fill="#232e3e"><tspan x="0" y="15">Increase</tspan></text>
+            <text id="decrease" transform="translate(631.5 1)" fill="#232e3e"><tspan x="0" y="15">Decrease</tspan></text>
+            <line id="Line_11034" data-name="Line 11034" x2="30" transform="translate(175.5 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
+            <line id="Line_11035" data-name="Line 11035" x2="30" transform="translate(318 11.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="5" opacity="0.5"/>
+            <rect id="Rectangle_23495" data-name="Rectangle 23495" width="25" height="4.5" transform="translate(478.066 10)" fill="#88e51c"/>
+            <rect id="Rectangle_23496" data-name="Rectangle 23496" width="25" height="5" transform="translate(593 10)" fill="#F86969"/>
+            <path id="Polygon_918" data-name="Polygon 918" d="M4,0,8,4H0Z" transform="translate(588 14) rotate(180)" fill="#F86969"/>
+            <path id="Polygon_919" data-name="Polygon 919" d="M4,0,8,4H0Z" transform="translate(465.934 10)" fill="#88e51c"/>
+          </g>
+        </svg>
+      )
+    } else {
+      legend = (
+        <svg xmlns="http://www.w3.org/2000/svg" width="311.596" height="38.419" viewBox="0 0 311.596 38.419" fontFamily='proxima-nova, "Proxima Nova", sans-serif' fontSize='14' >
+          <text id="current_year" data-name="current year" transform="translate(64.132)" fill="#232e3e" ><tspan x="0" y="13">current year</tspan></text>
+          <line id="Line_11768" data-name="Line 11768" x2="55" transform="translate(0 8.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
+          <line id="Line_11769" data-name="Line 11769" x2="55" transform="translate(151.464 8.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="1.5" opacity="0.5"/>
+          <text id="previous_year" data-name="previous year" transform="translate(214.596)" fill="#232e3e" ><tspan x="0" y="13">previous year</tspan></text>
+          <text id="increase" transform="translate(64.132 21.419)" fill="#232e3e" ><tspan x="0" y="13">increase</tspan></text>
+          <text id="decrease" transform="translate(214.596 21.419)" fill="#232e3e" ><tspan x="0" y="13">decrease</tspan></text>
+          <rect id="Rectangle_25583" data-name="Rectangle 25583" width="42.322" height="5" transform="translate(164.142 30.419)" fill="#f86969"/>
+          <path id="Polygon_1089" data-name="Polygon 1089" d="M4,0,8,4H0Z" transform="translate(159.142 34.419) rotate(180)" fill="#f86969"/>
+          <rect id="Rectangle_25582" data-name="Rectangle 25582" width="42.868" height="4.5" transform="translate(12.132 30.419)" fill="#88e51c"/>
+          <path id="Polygon_1090" data-name="Polygon 1090" d="M4,0,8,4H0Z" transform="translate(0 30.419)" fill="#88e51c"/>
+        </svg>
+
+
+      )
+    }
   } else if (ihdiGraph) {
     const legendStyle = {}
     if (printing || width < 600) {
       legendStyle.transform = 'scale(0.65)'
     }
-    const legend2 = (
-      <svg style={{ overflow: 'visible '}} key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
-        <g style={legendStyle} transform="translate(-41)">
-          <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
-          <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
-          <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
-          <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
-          <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+    let legend2 = null
+    if (window.innerWidth > 600) {
+      legend2 = (
+        <svg style={{ overflow: 'visible '}} key='additional' xmlns="http://www.w3.org/2000/svg" width="475" height="21" viewBox="0 0 475 21" fontFamily='proxima-nova, "Proxima Nova", sans-serif'>
+          <g style={legendStyle} transform="translate(-41)">
+            <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(70 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">IHDI of the year</tspan></text>
+            <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(221 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">HDI of the year</tspan></text>
+            <text id="Loss" transform="translate(368 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Loss</tspan></text>
+            <text id="Loss" transform="translate(440 1)" fill="#232e3e" fontWeight="600"><tspan x="0" y="15">Gain</tspan></text>
+            <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(41 8.053)" stroke="#000" strokeWidth="0.5">
+              <rect width="22" height="5" stroke="none"/>
+              <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+            </g>
+            <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
+              <rect width="22" height="5" stroke="none"/>
+              <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+            </g>
+            <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
+              <rect width="22" height="5" stroke="none"/>
+              <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+            </g>
+            <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
+              <rect width="22" height="5" stroke="none"/>
+              <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
+            </g>
           </g>
-          <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(192 8.053)" fill="none" stroke="#000" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(339 8.053)" fill="#F86969" stroke="#ffe17e" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(410 8.053)" fill="#88E51C" stroke="#ffe17e" strokeWidth="0.5">
-            <rect width="22" height="5" stroke="none"/>
-            <rect x="0.25" y="0.25" width="21.5" height="4.5" fill="none"/>
-          </g>
-        </g>
-      </svg>
+        </svg>
 
-    )
+      )
+    } else {
+      legend2 = (
+        <svg key='additional2' xmlns="http://www.w3.org/2000/svg" width="299" height="17" viewBox="0 0 299 17" fontFamily='proxima-nova, "Proxima Nova", sans-serif' fontWeight="600">
+          <text id="IHDI_of_the_year" data-name="IHDI of the year" transform="translate(18)" fill="#232e3e" ><tspan x="0" y="13">IHDI of the year</tspan></text>
+          <text id="HDI_of_the_year" data-name="HDI of the year" transform="translate(142)" fill="#232e3e" ><tspan x="0" y="13">HDI of the year</tspan></text>
+          <g id="Rectangle_24182" data-name="Rectangle 24182" transform="translate(0 6)" stroke="#000" strokeWidth="0.5">
+            <rect width="15" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="14.5" height="4.5" fill="none"/>
+          </g>
+          <g id="Rectangle_24183" data-name="Rectangle 24183" transform="translate(124 6)" fill="none" stroke="#000" strokeWidth="0.5">
+            <rect width="15" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="14.5" height="4.5" fill="none"/>
+          </g>
+          <g id="Rectangle_24184" data-name="Rectangle 24184" transform="translate(244 6)" fill="#f86969" stroke="#ffe17e" strokeWidth="0.5">
+            <rect width="15" height="5" stroke="none"/>
+            <rect x="0.25" y="0.25" width="14.5" height="4.5" fill="none"/>
+          </g>
+          <text id="Loss" transform="translate(262)" fill="#232e3e" ><tspan x="0" y="13">Loss</tspan></text>
+        </svg>
+
+      )
+    }
     legend = [legend, legend2]
   }
 
