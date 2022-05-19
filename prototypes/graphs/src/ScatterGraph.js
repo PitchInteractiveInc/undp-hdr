@@ -27,6 +27,9 @@ function Circle(props) {
     },
     // config,
   })
+  if (props.printing) {
+    return <circle {...props} />
+  }
   return (
     <animated.circle
       opacity={props.opacity}
@@ -34,21 +37,6 @@ function Circle(props) {
       cx={props.cx}
       cy={props.cy}
       fill={props.fill}
-    />
-  )
-}
-
-function Path(props) {
-  const pathSpring = useSpring({
-    to: {
-      d: props.d,
-    },
-    // config,
-  })
-  // console.log(props.d)
-  return (
-    <animated.path
-      opacity={props.opacity} d={pathSpring.d} stroke={props.stroke} fill='none'
     />
   )
 }
@@ -66,7 +54,7 @@ export const colors = [
 ]
 
 function AnimatedDotAndLine(props) {
-  const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale, index } = props
+  const { data, inviewOnce, hoveredPoint, stroke, yScale, xScale, index, printing } = props
   const [pointsAnimated, setPointsAnimated] = useState(0)
 
   const lineGenerator = line()
@@ -127,7 +115,7 @@ function AnimatedDotAndLine(props) {
         }
       }
     }
-    const r = i > pointsAnimated ? 0 : 6
+    const r = i > pointsAnimated  && !printing ? 0 : 6
     dots.push(
       <Circle
         key={row.index}
@@ -136,6 +124,7 @@ function AnimatedDotAndLine(props) {
         cy={dotY}
         fill={stroke}
         opacity={opacity}
+        printing={printing}
       />
     )
   })
@@ -143,7 +132,7 @@ function AnimatedDotAndLine(props) {
   const clipSpring = useSpring({
     to: {
       width: xScale(pointsAnimated)
-    }
+    },
   })
   return (
     <>
@@ -153,7 +142,7 @@ function AnimatedDotAndLine(props) {
             height={yScale.range()[0]}
           />
         </clipPath>
-        <path clipPath={`url(#${clipPathId})`} opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(data)} stroke={stroke} fill='none' />
+        <path clipPath={printing ? null :`url(#${clipPathId})`} opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(data)} stroke={stroke} fill='none' />
         <g>{dots}</g>
     </>
   )
@@ -313,6 +302,7 @@ export default function ScatterGraph(props) {
           xScale={xScale}
           inviewOnce={inviewOnce}
           index={index}
+          printing={printing}
           // lineOpacity={hoveredPoint ? 0.5 : 1}
         />
         {/* <path opacity={hoveredPoint ? 0.5 : 1} d={lineGenerator(rowData)} stroke={stroke} fill='none'></path>
