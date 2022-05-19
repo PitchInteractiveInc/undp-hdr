@@ -98,9 +98,6 @@ export default function ComparisonCountrySelectors(props) {
             }
           }
         }
-        if (style && style.backgroundColor) {
-          style.backgroundColor += ' !important'
-        }
 
         const countriesSorted = [...countries].sort((a, b) => a.Country.localeCompare(b.Country))
         const placeholder = 'Add a country'.toUpperCase()
