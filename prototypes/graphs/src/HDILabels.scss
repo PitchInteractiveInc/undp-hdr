@@ -11,6 +11,10 @@
     transform: scale(0.87);
     transform-origin: top left;
   }
+  @media print {
+    transform: scale(0.87);
+    transform-origin: top left;
+  }
   &.inline {
     display: inline-flex;
   }
@@ -32,4 +36,5 @@
       height: 100%;
     }
   }
+
 }

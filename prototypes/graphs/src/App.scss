@@ -66,3 +66,11 @@
   }
 }
 
+@media print {
+  body {
+    padding: 0 !important;
+  }
+  header.header__wrapper {
+    display: none;
+  }
+}

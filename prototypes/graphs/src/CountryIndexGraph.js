@@ -53,7 +53,7 @@ function GraphWrapper(props) {
   let graphElement = null
   const printWidth = 500
   let width = printing ? printWidth : graphWidth
-  let graphHeight = printing ? 230 : 460
+  let graphHeight = printing ? 350 : 460
 
   let countrySelectors = null
   if (countSelectable > 0 && !noCountrySelection) {
