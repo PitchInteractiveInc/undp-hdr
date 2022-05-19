@@ -29,7 +29,9 @@
     background-size: 10px;
     border: 2px solid black;
     background-repeat: no-repeat;
-
+    &:focus {
+      border: 2px solid black;
+    }
     &:active {
       text-transform: none;
     }
