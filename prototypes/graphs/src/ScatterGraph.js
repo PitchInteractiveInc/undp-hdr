@@ -444,11 +444,7 @@ export default function ScatterGraph(props) {
   return (
     <div className='ScatterGraph'>
       <GraphColorLegend rows={rowsToPlot} missingCountries={missingCountries} />
-      <div style={{
-        float: 'right'
-      }}>
-        {hdiLabels}
-      </div>
+      {hdiLabels}
       <div className='svgContainer' ref={ref}>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
