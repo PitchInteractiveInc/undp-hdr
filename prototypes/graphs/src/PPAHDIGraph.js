@@ -83,7 +83,7 @@ function Graph(props) {
   width -= margins.left + margins.right
   height -= margins.top + margins.bottom
   const rowWidth = width / sortedCountries.length
-  const barWidth = rowWidth - 2
+  const barWidth = Math.max(rowWidth - 2, 1)
 
   const svgWidth = width + margins.left + margins.right
   const svgHeight = height + margins.top + margins.bottom
