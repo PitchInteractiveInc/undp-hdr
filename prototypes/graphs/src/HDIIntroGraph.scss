@@ -22,5 +22,23 @@
 
   @media only screen and (max-width: 600px) {
     font-size: 12px;
+    .largeStats {
+      display: block;
+      > div {
+        float: left;
+        margin-bottom: 1em;
+
+        &:first-child {
+          width: 40%;
+        }
+        + div {
+          margin-left: 0;
+        }
+        .value {
+          font-size: 1.5em;
+        }
+
+      }
+    }
   }
 }
