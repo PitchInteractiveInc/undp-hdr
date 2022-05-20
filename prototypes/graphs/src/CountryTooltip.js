@@ -68,9 +68,9 @@ function GenderTable(props) {
       <thead>
         <tr>
           <td />
-          <td style={{ paddingRight: '0.3em'}}>Female </td>
+          <td style={{ paddingRight: '0.6em'}}>Female </td>
           <td>Male</td>
-          <td className='negative'>Gender gap</td>
+          <td className='negative' style={{ paddingLeft: '0.3em'}}>Gender gap</td>
         </tr>
       </thead>
       <tbody>
