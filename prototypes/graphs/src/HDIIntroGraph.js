@@ -136,7 +136,7 @@ export default function HDIIntroGraph(props) {
     <div className='HDIIntroGraph'>
       <div className='largeStats'>
         <div>
-          <div className='largeStatLabel'>HDI Value ({year})</div>
+          <div className='largeStatLabel'>HDI value ({year})</div>
           <div className='value'>{country[lastColumn]}</div>
         </div>
         <div>
@@ -144,7 +144,7 @@ export default function HDIIntroGraph(props) {
           <div className='value' style={{ color: hdiIntroColorScale(country[lastColumn])}}>{country.hdicode}</div>
         </div>
         <div>
-          <div className='largeStatLabel'>Developing Region</div>
+          <div className='largeStatLabel'>Developing region</div>
           <div className='value'>{regionText}</div>
         </div>
       </div>

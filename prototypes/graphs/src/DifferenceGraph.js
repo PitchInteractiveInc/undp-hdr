@@ -348,12 +348,12 @@ export default function DifferenceGraph(props) {
     } else {
       legend = (
         <svg xmlns="http://www.w3.org/2000/svg" width="311.596" height="38.419" viewBox="0 0 311.596 38.419" fontFamily='proxima-nova, "Proxima Nova", sans-serif' fontSize='14' >
-          <text id="current_year" data-name="current year" transform="translate(64.132)" fill="#232e3e" ><tspan x="0" y="13">current year</tspan></text>
+          <text id="current_year" data-name="current year" transform="translate(64.132)" fill="#232e3e" ><tspan x="0" y="13">Current year</tspan></text>
           <line id="Line_11768" data-name="Line 11768" x2="55" transform="translate(0 8.5)" fill="none" stroke="#1f5a95" strokeWidth="3"/>
           <line id="Line_11769" data-name="Line 11769" x2="55" transform="translate(151.464 8.5)" fill="none" stroke="#1f5a95" strokeWidth="3" strokeDasharray="1.5" opacity="0.5"/>
-          <text id="previous_year" data-name="previous year" transform="translate(214.596)" fill="#232e3e" ><tspan x="0" y="13">previous year</tspan></text>
-          <text id="increase" transform="translate(64.132 21.419)" fill="#232e3e" ><tspan x="0" y="13">increase</tspan></text>
-          <text id="decrease" transform="translate(214.596 21.419)" fill="#232e3e" ><tspan x="0" y="13">decrease</tspan></text>
+          <text id="previous_year" data-name="previous year" transform="translate(214.596)" fill="#232e3e" ><tspan x="0" y="13">Previous year</tspan></text>
+          <text id="increase" transform="translate(64.132 21.419)" fill="#232e3e" ><tspan x="0" y="13">Increase</tspan></text>
+          <text id="decrease" transform="translate(214.596 21.419)" fill="#232e3e" ><tspan x="0" y="13">Decrease</tspan></text>
           <rect id="Rectangle_25583" data-name="Rectangle 25583" width="42.322" height="5" transform="translate(164.142 30.419)" fill="#f86969"/>
           <path id="Polygon_1089" data-name="Polygon 1089" d="M4,0,8,4H0Z" transform="translate(159.142 34.419) rotate(180)" fill="#f86969"/>
           <rect id="Rectangle_25582" data-name="Rectangle 25582" width="42.868" height="4.5" transform="translate(12.132 30.419)" fill="#88e51c"/>
