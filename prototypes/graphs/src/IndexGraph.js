@@ -440,7 +440,7 @@ function IndexGraph(props) {
       return
     }
     const mouseY = event.clientY - svgPosition.top
-    const closestPointIndex = delaunay.find(mouseX - margins.left, mouseY - margins.top)
+    const closestPointIndex = delaunay.find(mouseX, mouseY - margins.top)
     // console.log(mouseX, mouseY)
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       // console.log(closestPointIndex)
