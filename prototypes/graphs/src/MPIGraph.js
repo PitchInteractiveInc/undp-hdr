@@ -270,7 +270,7 @@ function MPIGraph(props) {
             ref={svgRef}>
 
             <g transform={`translate(${margins.left}, ${margins.top})`}>
-              <line x1={0} y1={0} x2={0} y2={height} stroke='black' strokeWidth='1' />
+              <line x1={0} y1={0} x2={0} y2={height} stroke='black' strokeWidth='1' opacity={hoveredPoint ? 0.0 : null} />
               <line x1={0} y1={height} x2={width} y2={height} stroke='black' strokeWidth='1' />
               <g>{yTicks}</g>
               <g>{countryBars}</g>
