@@ -188,7 +188,7 @@ function MPIGraph(props) {
       type: 'index'
     }
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={mpiData} allRows={[]} graph={graph} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={mpiData} allRows={[]} graph={graph} />
     )
   }
 

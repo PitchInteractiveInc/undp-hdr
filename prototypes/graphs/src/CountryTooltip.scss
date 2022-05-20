@@ -23,6 +23,10 @@
       padding: 0.5em 1em;
     }
   }
+
+  &.mobile {
+    width: 100%;
+  }
   .countryName {
     font-weight: bold;
 

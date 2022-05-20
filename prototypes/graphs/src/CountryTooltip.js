@@ -7,7 +7,8 @@ import { mpiColors } from './MPIGraph'
 import {hdiIntroColorScale} from './HDIIntroGraph'
 import { scaleSqrt } from 'd3-scale'
 import { arc } from 'd3-shape'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useClickAway, useMedia } from 'react-use'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -477,7 +478,14 @@ export default function TooltipWrapper(props) {
   )
 }
 function CountryTooltip(props) {
-  const { point, index, graph, opacity } = props
+  const { point, index, graph, opacity, close } = props
+  const mobile = useMedia('(hover: none) and (max-width: 767px)')
+  const tooltipRef = useRef()
+  useClickAway(tooltipRef, () => {
+    if (mobile && close) {
+      close()
+    }
+  })
 
   let xOffset = 10
   let x = point.x + xOffset
@@ -516,6 +524,9 @@ function CountryTooltip(props) {
     opacity,
     transition: point.unmount ? 'opacity 0.3s ease-in-out' : null
   }
+  if (mobile) {
+    style.transform = `translate(0, ${y}px)`
+  }
   let tooltipContents = null
   let className = null
   if (index && graph) {
@@ -542,7 +553,7 @@ function CountryTooltip(props) {
     return null
   }
   return (
-    <div className={classNames('CountryTooltip', className)} style={style}>
+    <div ref={tooltipRef} className={classNames('CountryTooltip', className, { mobile })} style={style}>
       {tooltipContents}
     </div>
   )

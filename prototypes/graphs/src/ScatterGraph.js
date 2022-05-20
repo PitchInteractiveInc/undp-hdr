@@ -16,6 +16,7 @@ import HDILabels from './HDILabels';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { useSpring, animated } from '@react-spring/web'
+import { useMedia } from 'react-use';
 
 const config = { mass: 1, tension: 210, friction: 20 }
 
@@ -413,7 +414,7 @@ export default function ScatterGraph(props) {
   let tooltip = null
   if (hoveredPoint) {
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
     )
   }
 
@@ -422,8 +423,10 @@ export default function ScatterGraph(props) {
     hdiLabels = <HDILabels width={width} />
   }
   const navigate = useNavigate()
+  const mobile = useMedia('(hover: none) and (max-width: 767px)')
+
   const graphClick = (event) => {
-    if (hoveredPoint) {
+    if (hoveredPoint && !mobile) {
       const clickedCountry = hoveredPoint.hover[2].row
       const iso3 = clickedCountry.ISO3
       if (country && iso3 && country.ISO3 !== iso3) {

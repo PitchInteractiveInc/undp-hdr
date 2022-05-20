@@ -11,6 +11,7 @@ import format from './format';
 import getYearOfColumn from './getYearOfColumn';
 import { line } from 'd3-shape';
 import { useNavigate } from 'react-router-dom';
+import { useMedia } from 'react-use';
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -313,7 +314,7 @@ export default function DifferenceGraph(props) {
   let tooltip = null
   if (hoveredPoint) {
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={data} allRows={rowsToPlot} graph={graph} />
     )
   }
 
@@ -420,9 +421,10 @@ export default function DifferenceGraph(props) {
     }
     legend = [legend, legend2]
   }
+  const mobile = useMedia('(hover: none) and (max-width: 767px)')
 
   const clickGraph = () => {
-    if (hoveredPoint) {
+    if (hoveredPoint && !mobile) {
       const clickedCountry = hoveredPoint.hover[2].row
       const iso3 = clickedCountry.ISO3
       if (country && iso3 && country.ISO3 !== iso3) {

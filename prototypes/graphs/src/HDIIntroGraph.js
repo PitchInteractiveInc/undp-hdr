@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react"
 import CountryTooltip from "./CountryTooltip"
 import { regions } from "./RegionFilter"
 import { useNavigate } from "react-router-dom"
+import { useMedia } from "react-use"
 export const hdiIntroColorScale = scaleThreshold()
   .domain([0.55, 0.7, 0.8, 1])
   .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
@@ -105,7 +106,7 @@ export default function HDIIntroGraph(props) {
   let tooltip = null
   if (hoveredPoint) {
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={data} graph={{type: 'hdiIntro'}} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={data} graph={{type: 'hdiIntro'}} />
     )
   }
 
@@ -117,9 +118,10 @@ export default function HDIIntroGraph(props) {
 
 
   const navigate = useNavigate()
+  const mobile = useMedia('(hover: none) and (max-width: 767px)')
 
   const clickGraph = () => {
-    if (hoveredPoint) {
+    if (hoveredPoint && !mobile) {
       const clickedCountry = hoveredPoint.hover[2].row
       const iso3 = clickedCountry.ISO3
       if (country && iso3 && country.ISO3 !== iso3) {

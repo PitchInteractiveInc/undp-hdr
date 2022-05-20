@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useInView } from 'react-intersection-observer';
 import { useSpring, animated } from '@react-spring/web'
+import { useMedia } from 'react-use';
 function Rect(props) {
   const rectSpring = useSpring({
     to: {
@@ -202,14 +203,15 @@ export default function BarGraph(props) {
   let tooltip = null
   if (hoveredPoint) {
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={data} graph={graph} />
+      <CountryTooltip point={hoveredPoint} index={index} data={data} graph={graph} close={mouseLeave} />
     )
   }
 
   const navigate = useNavigate()
+  const mobile = useMedia('(hover: none) and (max-width: 767px)')
 
   const clickGraph = () => {
-    if (hoveredPoint) {
+    if (hoveredPoint && !mobile) {
       const clickedCountry = hoveredPoint.hover[2].row
       const iso3 = clickedCountry.ISO3
       if (country && iso3 && country.ISO3 !== iso3) {

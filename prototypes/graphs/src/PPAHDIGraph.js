@@ -192,7 +192,7 @@ function Graph(props) {
       type: 'index'
     }
     tooltip = (
-      <CountryTooltip point={hoveredPoint} index={index} data={data} allRows={[]} graph={graph} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={data} allRows={[]} graph={graph} />
     )
   }
   return (
