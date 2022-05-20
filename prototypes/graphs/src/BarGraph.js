@@ -76,7 +76,7 @@ export default function BarGraph(props) {
   const yScale = scaleLinear()
     .domain(yExtent)
     .range([0, height])
-
+    .nice()
   const sortedData = [...filteredData]
   sortedData.sort((a, b) => {
     const aValue = a[graphColumns[0]]
