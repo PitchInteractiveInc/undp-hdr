@@ -8,8 +8,9 @@
   font-size: 0.875em;
   justify-content: flex-end;
   @media print {
-    transform: scale(0.87);
-    transform-origin: top left;
+    .label {
+      white-space: nowrap;
+    }
   }
   &.inline {
     display: inline-flex;

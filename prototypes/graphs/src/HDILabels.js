@@ -5,7 +5,7 @@ export default function HDILabels(props) {
   const { inline, width } = props
   return (
     <div className={classNames('HDILabels', { inline })} style={{ width }}>
-      <div style={{ marginRight: '1em', fontSize: '0.875em'}}>HDI classification (value):</div>
+      <div className='label' style={{ marginRight: '1em', fontSize: '0.875em'}}>HDI classification (value):</div>
       <div className='labels'>
         {hdiBackgroundRectData.map((backgroundRect, i) => {
           return (
