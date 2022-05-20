@@ -166,6 +166,7 @@ export default function CountryRanks(props) {
     const lastColumn = graphColumns[graphColumns.length - 1]
     year = getYearOfColumn(lastColumn)
     countries = data.filter(d => d.ISO3 !== '')
+    .filter(country => selectedRegion === '' || country.region === selectedRegion)
   }
   return (
     <div className='CountryRanks'>
