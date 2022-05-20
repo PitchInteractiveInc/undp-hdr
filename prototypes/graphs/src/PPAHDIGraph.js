@@ -199,7 +199,7 @@ function Graph(props) {
     <div className='Graph' style={{ width: width + margins.left + margins.right}}>
       {countryDropdowns}
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <span style={{ fontWeight: '600', marginLeft: margins.left, transform: 'translateY(20px)'}}>PHDI value</span>
+        <span style={{ fontWeight: '600', marginLeft: margins.left}}>PHDI value</span>
         <svg
           xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="652.517" height="20" viewBox="0 0 652.517 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
