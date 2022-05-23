@@ -290,6 +290,7 @@ export default function DifferenceGraph(props) {
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       const x = delaunayData[closestPointIndex][0]
       const clientX = x + svgPosition.left
+      // console.log('set hovered point difference')
       setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: yearWidth, clientX, clientY: event.clientY })
     }
   }

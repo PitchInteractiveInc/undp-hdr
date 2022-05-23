@@ -481,8 +481,8 @@ function CountryTooltip(props) {
   const { point, index, graph, opacity, close } = props
   const mobile = useMedia('(hover: none) and (max-width: 767px)')
   const tooltipRef = useRef()
-  useClickAway(tooltipRef, () => {
-    if (mobile && close) {
+  useClickAway(tooltipRef, (e) => {
+    if (mobile && close && e.touches) {
       close()
     }
   })

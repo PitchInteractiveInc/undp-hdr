@@ -82,6 +82,7 @@ export default function HDIIntroGraph(props) {
     if (closestPointIndex !== -1) {
       // console.log(closestPointIndex, delaunayData[closestPointIndex])
       const x = delaunayData[closestPointIndex][0]
+      // console.log('sethoveredPoint')
       setHoveredPoint({ x, y: mouseY, hover: delaunayData[closestPointIndex], columnWidth: 10, clientX: event.clientX, clientY: event.clientY })
     }
   }
