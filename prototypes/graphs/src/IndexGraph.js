@@ -197,6 +197,9 @@ function IndexGraph(props) {
         // label = <text fill={'black'} dx='0.2em' fontWeight='bold' dy='-1em' x={x} y={yScale(data[0].value)}>{country.Country}</text>
 
       }
+      const style = index.key === 'HDI' ?
+        null :
+        { filter: `drop-shadow(0px 0px 3px ${stroke})` }
       return (
         <g key={country.ISO3}>
           <path
@@ -207,7 +210,7 @@ function IndexGraph(props) {
             stroke={stroke}
             opacity={0.75}
             strokeDasharray='1,1'
-            style={{ filter: `drop-shadow(0px 0px 3px ${stroke})` }}
+            style={style}
           />
           {label}
         </g>
