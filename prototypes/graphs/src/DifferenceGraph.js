@@ -12,6 +12,7 @@ import getYearOfColumn from './getYearOfColumn';
 import { line } from 'd3-shape';
 import { useNavigate } from 'react-router-dom';
 import { useMedia } from 'react-use';
+import { useInView } from 'react-intersection-observer'
 export const colors = [
   '#d12816',
   '#ee402d',
@@ -25,11 +26,8 @@ export const colors = [
   '#006eb5',
 ]
 function DifferenceGraphMark(props) {
-  const { x, markX, width, stroke, y, height, fill, previousMarkData } = props
-  const hoverLine = null
-  const hoverLabel = null
+  const { x, markX, width, stroke, y, height, fill, previousMarkData, opacity, hoverLabel, hoverLine } = props
   let previousYearMarks = null
-  let opacity = null
   if (previousMarkData) {
     previousYearMarks = (
       <g>
@@ -70,17 +68,51 @@ function DifferenceGraphMark(props) {
   )
 }
 function DifferenceGraphSeries(props) {
-  const { differenceData }  = props
+  const { differenceData, inviewOnce, printing, connectingLineData, xScale, yScale }  = props
+  const [pointsAnimated, setPointsAnimated] = useState(0)
+  useEffect(() => {
+    const id = setTimeout(() => {
+
+      if (inviewOnce && pointsAnimated < differenceData.length) {
+        const delta = 1// Math.ceil(data.length / 10)
+        setPointsAnimated(pointsAnimated + delta)
+      }
+    }, 16)
+    return () => clearTimeout(id)
+
+  }, [pointsAnimated, differenceData.length, inviewOnce])
+
+  let connectingLine = null
+  if (connectingLineData) {
+    const lineGen = line()
+      .x(d => xScale(d.index) + connectingLineData.markWidth / 2 + connectingLineData.markWidth * connectingLineData.rowIndex + connectingLineData.yearWidth * 0.1)
+      .y(d => yScale(d.value) + connectingLineData.markHeight / 2 + 0.5)
+    const path = lineGen(connectingLineData.data)
+
+    connectingLine = <path
+      key={`connecting-line-${connectingLineData.rowIndex}`}
+      d={path}
+      stroke={connectingLineData.stroke}
+      strokeWidth={connectingLineData.markHeight }
+      fill='none'
+      opacity={0.5}
+    />
+  }
   return (
     <g>
       {differenceData.map((d, i) => {
-        return (
+        const opacity = i < pointsAnimated ? d.opacity : 0
+         return (
           <DifferenceGraphMark
             key={i}
+            printing={printing}
             {...d}
+            opacity={opacity}
+
           />
         )
       })}
+      {connectingLine}
     </g>
   )
 }
@@ -91,6 +123,15 @@ export default function DifferenceGraph(props) {
   const dataKey = index.key
   const graphColumns = getGraphColumnsForKey(data, dataKey)
   const [hoveredPoint, setHoveredPoint] = useState(null)
+
+  const [ref, inView] = useInView({ threshold: 0.5 })
+  const [inviewOnce, setInviewOnce] = useState(false)
+  useEffect(() => {
+    if (inView && !inviewOnce) {
+      setInviewOnce(true)
+    }
+  }, [inView, inviewOnce])
+
 
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
@@ -193,6 +234,11 @@ export default function DifferenceGraph(props) {
         data: rowData,
         stroke,
         strokeWidth: markHeight,
+        markWidth,
+        rowIndex,
+        yearWidth,
+        stroke,
+        markHeight,
       }
       // const lineGen = line()
       //   .x(d => xScale(d.index) + markWidth / 2 + markWidth * rowIndex + yearWidth * 0.1)
@@ -261,37 +307,37 @@ export default function DifferenceGraph(props) {
       const delaunayY = rowsToPlot.length === 1 ? (height / 2) : ((y + prevY) / 2)
       delaunayData.push([x, delaunayY, {row: row.row, col: datum.col}])
 
-      // let opacity = null
-      // let hoverLabel = null
-      // let hoverLine = null
-      // if (hoveredPoint) {
-      //   if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
-      //     opacity = 1
-      //     hoverLine = (
-      //       <line
-      //         y1={0}
-      //         y2={height}
-      //         stroke='#232E3E'
-      //         strokeDasharray='4,4'
-      //       />
-      //     )
-      //   } else {
-      //     opacity = 0.3
-      //   }
-      //   if (index.key === 'IHDI' && hoveredPoint.hover[2].col === datum.col) {
-      //     const year = getYearOfColumn(datum.col)
-      //     hoverLabel = (
-      //       <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
-      //         <text fontWeight={'600'} fill={stroke} textAnchor='middle' dy='1em' >
-      //           {format(datum.value)}
-      //         </text>
-      //         <text fontWeight='600' fill='#D12800' textAnchor='middle' dy='2em' >
-      //           {format(row.row[`loss_${year}`], 'loss')}% loss
-      //         </text>
-      //       </g>
-      //     )
-      //   }
-      // }
+      let opacity = null
+      let hoverLabel = null
+      let hoverLine = null
+      if (hoveredPoint) {
+        if (hoveredPoint.hover[2].row === row.row && hoveredPoint.hover[2].col === datum.col) {
+          opacity = 1
+          hoverLine = (
+            <line
+              y1={0}
+              y2={height}
+              stroke='#232E3E'
+              strokeDasharray='4,4'
+            />
+          )
+        } else {
+          opacity = 0.3
+        }
+        if (index.key === 'IHDI' && hoveredPoint.hover[2].col === datum.col) {
+          const year = getYearOfColumn(datum.col)
+          hoverLabel = (
+            <g transform={`translate(0, ${Math.min(y, prevY) + previousHeight + markHeight})`}>
+              <text fontWeight={'600'} fill={stroke} textAnchor='middle' dy='1em' >
+                {format(datum.value)}
+              </text>
+              <text fontWeight='600' fill='#D12800' textAnchor='middle' dy='2em' >
+                {format(row.row[`loss_${year}`], 'loss')}% loss
+              </text>
+            </g>
+          )
+        }
+      }
       return {
         x,
         markX: -markWidth / 2 + 1,
@@ -302,6 +348,9 @@ export default function DifferenceGraph(props) {
         fill: ihdiGraph ? stroke : 'none',
         previousMarkData,
         hoveredPoint,
+        opacity,
+        hoverLabel,
+        hoverLine,
       }
       // return (
       //   <g key={datumIndex} transform={`translate(${x}, 0)`} opacity={opacity}>
@@ -324,6 +373,10 @@ export default function DifferenceGraph(props) {
         key={row.row.Country}
         differenceData={differenceMarkData}
         connectingLineData={connectingLineData}
+        inviewOnce={inviewOnce}
+        printing={printing}
+        xScale={xScale}
+        yScale={yScale}
       />
     )
     // return (
@@ -539,7 +592,7 @@ export default function DifferenceGraph(props) {
     <div className='DifferenceGraph'>
       <div className='differenceLegend'>{legend}</div>
 
-      <div className='svgContainer'>
+      <div className='svgContainer' ref={ref}>
         <svg style={{ cursor }} fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={svgHeight}
           onMouseMove={mouseMove}
           onMouseEnter={mouseMove}
