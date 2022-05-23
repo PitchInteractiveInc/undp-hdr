@@ -201,14 +201,14 @@ function Graph(props) {
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
         <span style={{ fontWeight: '600', marginLeft: margins.left}}>PHDI value</span>
         <svg
-          xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="652.517" height="20" viewBox="0 0 652.517 20"
+          xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="178" height="20" viewBox="0 0 178 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
-          transform='translate(0, 5)'
+          transform='translate(0, 3)'
           fontSize='16'
           >
           {/* <text id="PHDI_rank" data-name="PHDI rank" font-size="16" font-weight="600"><tspan x="0" y="15">PHDI rank</tspan></text> */}
-          <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(475.087)" fontWeight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
-          <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V5.1H0Z" transform="translate(652.517 12) rotate(180)"/>
+          <text id="Loss_from_HDI" data-name="Loss from HDI" transform="translate(0)" fontWeight="600"><tspan x="0" y="15">Loss from HDI</tspan></text>
+          <path id="Path_31967" data-name="Path 31967" d="M0,0H64.43V5.1H0Z" transform="translate(178 12) rotate(180)"/>
           {/* <rect id="Rectangle_25574" data-name="Rectangle 25574" width="300" height="8.57" transform="translate(116 6.43)" fill="url(#linear-gradient)"/> */}
           {/* <text id="low" transform="translate(108 1.5)" font-size="14"><tspan x="-21.434" y="13">low</tspan></text>
           <text id="high" transform="translate(424 1.5)" font-size="14"><tspan x="0" y="13">high</tspan></text> */}
