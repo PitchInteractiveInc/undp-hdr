@@ -20,6 +20,12 @@
     position: relative;
   }
 
+  svg {
+    text {
+      cursor: default;
+    }
+  }
+
   .positive {
     color: #88E51C;
     fill: #88E51C;
