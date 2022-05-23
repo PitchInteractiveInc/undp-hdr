@@ -15,6 +15,11 @@
 
   .pageBreakAfter, &.pageBreakAfter {
     break-after: page;
+    page-break-after: always;
+  }
+  .pageBreakBefore, &.pageBreakBefore {
+    break-before: page;
+    page-break-before: always;
   }
   .graphTitle {
     font-weight: bold;

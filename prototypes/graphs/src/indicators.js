@@ -32,6 +32,7 @@ const indicators =  [
 
       }
     ],
+    pageBreakBefore: true,
   },
   {
     key: 'IHDI',

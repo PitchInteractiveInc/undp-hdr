@@ -53,7 +53,7 @@ function GraphWrapper(props) {
   let graphElement = null
   const printWidth = 500
   let width = printing ? printWidth : graphWidth
-  let graphHeight = printing ? 350 : 460
+  let graphHeight = printing ? 270 : 460
 
   let countrySelectors = null
   if (countSelectable > 0 && !noCountrySelection) {
@@ -161,7 +161,7 @@ function GraphWrapper(props) {
 export default function CountryIndexGraph(props) {
   const { data, country, index, syncCountries, forceSelection, indexIndex, printing, graphWidth } = props
 
-  const { pageBreakAfter } = index
+  const { pageBreakAfter, pageBreakBefore } = index
   let additionalIndexContent = null
   const useDrupalNodeLink = inDrupal &&
     window.drupalSettings.hdro_app &&
@@ -182,7 +182,7 @@ export default function CountryIndexGraph(props) {
     tagProps.to = link
   }
   return (
-    <div className={classNames('CountryIndexGraph', { pageBreakAfter })}>
+    <div className={classNames('CountryIndexGraph', { pageBreakAfter, pageBreakBefore })}>
       <div className='indexText'>
         <div className='key'>{index.key}</div>
         <div className='name'>{index.name}</div>
