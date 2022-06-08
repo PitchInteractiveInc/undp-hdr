@@ -74,7 +74,7 @@ function MPIGraph(props) {
   const averages = useMemo(() => {
     const averages = {}
     metrics.forEach(metric => {
-      averages[metric]  = mean(countries , d => d[metric])
+      averages[metric]  = 1
     })
     return averages
   }, [countries])
@@ -225,10 +225,9 @@ function MPIGraph(props) {
       <g key={metric} clipPath={clipPathId}>
         <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
 
-          <text opacity={textOpacity} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
+          <text style={{ transition: 'opacity 0.3s ease-in-out', opacity: textOpacity}} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
 
           <rect width={barWidth} height={metricGraphBarHeight} fill={mpiColors[metric]} />
-          <text style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'}} fontWeight='600' x={barWidth} dx={'-0.2em'} y={metricGraphBarHeight - 5} textAnchor={'end'} fill='#fff'>{format(value, 'mpi')}%</text>
         </g>
       </g>
     )
@@ -239,7 +238,7 @@ function MPIGraph(props) {
         {countryDropdowns}
       </div>
       <div style={{ fontWeight: 'bold', marginBottom: '0.5em'}}>
-        Contribution of deprivation in indicator to overall multidimensional poverty (%)
+        Contribution of deprivation in indicator to overall multidimensional poverty
       </div>
       <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         <defs>
