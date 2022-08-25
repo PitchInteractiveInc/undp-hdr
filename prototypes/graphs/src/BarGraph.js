@@ -51,7 +51,8 @@ export default function BarGraph(props) {
   }, [inView, inviewOnce])
 
   const dataKey = index.key
-  const graphColumns = getGraphColumnsForKey(data, dataKey)
+  let graphColumns = getGraphColumnsForKey(data, dataKey)
+  graphColumns = [graphColumns[graphColumns.length - 1]]
   // console.log(dataKey, data.columns)
   // console.log(graphColumns)
   const filteredData = data.filter(d => d[graphColumns[0]] !== ''

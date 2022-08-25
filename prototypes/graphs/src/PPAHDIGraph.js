@@ -10,6 +10,7 @@ import { extent } from 'd3-array';
 import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useWindowSize } from 'react-use'
+import getGraphColumnsForKey from './getGraphColumnsForKey';
 function TextWithBackground(props) {
   const textRef = useRef()
   const [textSize, setTextSize] = useState(null)
@@ -66,8 +67,10 @@ function Graph(props) {
     exportSVG(event.target.closest('svg'), `PPA-HDI.svg`)
   }
 
-  const ppaKey = 'phdi_2019'
-  const hdiKey = 'hdi_2019'
+  const ppaKeys = getGraphColumnsForKey(data, 'phdi')
+  const hdiKeys = getGraphColumnsForKey(data, 'hdi')
+  const ppaKey = ppaKeys[ppaKeys.length - 1]
+  const hdiKey = hdiKeys[hdiKeys.length - 1]
 
 
   const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '' && d[ppaKey] !== '')
