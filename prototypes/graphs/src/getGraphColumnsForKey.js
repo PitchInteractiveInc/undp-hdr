@@ -6,5 +6,6 @@ export default function getGraphColumnsForKey(data, dataKey) {
     }
     return key.toLowerCase().match(keyRe)
   })))
+  // console.log(graphColumns)
   return graphColumns
 }
