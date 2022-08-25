@@ -6,7 +6,7 @@ import metadataFile from './data/HDR201122web_metadata_040822.csv'
 import dataFile from './data/Onlinemaster_HDR2122_081522.csv'
 
 const countriesToRemove = [
-  'MCO', 'PRK', 'SOM', 'NRU', 'SMR', 'TUV'
+  'MCO', 'PRK', 'SOM', 'NRU',
 ]
 export default function useHDRData() {
   const [data, setData] = useState(null)
