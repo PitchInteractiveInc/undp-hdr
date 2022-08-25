@@ -53,10 +53,10 @@ export default function getCountryIndexDescription(country, index, data) {
             {defaults[index.key]} {getCountryWithApostrophe(country.Country)} HDI value for {latestYear} is {latestValueFormatted}— which put the country in the {country.hdicode} human development category—positioning it at {country[`hdi_rank_${latestYear}`]} out of {countCountries} countries and territories.
           </p>
           <p>
-            Between {firstYear} and {latestYear}, {getCountryWithApostrophe(country.Country)} HDI value increased from {firstValueFormatted} to {latestValueFormatted}, an increase of {percentChangeFormatted} percent.
+            Between {firstYear} and {latestYear}, {getCountryWithApostrophe(country.Country)} HDI value changed from {firstValueFormatted} to {latestValueFormatted}, an change of {percentChangeFormatted} percent.
           </p>
           <p>
-            Between {firstYear} and {latestYear}, {getCountryWithApostrophe(country.Country)} life expectancy at birth increased by {leIncrease} years, mean years of schooling increased by {mysIncrease} years and expected years of schooling increased by {eysIncrease} years. {getCountryWithApostrophe(country.Country)} GNI per capita increased by about {gnipcPercentIncreaseIncrease} percent between {firstYear} and {latestYear}.
+            Between {firstYear} and {latestYear}, {getCountryWithApostrophe(country.Country)} life expectancy at birth changed by {leIncrease} years, mean years of schooling changed by {mysIncrease} years and expected years of schooling changed by {eysIncrease} years. {getCountryWithApostrophe(country.Country)} GNI per capita changed by about {gnipcPercentIncreaseIncrease} percent between {firstYear} and {latestYear}.
           </p>
         </>
       )
