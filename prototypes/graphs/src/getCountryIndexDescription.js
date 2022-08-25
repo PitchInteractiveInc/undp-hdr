@@ -70,7 +70,7 @@ export default function getCountryIndexDescription(country, index, data) {
     } else if (index.key === 'GDI') {
       const femaleHdi = format(country[`hdi_f_${latestYear}`], 'hdi_f')
       const maleHdi = format(country[`hdi_m_${latestYear}`], 'hdi_m')
-      const group = country[`gdi_group_2019`]
+      const group = country[`gdi_group_2021`]
       const groupText = group !== '' ? `, placing it into Group ${group}` : ''
       description = (
         <p>
