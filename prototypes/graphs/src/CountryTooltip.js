@@ -410,17 +410,17 @@ function PHDIBarTooltip(props) {
       />
       <Stat
         label='Difference from HDI rank'
-        value={format(country[`rankdiff_hdi_phdi_${year}`], 'rankdiff_hdi_phdi')}
+        value={format(country[`rankdiff_hdi_phdi_2021`], 'rankdiff_hdi_phdi')}
       />
       <hr />
       <Stat
         label='Material footprint per capita (tonnes)'
-        value={format(country['co2_prod_2018'], 'co2_prod')}
+        value={format(country[`co2_prod_${year}`], 'co2_prod')}
         bottomBorder
       />
       <Stat
         label='Carbon dixoide per capita (production, tonnes)'
-        value={format(country['mf_2017'], 'mf')}
+        value={format(country[`mf_${year}`], 'mf')}
         bottomBorder
       />
 
