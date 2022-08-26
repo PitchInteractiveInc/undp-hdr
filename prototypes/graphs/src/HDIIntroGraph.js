@@ -8,6 +8,7 @@ import CountryTooltip from "./CountryTooltip"
 import { regions } from "./RegionFilter"
 import { useNavigate } from "react-router-dom"
 import { useMedia } from "react-use"
+import format from "./format"
 export const hdiIntroColorScale = scaleThreshold()
   .domain([0.55, 0.7, 0.8, 1])
   .range(['#B5D5F5','#6BABEB', '#3288CE', '#1F5A95'])
@@ -138,7 +139,7 @@ export default function HDIIntroGraph(props) {
       <div className='largeStats'>
         <div>
           <div className='largeStatLabel'>HDI value ({year})</div>
-          <div className='value'>{country[lastColumn]}</div>
+          <div className='value'>{format(country[lastColumn], index.key)}</div>
         </div>
         <div>
           <div className='largeStatLabel'>Human development classification</div>
