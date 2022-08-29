@@ -13,7 +13,11 @@ export default function GraphColorLegend(props) {
         const color = row.color
         const country = row.row.Country
         return (
-          <div key={i} style={{ color }}>{country}</div>
+          <div key={i} style={{ color }} ref={node => {
+            if (node) {
+              node.style.setProperty('color', color, 'important')
+            }
+          }}>{country}</div>
         )
       })}
     </div>
