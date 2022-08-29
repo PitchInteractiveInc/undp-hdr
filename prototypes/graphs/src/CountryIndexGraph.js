@@ -124,9 +124,12 @@ function GraphWrapper(props) {
     countryList.sort()
     const lastCountry = countryList.pop()
     const joinedCountryList = countryList.join(', ') + (countryList.length ? ' & ' : '') + lastCountry
-
+    let countryCount = countries.length;
+    if (index.key === 'IHDI') {
+      countryCount = 156 // hardcode just the latest years value...
+    }
     missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
-      The {index.key} covers {countries.length} {index.key === 'MPI' ? ' developing countries (as of the latest update in October 2021)' : 'countries only'}. The {index.key} is not computed for {joinedCountryList}.
+      The {index.key} covers {countryCount} {index.key === 'MPI' ? ' developing countries (as of the latest update in October 2021)' : 'countries only'}. The {index.key} is not computed for {joinedCountryList}.
     </div>
   }
 
