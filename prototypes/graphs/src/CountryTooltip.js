@@ -298,7 +298,7 @@ export function HDIScatterTooltip(props) {
               <td>{country.Country}</td>
               {yearKeys.map(key => {
                 const fontWeight = key === column ? 'bold' : 'normal'
-                const value = country[key]
+                const value = format(country[key], index.key)
                 const allColumnIndex = allColumns.indexOf(key)
                 let difference = null
                 if (allColumnIndex > 0) {
