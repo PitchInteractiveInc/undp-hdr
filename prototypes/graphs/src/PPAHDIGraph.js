@@ -11,6 +11,7 @@ import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useWindowSize } from 'react-use'
 import getGraphColumnsForKey from './getGraphColumnsForKey';
+import getYearOfColumn from './getYearOfColumn';
 function TextWithBackground(props) {
   const textRef = useRef()
   const [textSize, setTextSize] = useState(null)
@@ -71,6 +72,8 @@ function Graph(props) {
   const hdiKeys = getGraphColumnsForKey(data, 'hdi')
   const ppaKey = ppaKeys[ppaKeys.length - 1]
   const hdiKey = hdiKeys[hdiKeys.length - 1]
+
+  const ppaYear = getYearOfColumn(ppaKey)
 
 
   const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '' && d[ppaKey] !== '')
@@ -202,7 +205,7 @@ function Graph(props) {
     <div className='Graph' style={{ width: width + margins.left + margins.right}}>
       {countryDropdowns}
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <span style={{ fontWeight: '600', marginLeft: margins.left}}>PHDI value</span>
+        <span style={{ fontWeight: '600', marginLeft: margins.left}}>{ppaYear} PHDI value</span>
         <svg
           xmlns="http://www.w3.org/2000/svg" xmlnslink="http://www.w3.org/1999/xlink" width="178" height="20" viewBox="0 0 178 20"
           fontFamily='proxima-nova, "Proxima Nova", sans-serif'
