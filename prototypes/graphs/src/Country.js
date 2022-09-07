@@ -51,7 +51,7 @@ export default function Country(props) {
   const country = data.find(d => d.ISO3 === params.country)
   const populationColumns = getGraphColumnsForKey(data, 'pop_total')
   const lastPopulationColumn = populationColumns[populationColumns.length - 1]
-  const formattedPopulation = (country[lastPopulationColumn] * 1000000).toLocaleString()
+  const formattedPopulation = Math.round(country[lastPopulationColumn] * 1000000).toLocaleString()
   const populationYear = getYearOfColumn(lastPopulationColumn)
   const print = () => {
     setPrintingViaButton(true)
