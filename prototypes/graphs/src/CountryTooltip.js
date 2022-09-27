@@ -415,12 +415,12 @@ function PHDIBarTooltip(props) {
       <hr />
       <Stat
         label='Material footprint per capita (tonnes)'
-        value={format(country[`co2_prod_${year}`], 'co2_prod')}
+        value={format(country[`mf_${year}`], 'co2_prod')}
         bottomBorder
       />
       <Stat
         label='Carbon dixoide per capita (production, tonnes)'
-        value={format(country[`mf_${year}`], 'mf')}
+        value={format(country[`co2_prod_${year}`], 'mf')}
         bottomBorder
       />
 
