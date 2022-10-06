@@ -78,7 +78,7 @@ function Graph(props) {
   const countries = data.filter(d => d.ISO3 !== '' && d[hdiKey] !== '' && d[ppaKey] !== '')
 
   const sortedCountries = [...countries]
-  sortedCountries.sort((a, b) => a[ppaKey] - b[ppaKey])
+  sortedCountries.sort((a, b) => a[hdiKey] - b[hdiKey])
 
   const maxBlockSize = 1392
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
