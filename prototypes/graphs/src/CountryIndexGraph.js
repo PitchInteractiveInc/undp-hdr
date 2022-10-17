@@ -129,7 +129,7 @@ function GraphWrapper(props) {
       countryCount = 156 // hardcode just the latest years value...
     }
     missingCountryDisclaimer = <div className='missingCountryDisclaimer'>
-      The {index.key} covers {countryCount} {index.key === 'MPI' ? ' developing countries (as of the latest update in October 2021)' : 'countries only'}. The {index.key} is not computed for {joinedCountryList}.
+      The {index.key} covers {countryCount} {index.key === 'MPI' ? ' developing countries (as of the latest update in October 2022)' : 'countries only'}. The {index.key} is not computed for {joinedCountryList}.
     </div>
   }
 
