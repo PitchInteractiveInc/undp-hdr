@@ -232,7 +232,7 @@ function Graph(props) {
             <line y2={height} stroke='#000' strokeWidth={'0.5'} />
 
             <g id="Group_4458" data-name="Group 4458" transform={`translate(0 ${height + 5})`}>
-              <text id="MPI_rank_from_low_to_high" ><tspan x="0" y="13">PHDI value from low to high</tspan></text>
+              <text id="MPI_rank_from_low_to_high" ><tspan x="0" y="13">HDI value from low to high</tspan></text>
               <g id="Group_3166" data-name="Group 3166" transform="translate(170 0)">
                 <line id="Line_11490" data-name="Line 11490" x2="18" transform="translate(0 8)" fill="none" stroke="#000" strokeWidth="1"/>
                 <path id="Polygon_1004" data-name="Polygon 1004" d="M5,0l5,8H0Z" transform="translate(18 3) rotate(90)"/>
