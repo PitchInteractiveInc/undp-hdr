@@ -6,11 +6,11 @@ import format from './format'
 import { mpiColors } from './MPIGraph'
 import { gsniColors } from './GSNIGraph'
 import {hdiIntroColorScale} from './HDIIntroGraph'
-import { scaleSqrt } from 'd3-scale'
+import { scaleSqrt, scaleLinear } from 'd3-scale'
 import { arc } from 'd3-shape'
 import { useEffect, useRef, useState } from 'react'
 import { useClickAway, useMedia } from 'react-use'
-import { sum } from 'd3-array'
+import { sum, max } from 'd3-array'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -392,8 +392,8 @@ function GSNIBarTooltip(props) {
   const { point } = props
   const country = point.hover[2].row
   const gsniMetrics = Object.keys(gsniColors)
-  const svgHeight = 315
-  const svgWidth = 373
+  const svgHeight = 315 / 2
+  const svgWidth = 503
   const barWidth = 167
   const textPadding = 10
   let runningY = 0
@@ -404,6 +404,7 @@ function GSNIBarTooltip(props) {
   const minBarHeight = 12
   let extraBarHeight = 0
   const gsniMetricSum = sum(gsniMetrics, metric => +country[metric])
+  const allMetrics = ['Total', 'Men', 'Women'].concat(gsniMetrics)
   const rects = gsniMetrics.map(metric => {
     const value = country[metric]
     if (value === '' || value === '0') {
@@ -436,6 +437,80 @@ function GSNIBarTooltip(props) {
       </g>
     )
     })
+
+  const metricMax = max(allMetrics, metric => +country[metric])
+  const marginBottom = 20
+  const marginTop = 20
+  const marginLeft = 20
+  const marginRight = 20
+  const yScale = scaleLinear()
+    .domain([0, 100])
+    .range([svgHeight - marginBottom - marginTop, 0])
+  // const yAxis = axisLeft(yScale)
+  //   .tickFormat(d => format(d, 'gsni'))
+  //   .tickSize(-svgWidth)
+  //   .tickPadding(10)
+  // const yAxisGroup = (
+  //   <g className='yAxis' transform={`translate(${barWidth}, 0)`}>
+  //     {yAxis}
+  //   </g>
+  // )
+  const barWidth2 = (svgWidth - marginLeft - marginRight) / allMetrics.length / 2
+
+  const rects2 = allMetrics.map((metric, i) => {
+    const value = country[metric]
+    const rectHeight = svgHeight - yScale(value) - marginTop - marginBottom
+    const rectY = yScale(value)
+    const rectX = (i + 0.25) * barWidth2 * 2 + marginLeft
+    const fill = gsniColors[metric] || '#ccc'
+    return (
+      <g key={metric} transform={`translate(${rectX}, ${rectY})`}>
+        <rect
+          width={barWidth2}
+          height={rectHeight}
+          fill={fill}
+        />
+        <text
+          x={barWidth2 / 2}
+          textAnchor='middle'
+          y={rectHeight}
+          dy='0.85em'
+          fontSize='0.8em'
+        >
+          {metric}
+        </text>
+        <text
+          x={barWidth2 / 2}
+          textAnchor='middle'
+          dy='-0.5em'
+          fontSize='0.8em'
+        >
+          {format(value, 'gsni')}%
+        </text>
+      </g>
+    )
+  })
+  const lines = [0, 20, 40, 60, 80, 100].map(value => {
+    const y = yScale(value)
+    return (
+      <g key={value} transform={`translate(${marginLeft}, ${y})`}>
+        <line
+          x1={0}
+          x2={svgWidth - marginLeft - marginRight}
+          stroke='#ccc'
+          strokeWidth={1}
+        />
+        <text
+          x={0}
+          textAnchor='end'
+          dy='0.85em'
+          fontSize='0.8em'
+        >
+          {value}%
+        </text>
+      </g>
+    )
+  })
   return (
     <div>
       <ChangeTooltipHeader {...props} />
@@ -445,6 +520,12 @@ function GSNIBarTooltip(props) {
 
           {rects}
 
+        </g>
+      </svg>
+      <svg width={svgWidth} height={svgHeight }>
+        <g transform={`translate(0, ${marginTop})`}>
+          <g>{lines}</g>
+          <g>{rects2}</g>
         </g>
       </svg>
     </div>
@@ -558,7 +639,9 @@ function CountryTooltip(props) {
   if (point.columnWidth) {
     x += point.columnWidth / 2
   }
-  const tooltipWidth = graph.type === 'hdiIntro' ? 274 : 423
+  console.log(props)
+  const tooltipWidth = graph.type === 'hdiIntro' ? 274 : index.key === 'GSNI' ? 503 : 423
+  console.log(tooltipWidth)
   const scrollBarPadding = 80
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
   const headerHeight = 112
@@ -614,6 +697,7 @@ function CountryTooltip(props) {
       tooltipContents = <HDIIntroTooltip {...props} />
     } else if (index.key === 'GSNI') {
       tooltipContents = <GSNIBarTooltip {...props} />
+      className='gsniTooltip'
     }
   }
   if (!tooltipContents) {
