@@ -4,11 +4,13 @@ import getGraphColumnsForKey from './getGraphColumnsForKey'
 import getYearOfColumn from './getYearOfColumn'
 import format from './format'
 import { mpiColors } from './MPIGraph'
+import { gsniColors } from './GSNIGraph'
 import {hdiIntroColorScale} from './HDIIntroGraph'
 import { scaleSqrt } from 'd3-scale'
 import { arc } from 'd3-shape'
 import { useEffect, useRef, useState } from 'react'
 import { useClickAway, useMedia } from 'react-use'
+import { sum } from 'd3-array'
 function Stat(props) {
   const { label, value, suffix, bold, bottomBorder, valueClass, negative } = props
   const s = suffix ? (<span className='suffix'>{suffix}</span>) : null
@@ -386,6 +388,69 @@ function MPIBarTooltip(props) {
   )
 }
 
+function GSNIBarTooltip(props) {
+  const { point } = props
+  const country = point.hover[2].row
+  const gsniMetrics = Object.keys(gsniColors)
+  const svgHeight = 315
+  const svgWidth = 373
+  const barWidth = 167
+  const textPadding = 10
+  let runningY = 0
+  const numNonZero = gsniMetrics.filter(metric => +country[metric] !== 0).length
+  const barPadding = 1
+  const totalBarPadding = barPadding * (numNonZero - 1)
+  const availableHeight = svgHeight - totalBarPadding
+  const minBarHeight = 12
+  let extraBarHeight = 0
+  const gsniMetricSum = sum(gsniMetrics, metric => +country[metric])
+  const rects = gsniMetrics.map(metric => {
+    const value = country[metric]
+    if (value === '' || value === '0') {
+      return null
+    }
+    // console.log(metric, value)
+    let rectHeight = availableHeight * (value / gsniMetricSum)
+    if (rectHeight < minBarHeight) {
+      extraBarHeight += minBarHeight - rectHeight
+      rectHeight = minBarHeight
+    }
+    const rectY = runningY
+    runningY += rectHeight + barPadding
+    return (
+      <g key={metric} transform={`translate(0, ${rectY})`}>
+        <rect
+          width={barWidth}
+          height={rectHeight}
+          fill={gsniColors[metric]}
+        />
+        <text
+          x={barWidth + textPadding}
+          dy='0.85em'
+          fill={gsniColors[metric]}
+          fontWeight='bold'
+        >
+          {metric}: {format(value, 'gsni')}%
+        </text>
+
+      </g>
+    )
+    })
+  return (
+    <div>
+      <ChangeTooltipHeader {...props} />
+      <hr />
+      <svg width={svgWidth} height={svgHeight + extraBarHeight}>
+        <g>
+
+          {rects}
+
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 function PHDIBarTooltip(props) {
   const { point } = props
   const country = point.hover[2].row
@@ -547,6 +612,8 @@ function CountryTooltip(props) {
     } else if (index.key === 'HDI' && graph.type === 'hdiIntro') {
       className = 'hdiIntroTooltip'
       tooltipContents = <HDIIntroTooltip {...props} />
+    } else if (index.key === 'GSNI') {
+      tooltipContents = <GSNIBarTooltip {...props} />
     }
   }
   if (!tooltipContents) {

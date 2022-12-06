@@ -1,6 +1,14 @@
+import GSNIGraphWrapper from "./GSNIGraph"
 import MPIGraph from "./MPIGraph"
 import PPAHDIGraph from "./PPAHDIGraph"
 const indicators =  [
+  {
+    key: 'GSNI',
+    name: 'GSNI',
+    customGraph: <GSNIGraphWrapper />,
+    countryGraphs: [],
+    lowerBetter: true,
+  },
   {
     key: 'HDI',
     name: 'Human Development Index',

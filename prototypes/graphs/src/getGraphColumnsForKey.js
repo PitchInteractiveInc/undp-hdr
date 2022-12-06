@@ -4,6 +4,9 @@ export default function getGraphColumnsForKey(data, dataKey) {
     if (dataKey === 'MPI') {
       keyRe = /^MPI$/i
     }
+    if (dataKey === 'GSNI') {
+      keyRe = /^GSNI$/i
+    }
     return key.toLowerCase().match(keyRe)
   })))
   // console.log(graphColumns)
