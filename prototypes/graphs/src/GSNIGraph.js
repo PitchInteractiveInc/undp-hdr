@@ -184,7 +184,7 @@ function GSNIGraph(props) {
 
   const mouseLeave = () => {
     if (hoveredPoint) {
-      // setHoveredPoint({... hoveredPoint, unmount: true })
+      setHoveredPoint({... hoveredPoint, unmount: true })
     }
   }
   useEffect(() => {
