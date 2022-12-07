@@ -463,12 +463,17 @@ function GSNIBarTooltip(props) {
   const barWidth2 = (svgWidth - marginLeft - marginRight) / allMetrics.length / 2
   const positions = [
     barWidth2 * 0.2,
-    barWidth2 + barWidth2 * 0.5,
-    barWidth2 + barWidth2 + barWidth2 * 0.8,
-    barWidth2 + barWidth2 + barWidth2 + barWidth2 * 2.5,
-    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 3.75,
-    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 5,
-    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 6.25,
+    barWidth2 + barWidth2 * 0.6,
+    barWidth2 + barWidth2 + barWidth2 * 1,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 * 2,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 2.8,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 3.6,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 4.4,
+  ]
+  const barWidthGrowFactor = 1.3
+  const barWidths = [
+    barWidth2, barWidth2, barWidth2,
+    barWidth2 * barWidthGrowFactor, barWidth2 * barWidthGrowFactor, barWidth2 * barWidthGrowFactor, barWidth2 * barWidthGrowFactor
   ]
   const rects2 = allMetrics.map((metric, i) => {
     const value = country[metric]
@@ -479,21 +484,31 @@ function GSNIBarTooltip(props) {
     return (
       <g key={metric} transform={`translate(${rectX}, ${rectY})`}>
         <rect
-          width={barWidth2}
+          width={barWidths[i]}
           height={rectHeight}
           fill={fill}
         />
         <text
-          x={barWidth2 / 2}
+          x={barWidths[i] / 2}
           textAnchor='middle'
           y={rectHeight}
           dy='0.85em'
           fontSize='0.8em'
         >
-          {metric}
+          {metric.split(' ').map((word, wordIndex) => {
+            return (
+              <tspan
+                key={word}
+                x={barWidths[i] / 2}
+                dy='1.1em'
+              >
+                {word}
+              </tspan>
+            )
+          })}
         </text>
         <text
-          x={barWidth2 / 2}
+          x={barWidths[i] / 2}
           textAnchor='middle'
           dy='-0.5em'
           fontSize='0.8em'
@@ -503,13 +518,14 @@ function GSNIBarTooltip(props) {
       </g>
     )
   })
+  const offsetRight = 60
   const lines = [0, 20, 40, 60, 80, 100].map(value => {
     const y = yScale(value)
     return (
       <g key={value} transform={`translate(${marginLeft}, ${y})`}>
         <line
           x1={0}
-          x2={svgWidth - marginLeft - marginRight}
+          x2={svgWidth - marginLeft - marginRight - offsetRight}
           stroke='#ccc'
           strokeWidth={1}
         />
@@ -528,7 +544,7 @@ function GSNIBarTooltip(props) {
     <div>
       <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' label='Percent of people with at least one bias'/>
       <hr />
-      <svg width={svgWidth} height={svgHeight + extraBarHeight}>
+      <svg width={svgWidth - offsetRight} height={svgHeight + extraBarHeight}>
         <g>
 
           {rects}
@@ -536,7 +552,7 @@ function GSNIBarTooltip(props) {
         </g>
       </svg>
       <hr />
-      <div style={{ fontWeight: 'bold'}}>Bias percent breakdown by gender and dimension</div>
+      <div style={{ fontWeight: 'bold', marginBottom: '0.75em'}}>Bias percent breakdown by gender and dimension</div>
       <svg width={svgWidth} height={svgHeight }>
         <g transform={`translate(0, ${marginTop})`}>
           <g>{lines}</g>
@@ -655,7 +671,7 @@ function CountryTooltip(props) {
     x += point.columnWidth / 2
   }
   // console.log(props)
-  const tooltipWidth = graph.type === 'hdiIntro' ? 274 : index.key === 'GSNI' ? 503 : 423
+  const tooltipWidth = graph.type === 'hdiIntro' ? 274 : index.key === 'GSNI' ? 443 : 423
   // console.log(tooltipWidth)
   const scrollBarPadding = 80
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth

@@ -9,10 +9,10 @@ import CountryTooltip from './CountryTooltip';
 import format from './format';
 import { useWindowSize } from 'react-use';
 export const gsniColors = {
-  'Political': '#1f5a95',
-  'Educational': '#3288ce',
-  'Economic': '#6babeb',
-  'Physical integrity': '#b5d5f5',
+  'Political': '#26830E',
+  'Educational': '#33AF13',
+  'Economic': '#85CF71',
+  'Physical integrity': '#AEDFA1',
   // 'Cooking fuel': '#',
   // 'Housing': '#94c4f5',
   // 'Sanitation': '#',
@@ -454,7 +454,7 @@ function GSNIGraph2(props) {
     if (closestPointIndex !== -1 && !isNaN(closestPointIndex)) {
       // console.log(closestPointIndex)
       // console.log(delaunayData[closestPointIndex])
-      const x = delaunayData[closestPointIndex][0] + margins.left
+      const x = mouseX
       const y = mouseY
       const clientX = x + svgPosition.left
       setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: 0, clientX, clientY: event.clientY })
