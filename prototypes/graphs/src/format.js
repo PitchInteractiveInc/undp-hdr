@@ -20,6 +20,9 @@ export default function format(value, key) {
     case 'diff_hdi_phdi':
       decimals = 1
       break
+    case 'gsni':
+      decimals = 2
+    break
     case 'gnipc':
     case 'gni_pc':
     case 'rankdiff_hdi_phdi':

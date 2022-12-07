@@ -52,7 +52,8 @@ function ChangeTooltipHeader(props) {
       <Stat
         bold
         label={`${year ? year : ''} ${index.key} value`}
-        value={format(value)}
+        value={format(value,props.formatKey)}
+        suffix={props.suffix}
       />
       {previousYear}
     </>
@@ -456,12 +457,20 @@ function GSNIBarTooltip(props) {
   //   </g>
   // )
   const barWidth2 = (svgWidth - marginLeft - marginRight) / allMetrics.length / 2
-
+  const positions = [
+    barWidth2 * 0.2,
+    barWidth2 + barWidth2 * 0.5,
+    barWidth2 + barWidth2 + barWidth2 * 0.8,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 * 2.5,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 3.75,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 5,
+    barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 + barWidth2 * 6.25,
+  ]
   const rects2 = allMetrics.map((metric, i) => {
     const value = country[metric]
     const rectHeight = svgHeight - yScale(value) - marginTop - marginBottom
     const rectY = yScale(value)
-    const rectX = (i + 0.25) * barWidth2 * 2 + marginLeft
+    const rectX = positions[i] + marginLeft
     const fill = gsniColors[metric] || '#ccc'
     return (
       <g key={metric} transform={`translate(${rectX}, ${rectY})`}>
@@ -513,7 +522,7 @@ function GSNIBarTooltip(props) {
   })
   return (
     <div>
-      <ChangeTooltipHeader {...props} />
+      <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' />
       <hr />
       <svg width={svgWidth} height={svgHeight + extraBarHeight}>
         <g>
@@ -639,9 +648,9 @@ function CountryTooltip(props) {
   if (point.columnWidth) {
     x += point.columnWidth / 2
   }
-  console.log(props)
+  // console.log(props)
   const tooltipWidth = graph.type === 'hdiIntro' ? 274 : index.key === 'GSNI' ? 503 : 423
-  console.log(tooltipWidth)
+  // console.log(tooltipWidth)
   const scrollBarPadding = 80
   const flipX = point.clientX + tooltipWidth + scrollBarPadding > window.innerWidth
   const headerHeight = 112
