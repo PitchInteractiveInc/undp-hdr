@@ -435,7 +435,7 @@ function GSNIBarTooltip(props) {
           dy='0.85em'
           fill={gsniColors[metric]}
           fontWeight='bold'
-          style={{ textShadow: '1px 1px 1px rgba(0, 0, 0, 0.25)'}}
+          style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)'}}
         >
           {metric}: {format(value, 'gsni')}%
         </text>
