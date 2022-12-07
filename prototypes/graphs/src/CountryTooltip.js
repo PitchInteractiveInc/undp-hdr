@@ -44,6 +44,10 @@ function ChangeTooltipHeader(props) {
       />
     )
   }
+  let label = `${year ? year : ''} ${index.key} value`
+  if (props.label) {
+    label = props.label
+  }
   return (
     <>
 
@@ -51,7 +55,7 @@ function ChangeTooltipHeader(props) {
       <hr />
       <Stat
         bold
-        label={`${year ? year : ''} ${index.key} value`}
+        label={label}
         value={format(value,props.formatKey)}
         suffix={props.suffix}
       />
@@ -441,7 +445,7 @@ function GSNIBarTooltip(props) {
 
   const metricMax = max(allMetrics, metric => +country[metric])
   const marginBottom = 20
-  const marginTop = 20
+  const marginTop = 10
   const marginLeft = 20
   const marginRight = 20
   const yScale = scaleLinear()
@@ -512,7 +516,7 @@ function GSNIBarTooltip(props) {
         <text
           x={0}
           textAnchor='end'
-          dy='0.85em'
+          dy='0.45em'
           fontSize='0.8em'
         >
           {value}%
@@ -522,7 +526,7 @@ function GSNIBarTooltip(props) {
   })
   return (
     <div>
-      <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' />
+      <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' label='Percent of people with at least one bias'/>
       <hr />
       <svg width={svgWidth} height={svgHeight + extraBarHeight}>
         <g>
@@ -531,6 +535,8 @@ function GSNIBarTooltip(props) {
 
         </g>
       </svg>
+      <hr />
+      <div style={{ fontWeight: 'bold'}}>Bias percent breakdown by gender and dimension</div>
       <svg width={svgWidth} height={svgHeight }>
         <g transform={`translate(0, ${marginTop})`}>
           <g>{lines}</g>
