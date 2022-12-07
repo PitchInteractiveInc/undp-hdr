@@ -29,6 +29,7 @@ export default function GSNIGraphWrapper(props) {
   }
   return  <>
     <GSNIGraph {...props} gsniData={gsniData} />
+    <GSNIGraph2 {...props} gsniData={gsniData} windowHeight />
     <GSNIGraph2 {...props} gsniData={gsniData} />
   </>
 }
@@ -322,11 +323,11 @@ function GSNIGraph2(props) {
   const windowWidth = Math.min(maxBlockSize, windowSize.width) - 32 - 20
   let width = windowWidth
   // let height = Math.max(windowSize.height * 0.65, 200)
-  let rowHeight = 20
+  let rowHeight = props.windowHeight ? windowSize.height * 0.65 / sortedCountries.length : 20
   const barHeight = rowHeight - 2
   let height = rowHeight * sortedCountries.length
 
-  const margins = { top: 20, right: 0, bottom: 10, left: 150 }
+  const margins = { top: 20, right: 0, bottom: 10, left: props.windowHeight ? 10 : 150 }
   width -= margins.left + margins.right
   // height -= margins.top + margins.bottom
   // const rowWidth = width / sortedCountries.length
@@ -398,7 +399,7 @@ function GSNIGraph2(props) {
     })
     // const x = countryIndex * rowWidth
     delaunayData.push([width/2, y + barHeight / 2, {row: country, col: gsniKey}])
-    let label = <text fontWeight='600' textAnchor='end' x='-5' y='14'>{country.Country}</text>
+    let label = props.windowHeight ? null : <text fontWeight='600' textAnchor='end' x='-5' y='14'>{country.Country}</text>
     if (isSelected) {
       // label = (
         // <g transform={`translate(${barWidth / 2}, ${runningY - 5})`}>
