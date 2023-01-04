@@ -24,7 +24,7 @@ export default function useMPIData() {
         if (countryData) {
           row.ISO3 = countryData.ISO3
         }
-        const numericKeys = ['Total', 'Male', 'Female', 'Share of people with no bias', 'Political', 'Educational', 'Economic', 'Physical integrity']
+        const numericKeys = ['Total', 'Men', 'Women', 'Share of people with no bias', 'Political', 'Educational', 'Economic', 'Physical integrity']
         numericKeys.forEach(key => {
           row[key] = +row[key]
         })

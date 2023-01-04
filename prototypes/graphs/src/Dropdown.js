@@ -14,6 +14,7 @@ export default function Dropdown(props) {
     labelAccessor,
     optGroupAccessor,
     optGroupLabels,
+    style
   } = props
 
   const optionMapper = d => {
@@ -36,7 +37,7 @@ export default function Dropdown(props) {
     })
   }
   return (
-    <div className='Dropdown'>
+    <div className='Dropdown' style={style}>
       <div className='DropdownLabel'>
         {label}
       </div>

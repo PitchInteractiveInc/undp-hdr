@@ -32,7 +32,7 @@ export default function IndexGraphWrapper(props) {
   const { selectedMetricShortName } = useParams()
   const indicator = indicators.find(d => d.key === selectedMetricShortName)
   if (indicator.customGraph) {
-    return cloneElement(indicator.customGraph, {index: indicator})
+    return cloneElement(indicator.customGraph, {index: indicator, data})
   }
   if (!data) {
     return null
