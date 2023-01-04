@@ -11,6 +11,7 @@ import { useWindowSize } from 'react-use';
 import Dropdown from './Dropdown';
 import { useSpring, animated } from 'react-spring';
 import getGraphColumnsForKey from './getGraphColumnsForKey';
+import { TextWithBackground } from './PPAHDIGraph';
 export const gsniColors = {
   'Political': '#901AC8',
   'Educational': '#BC76DE',
@@ -185,9 +186,8 @@ function GSNIGraph(props) {
     if (isSelected) {
       label = (
         <g key={country.ISO3} transform={`translate(${x + barWidth / 2}, ${runningY - 5})`}>
+          <TextWithBackground fontWeight='600' x={-2} y={-6} fill="black">{country.Country} {format(country[selectedGSNIKey], 'gsni')}</TextWithBackground>
           <circle cx={0} cy={0} r={2} fill={'black'} />
-          <text fontWeight='600' x={-2 + 0.5} y={-6 + 0.5} fill="#fff">{country.Country} {format(country[selectedGSNIKey], 'gsni')}</text>
-          <text fontWeight='600' x={-2} y={-6} fill="black">{country.Country} {format(country[selectedGSNIKey], 'gsni')}</text>
         </g>
       )
       labels.push(label)

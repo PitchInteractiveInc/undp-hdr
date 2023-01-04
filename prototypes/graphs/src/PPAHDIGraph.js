@@ -12,7 +12,8 @@ import format from './format';
 import { useWindowSize } from 'react-use'
 import getGraphColumnsForKey from './getGraphColumnsForKey';
 import getYearOfColumn from './getYearOfColumn';
-function TextWithBackground(props) {
+export function TextWithBackground(props) {
+  const { x, y, ...restOfProps} = props
   const textRef = useRef()
   const [textSize, setTextSize] = useState(null)
   useEffect(() => {
@@ -28,17 +29,17 @@ function TextWithBackground(props) {
   let rect = null
   if (textSize) {
     rect = <rect
-      x={-textSize.width}
-      y={-textSize.height}
+      x={props.textAnchor === 'end' ? -textSize.width : 0 }
+      y={-textSize.height * 0.66}
       width={textSize.width}
       height={textSize.height}
       fill={'#fff'}
       opacity='0.9'
     />
   }
-  return <g>
+  return <g transform={`translate(${x}, ${y})`}>
     {rect}
-    <text {...props} ref={textRef}>{props.children}</text>
+    <text {...restOfProps} ref={textRef}>{props.children}</text>
   </g>
 }
 
