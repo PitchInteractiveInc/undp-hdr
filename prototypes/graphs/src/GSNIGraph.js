@@ -269,7 +269,7 @@ function GSNIGraph(props) {
     tooltip = (
       <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={gsniData} allRows={[]} graph={graph}
         selectedGSNIKey={selectedGSNIKey}
-        label={graphAndTooltipLabel}
+        label={graphAndTooltipLabel.split(', total and by dimension')[0]}
       />
     )
   }
