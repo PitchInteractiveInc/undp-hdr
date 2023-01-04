@@ -410,39 +410,39 @@ function GSNIBarTooltip(props) {
   let extraBarHeight = 0
   const gsniMetricSum = sum(gsniMetrics, metric => +country[metric])
   const allMetrics = ['Total', 'Men', 'Women'].concat(gsniMetrics)
-  const rects = gsniMetrics.map(metric => {
-    const value = country[metric]
-    if (value === '' || value === '0') {
-      return null
-    }
-    // console.log(metric, value)
-    let rectHeight = availableHeight * (value / gsniMetricSum)
-    if (rectHeight < minBarHeight) {
-      extraBarHeight += minBarHeight - rectHeight
-      rectHeight = minBarHeight
-    }
-    const rectY = runningY
-    runningY += rectHeight + barPadding
-    return (
-      <g key={metric} transform={`translate(0, ${rectY})`}>
-        <rect
-          width={barWidth}
-          height={rectHeight}
-          fill={gsniColors[metric]}
-        />
-        <text
-          x={barWidth + textPadding}
-          dy='0.85em'
-          fill={gsniColors[metric]}
-          fontWeight='bold'
-          style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)'}}
-        >
-          {metric}: {format(value, 'gsni')}%
-        </text>
+  // const rects = gsniMetrics.map(metric => {
+  //   const value = country[metric]
+  //   if (value === '' || value === '0') {
+  //     return null
+  //   }
+  //   // console.log(metric, value)
+  //   let rectHeight = availableHeight * (value / gsniMetricSum)
+  //   if (rectHeight < minBarHeight) {
+  //     extraBarHeight += minBarHeight - rectHeight
+  //     rectHeight = minBarHeight
+  //   }
+  //   const rectY = runningY
+  //   runningY += rectHeight + barPadding
+  //   return (
+  //     <g key={metric} transform={`translate(0, ${rectY})`}>
+  //       <rect
+  //         width={barWidth}
+  //         height={rectHeight}
+  //         fill={gsniColors[metric]}
+  //       />
+  //       <text
+  //         x={barWidth + textPadding}
+  //         dy='0.85em'
+  //         fill={gsniColors[metric]}
+  //         fontWeight='bold'
+  //         style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)'}}
+  //       >
+  //         {metric}: {format(value, 'gsni')}%
+  //       </text>
 
-      </g>
-    )
-    })
+  //     </g>
+  //   )
+  //   })
 
   const metricMax = max(allMetrics, metric => +country[metric])
   const marginBottom = 20
@@ -544,14 +544,14 @@ function GSNIBarTooltip(props) {
   return (
     <div>
       <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' label='Percent of people with at least one bias'/>
-      <hr />
+      {/* <hr />
       <svg width={svgWidth - offsetRight} height={svgHeight + extraBarHeight}>
         <g>
 
           {rects}
 
         </g>
-      </svg>
+      </svg> */}
       <hr />
       <div style={{ fontWeight: 'bold', marginBottom: '0.75em'}}>Bias percent breakdown by gender and dimension</div>
       <svg width={svgWidth} height={svgHeight }>
