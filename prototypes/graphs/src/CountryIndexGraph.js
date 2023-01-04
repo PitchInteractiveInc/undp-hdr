@@ -163,7 +163,9 @@ function GraphWrapper(props) {
 }
 export default function CountryIndexGraph(props) {
   const { data, country, index, syncCountries, forceSelection, indexIndex, printing, graphWidth } = props
-
+  if (!index.countryGraphs.length) {
+    return null
+  }
   const { pageBreakAfter, pageBreakBefore } = index
   let additionalIndexContent = null
   const useDrupalNodeLink = inDrupal &&
