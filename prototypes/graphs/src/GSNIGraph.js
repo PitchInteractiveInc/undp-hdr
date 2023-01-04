@@ -111,7 +111,7 @@ function GSNIGraph(props) {
     return averages
   }, [countries])
   const metricsToUse = selectedGSNIKeyType === 'index' ? metrics : metrics.filter(d => d === selectedGSNIKey)
-
+  let labels = []
   const countryBars = sortedCountries.map((country, countryIndex) => {
     const totalBarHeight = yScale(country[selectedGSNIKey])
 
@@ -157,19 +157,16 @@ function GSNIGraph(props) {
     let label = null
     if (isSelected) {
       label = (
-        <g transform={`translate(${barWidth / 2}, ${runningY - 5})`}>
+        <g key={country.ISO3} transform={`translate(${x + barWidth / 2}, ${runningY - 5})`}>
           <circle cx={0} cy={0} r={2} fill={'black'} />
+          <text fontWeight='600' x={-2 + 0.5} y={-6 + 0.5} fill="#fff">{country.Country} {format(country[selectedGSNIKey], 'gsni')}</text>
           <text fontWeight='600' x={-2} y={-6} fill="black">{country.Country} {format(country[selectedGSNIKey], 'gsni')}</text>
         </g>
       )
+      labels.push(label)
     }
     return <g opacity={opacity} key={country.ISO3} transform={`translate(${x}, 0)`}>
-      {/* <rect x={0}
-        width={width} height={barHeight}
-        fill={'black'}
-      /> */}
       {metricBars}
-      {label}
     </g>
   })
   const delaunay = Delaunay.from(delaunayData)
@@ -344,6 +341,7 @@ function GSNIGraph(props) {
               <line x1={0} y1={height} x2={width} y2={height} stroke='black' strokeWidth='1' />
               <g>{yTicks}</g>
               <g>{countryBars}</g>
+              <g>{labels}</g>
             </g>
 
           </svg>
