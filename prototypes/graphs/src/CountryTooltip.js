@@ -394,7 +394,7 @@ function MPIBarTooltip(props) {
 }
 
 function GSNIBarTooltip(props) {
-  const { point } = props
+  const { point, selectedGSNIKey } = props
   const country = point.hover[2].row
   const gsniMetrics = Object.keys(gsniColors)
   const svgHeight = 315 / 2
@@ -482,8 +482,10 @@ function GSNIBarTooltip(props) {
     const rectY = yScale(value)
     const rectX = positions[i] + marginLeft
     const fill = gsniColors[metric] || '#ccc'
+    const selectedMetric = metric === selectedGSNIKey
+    const fontWeight = selectedMetric ? 'bold' : 'normal'
     return (
-      <g key={metric} transform={`translate(${rectX}, ${rectY})`}>
+      <g key={metric} fontWeight={fontWeight} transform={`translate(${rectX}, ${rectY})`}>
         <rect
           width={barWidths[i]}
           height={rectHeight}
@@ -543,7 +545,7 @@ function GSNIBarTooltip(props) {
   })
   return (
     <div>
-      <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' label='Percent of people with at least one bias'/>
+      <ChangeTooltipHeader {...props} formatKey='gsni' suffix='%' label={props.label}/>
       {/* <hr />
       <svg width={svgWidth - offsetRight} height={svgHeight + extraBarHeight}>
         <g>

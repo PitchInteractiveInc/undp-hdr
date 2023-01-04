@@ -237,7 +237,7 @@ function GSNIGraph(props) {
       const x = delaunayData[closestPointIndex][0] + margins.left
       const y = mouseY
       const clientX = x + svgPosition.left
-      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY })
+      setHoveredPoint({ x, y, hover: delaunayData[closestPointIndex], columnWidth: rowWidth * 2, clientX, clientY: event.clientY})
     }
   }
 
@@ -258,13 +258,19 @@ function GSNIGraph(props) {
     }
   }, [hoveredPoint])
 
+  const graphAndTooltipLabel = selectedGSNIKeyType === 'index' ?
+    `Percent of ${selectedGSNIKey === 'Total' ? 'people' : (selectedGSNIKey === 'Male' ? 'Men' : 'Women')} with at least one bias, total and by dimension`
+    : `Percent of people with a bias in ${selectedGSNIKey} factors`
   let tooltip = null
   if (hoveredPoint) {
     const graph = {
       type: 'index'
     }
     tooltip = (
-      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={gsniData} allRows={[]} graph={graph} />
+      <CountryTooltip close={mouseLeave} point={hoveredPoint} index={index} data={gsniData} allRows={[]} graph={graph}
+        selectedGSNIKey={selectedGSNIKey}
+        label={graphAndTooltipLabel}
+      />
     )
   }
 
@@ -339,10 +345,7 @@ function GSNIGraph(props) {
 
       </div>
       <div style={{ fontWeight: 'bold', marginBottom: '0.5em'}}>
-        {selectedGSNIKeyType === 'index' ?
-          `Percent of ${selectedGSNIKey === 'Total' ? 'people' : (selectedGSNIKey === 'Male' ? 'Men' : 'Women')} with at least one bias, total and by dimension`
-          : `Percent of people with a bias in ${selectedGSNIKey} factors`
-        }
+        {graphAndTooltipLabel}
       </div>
       <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         <defs>
