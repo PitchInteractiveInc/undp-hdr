@@ -11,10 +11,10 @@ import { useWindowSize } from 'react-use';
 import Dropdown from './Dropdown';
 import { useSpring, animated } from 'react-spring';
 export const gsniColors = {
-  'Political': '#26830E',
-  'Educational': '#33AF13',
-  'Economic': '#85CF71',
-  'Physical integrity': '#AEDFA1',
+  'Political': '#901AC8',
+  'Educational': '#BC76DE',
+  'Economic': '#D3A3E9',
+  'Physical integrity': '#E9D1F4',
   // 'Cooking fuel': '#',
   // 'Housing': '#94c4f5',
   // 'Sanitation': '#',
