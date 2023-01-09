@@ -555,7 +555,7 @@ function GSNIBarTooltip(props) {
         </g>
       </svg> */}
       <hr />
-      <div style={{ fontWeight: 'bold', marginBottom: '0.75em'}}>Bias percent breakdown by gender and dimension</div>
+      <div style={{ fontWeight: 'bold', marginBottom: '0.75em'}}>Percentage of people with bias by gender and dimension</div>
       <svg width={svgWidth} height={svgHeight }>
         <g transform={`translate(0, ${marginTop})`}>
           <g>{lines}</g>
