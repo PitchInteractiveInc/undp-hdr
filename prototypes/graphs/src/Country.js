@@ -12,9 +12,11 @@ import {useWindowSize} from 'react-use';
 import classNames from "classnames"
 import formatCSV from './data/metricCSVRenames.js'
 import getYearOfColumn from "./getYearOfColumn"
+import useGSNIData from "./useGSNIData"
 export default function Country(props) {
   let {data} = useHDRData()
   const mpiData = useMPIData()
+  const gsniData = useGSNIData()
   const params = useParams()
 
   const [syncingCountries, setSyncingCountries] = useState(false)
@@ -44,7 +46,7 @@ export default function Country(props) {
 
   const printing = useDetectPrint()
   const [printingViaButton, setPrintingViaButton] = useState(false)
-  if (!data || !mpiData) {
+  if (!data || !mpiData || !gsniData) {
     return
   }
 
@@ -71,6 +73,13 @@ export default function Country(props) {
         merged[key] = mpiCountry[key]
       })
     }
+    const gsniCountry = gsniData.find(d => d.Country === country.Country)
+    if (gsniCountry) {
+      Object.keys(gsniCountry).forEach(key => {
+        merged[key] = gsniCountry[key]
+      })
+    }
+
     const csv = formatCSV(merged)
     // console.log(csv)
     const a = document.createElement("a");
@@ -112,7 +121,7 @@ export default function Country(props) {
       </div>
       <div className='indicies'>
         {indicators.map((indicator, i) => {
-          let dataToUse = indicator.key === 'MPI' ? mpiData : data
+          let dataToUse = indicator.key === 'MPI' ? mpiData : indicator.key === 'GSNI' ? gsniData : data
           const countryToUse = dataToUse.find(d => d.ISO3 === params.country) || country
           return <CountryIndexGraph
             key={indicator.key}

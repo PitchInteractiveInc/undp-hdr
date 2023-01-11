@@ -62,7 +62,11 @@ const indicators =  [
     key: 'GSNI',
     name: 'GSNI',
     customGraph: <GSNIGraphWrapper />,
-    countryGraphs: [],
+    countryGraphs: [{
+      type: 'bar',
+      title: ({country, extent}) => `GSNI in comparison of latest year`,
+
+    }],
     lowerBetter: true,
   },
   {

@@ -53,7 +53,10 @@ export default function BarGraph(props) {
   const dataKey = index.key
   let graphColumns = getGraphColumnsForKey(data, dataKey)
   let hdiGraphColumns = getGraphColumnsForKey(data, 'HDI') // use these for a custom PHDI sort order
-
+  if (index.key === 'GSNI' || index.key == 'MPI') {
+    console.log(index.key, data, graphColumns)
+    console.log(data.columns.filter(d => d.includes('mpi')))
+  }
   graphColumns = [graphColumns[graphColumns.length - 1]]
   hdiGraphColumns = [hdiGraphColumns[hdiGraphColumns.length - 1]]
 
@@ -90,7 +93,7 @@ export default function BarGraph(props) {
       aValue = a[hdiGraphColumns[0]]
       bValue = b[hdiGraphColumns[0]]
     }
-    return index.key === 'MPI' ? bValue - aValue : aValue - bValue
+    return index.key === 'MPI' || index.key === 'GSNI' ? bValue - aValue : aValue - bValue
   })
 
   const barWidth = width / sortedData.length * 0.8
@@ -152,8 +155,8 @@ export default function BarGraph(props) {
       <g transform={`translate(${x}, ${0})`} key={i}>
         <Rect
           width={barWidth}
-          y={height - y}
-          height={y}
+          y={isNaN(height - y) ? 0 : height - y}
+          height={isNaN(y) ? 0 : y}
           fill={fill}
           stroke={stroke}
           index={i}

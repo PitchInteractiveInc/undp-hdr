@@ -5,7 +5,7 @@ export default function getGraphColumnsForKey(data, dataKey) {
       keyRe = /^MPI$/i
     }
     if (dataKey === 'GSNI') {
-      keyRe = /^GSNI$/i
+      keyRe = /^Total$/i
     }
     return key.toLowerCase().match(keyRe)
   })))

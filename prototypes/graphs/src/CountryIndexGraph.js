@@ -47,9 +47,9 @@ function GraphWrapper(props) {
       } else {
         setCountriesThatFailedToSync(null)
       }
+
     }
   }, [forceSelection, countries, noCountrySelection, selectedCountries])
-
   let graphElement = null
   const printWidth = 500
   let width = printing ? printWidth : graphWidth
@@ -110,6 +110,7 @@ function GraphWrapper(props) {
       }
     }
   })
+
   if (countriesThatFailedToSync && allCountries && allCountries.data) {
     countriesThatFailedToSync.forEach(iso => {
       const country = allCountries.data.find(c => c.ISO3 === iso)

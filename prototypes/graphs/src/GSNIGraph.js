@@ -259,7 +259,7 @@ function GSNIGraph(props) {
   }, [hoveredPoint])
 
   const graphAndTooltipLabel = selectedGSNIKeyType === 'index' ?
-    `Percent of ${selectedGSNIKey === 'Total' ? 'people' : (selectedGSNIKey === 'Male' ? 'Men' : 'Women')} with bias, total and by dimension`
+    `Percent of ${selectedGSNIKey === 'Total' ? 'people' : (selectedGSNIKey === 'Men' ? 'Men' : 'Women')} with bias, total and by dimension`
     : `Percent of people with a bias in ${selectedGSNIKey} factors`
   let tooltip = null
   if (hoveredPoint) {
