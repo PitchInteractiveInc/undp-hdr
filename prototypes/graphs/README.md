@@ -1,3 +1,24 @@
+# UNDP HDRO Graphs
+
+This application is a React app that's designed to be embedded within the Drupal instance at https://hdr.undp.org/
+
+The application works as a standalone app as well as when embedded within Drupal.
+
+There are three main sections within the application:
+
+* [Standalone Index Graphs](src/IndexGraph.js)
+* [Country Detail Page](src/Country.js)
+* [Country Ranking Index Page](src/CountryRanks.js)
+
+
+The data files are stored in [src/data](src/data/)
+
+Indicator config data is found in [src/indicators.js](src/indicators.js)
+
+Indicator copy is available at [src/getCountryIndexDescription.js](src/getCountryIndexDescription.js)
+
+As mentioned, this app is designed to be embedded within an existing Drupal site. To do this, build the app with `npm run build`, then, copy the contents of the `build` directory to the custom drupal module. It's located in the drupal site ate `web/modules/custom/hdro_app/`. Within that folder, edit `hdro_app.libraries.yml` and update the filenames for the `static/js/main.#######.js` and the `static/css/main.######.css` files.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
