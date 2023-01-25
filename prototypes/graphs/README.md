@@ -10,8 +10,16 @@ There are three main sections within the application:
 * [Country Detail Page](src/Country.js)
 * [Country Ranking Index Page](src/CountryRanks.js)
 
+Links and routes can be added in [src/App.js](src/App.js). The navigation that is displayed here is hidden when the application can detect that it is running within a Drupal site.
 
-The data files are stored in [src/data](src/data/)
+With that said, the Drupal site and the React App need to coordinate the sharing of URLs between the sites. The Drupal application should embed the react app using the following url schemes:
+
+* The Individual Index Pages are at `#/indicies/[INDEX KEY]`, the index keys can be found in [src/indicators.js](src/indicators.js)
+* The Country Detail pages are at `#/countries/[THREE LETTER COUNTRY CODE` e.g. `/#/countries/USA`
+* The Country Rankings page is at `#/ranks`
+
+
+The data files are stored in [src/data](src/data/). Most metrics are stored in the [Onlinemaster_HDR2122_081522.csv](src/data/Onlinemaster_HDR2122_081522.csv) csv file, but there are separate files for [MPI](src/data/MPI_formatted.csv) and [GSNI](src/data/GSNI.csv).
 
 Indicator config data is found in [src/indicators.js](src/indicators.js)
 
