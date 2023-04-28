@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { csvParse } from 'd3-dsv'
 
 
-import gsniFile from './data/GSNI.csv'
+import gsniFile from './data/GSNI_2023.csv'
 import dataFile from './data/Onlinemaster_HDR2122_081522.csv'
 
 export default function useMPIData() {

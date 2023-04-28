@@ -1,6 +1,6 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import useGSNIData from "./useGSNIData";
-import { range, max, mean, sum } from 'd3-array'
+import { sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import exportSVG from './exportSVG';
 import ComparisonCountrySelectors from './ComparisonCountrySelectors';
@@ -14,9 +14,9 @@ import getGraphColumnsForKey from './getGraphColumnsForKey';
 import { TextWithBackground } from './PPAHDIGraph';
 export const gsniColors = {
   'Political': '#901AC8',
-  'Educational': '#BC76DE',
-  'Economic': '#D3A3E9',
-  'Physical integrity': '#E9D1F4',
+  'Educational': '#901AC8',
+  'Economic': '#901AC8',
+  'Physical integrity': '#901AC8',
   // 'Cooking fuel': '#',
   // 'Housing': '#94c4f5',
   // 'Sanitation': '#',
@@ -84,7 +84,7 @@ function GSNIGraph(props) {
   const [selectedCountries, setSelectedCountries] = useState([])
   const svgRef = useRef()
   const [hoveredPoint, setHoveredPoint] = useState(null)
-  const [hoveredMetric, setHoveredMetric] = useState(null)
+  // const [hoveredMetric, setHoveredMetric] = useState(null)
   const countSelectedCountries = selectedCountries.filter(d => d !== '').length
   const [selectedGSNIKey, setSelectedGSNIKey] = useState('Total')
   const [sortId, setSortId] = useState(sorts[0].id)
@@ -131,13 +131,13 @@ function GSNIGraph(props) {
     .range([0, height])
 
   const delaunayData = []
-  const averages = useMemo(() => {
-    const averages = {}
-    metrics.forEach(metric => {
-      averages[metric]  = 1
-    })
-    return averages
-  }, [countries])
+  // const averages = useMemo(() => {
+  //   const averages = {}
+  //   metrics.forEach(metric => {
+  //     averages[metric]  = 1
+  //   })
+  //   return averages
+  // }, [countries])
   const metricsToUse = selectedGSNIKeyType === 'index' ? metrics : metrics.filter(d => d === selectedGSNIKey)
   let labels = []
   const countryBars = sortedCountries.map((country, countryIndex) => {
@@ -166,9 +166,9 @@ function GSNIGraph(props) {
       const rectHeight = totalBarHeight * (metricPercentage / metricTotalSum)
       runningY -= rectHeight
       let barOpacity = 1
-      if (hoveredMetric) {
-        barOpacity = hoveredMetric === metric ? 1 : 0.2
-      }
+      // if (hoveredMetric) {
+      //   barOpacity = hoveredMetric === metric ? 1 : 0.2
+      // }
       return (
         <AnimatedRect
           key={metric}
@@ -213,7 +213,7 @@ function GSNIGraph(props) {
 
   const rightClick = (e) => {
     //export svg
-    const svg = svgRef.current
+    // const svg = svgRef.current
     setHoveredPoint(null)
     setExporting(true)
     e.preventDefault()
@@ -243,7 +243,7 @@ function GSNIGraph(props) {
 
   const mouseLeave = () => {
     if (hoveredPoint) {
-      setHoveredPoint({... hoveredPoint, unmount: true })
+      setHoveredPoint({...hoveredPoint, unmount: true })
     }
   }
   useEffect(() => {
@@ -274,46 +274,46 @@ function GSNIGraph(props) {
     )
   }
 
-  const metricGraphHeight = 40
-  const metricGraphBarHeight = 20
+  // const metricGraphHeight = 40
+  // const metricGraphBarHeight = 20
 
-  const metricGraphSum = sum(metrics, metric => averages[metric])
-  const metricGraphBarPadding = 5
-  const metricGraphBarTotalPadding = metricGraphBarPadding * (metrics.length - 1)
-  const metricGraphBarWidth = svgWidth - metricGraphBarTotalPadding
-  const metricGraphXScale = scaleLinear()
-    .domain([0, metricGraphSum])
-    .range([0, metricGraphBarWidth])
+  // const metricGraphSum = sum(metrics, metric => averages[metric])
+  // const metricGraphBarPadding = 5
+  // const metricGraphBarTotalPadding = metricGraphBarPadding * (metrics.length - 1)
+  // const metricGraphBarWidth = svgWidth - metricGraphBarTotalPadding
+  // const metricGraphXScale = scaleLinear()
+  //   .domain([0, metricGraphSum])
+  //   .range([0, metricGraphBarWidth])
 
-  let runningX = 0
-  const hoverMetric = (metric) => () => {
-    setHoveredMetric(metric)
-  }
-  const masks = []
-  const metricGraphBars = metrics.map((metric, metricIndex) => {
-    const value = averages[metric]
-    const barWidth = metricGraphXScale(value)
-    const x = runningX
-    runningX += barWidth + metricGraphBarPadding
-    const maskId = `gsniMask${metricIndex}`
-    masks.push(
-      <clipPath id={maskId} key={metricIndex} >
-        <rect key={metric} x={x} y={0} width={barWidth} height={metricGraphHeight} fill='#333' />
-      </clipPath>
-    )
-    const textOpacity = !hoveredMetric || (hoveredMetric === metric) ? 1 : 0
-    const clipPathId = hoveredMetric && (hoveredMetric === metric) ? null : `url(#${maskId})`
-    return (
-      <g key={metric} clipPath={clipPathId}>
-        <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
+  // let runningX = 0
+  // const hoverMetric = (metric) => () => {
+  //   setHoveredMetric(metric)
+  // }
+  // const masks = []
+  // const metricGraphBars = metrics.map((metric, metricIndex) => {
+  //   const value = averages[metric]
+  //   const barWidth = metricGraphXScale(value)
+  //   const x = runningX
+  //   runningX += barWidth + metricGraphBarPadding
+  //   const maskId = `gsniMask${metricIndex}`
+  //   masks.push(
+  //     <clipPath id={maskId} key={metricIndex} >
+  //       <rect key={metric} x={x} y={0} width={barWidth} height={metricGraphHeight} fill='#333' />
+  //     </clipPath>
+  //   )
+  //   const textOpacity = !hoveredMetric || (hoveredMetric === metric) ? 1 : 0
+  //   const clipPathId = hoveredMetric && (hoveredMetric === metric) ? null : `url(#${maskId})`
+  //   return (
+  //     <g key={metric} clipPath={clipPathId}>
+  //       <g transform={`translate(${x}, 10)`}  onMouseOver={hoverMetric(metric)} onMouseOut={hoverMetric(null)}>
 
-          <text style={{ transition: 'opacity 0.3s ease-in-out', opacity: textOpacity}} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
+  //         <text style={{ transition: 'opacity 0.3s ease-in-out', opacity: textOpacity}} fontSize='0.8em' fontWeight='600' dy={'-0.2em'}>{metric}</text>
 
-          <rect width={barWidth} height={metricGraphBarHeight} fill={gsniColors[metric]} />
-        </g>
-      </g>
-    )
-  })
+  //         <rect width={barWidth} height={metricGraphBarHeight} fill={gsniColors[metric]} />
+  //       </g>
+  //     </g>
+  //   )
+  // })
   return (
     <div className='IndexGraph'>
       <div>
@@ -347,13 +347,13 @@ function GSNIGraph(props) {
       <div style={{ fontWeight: 'bold', marginBottom: '0.5em'}}>
         {graphAndTooltipLabel}
       </div>
-      <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
+      {/* <svg fontSize='0.875em' fontFamily='proxima-nova, "Proxima Nova", sans-serif' width={svgWidth} height={metricGraphHeight}>
         <defs>
           {masks}
         </defs>
 
         {metricGraphBars}
-      </svg>
+      </svg> */}
       <div style={{ marginLeft: margins.left}}>
         <span style={{ fontWeight: '600'}}>{index.key} (percentage of people)</span>
 
