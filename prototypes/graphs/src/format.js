@@ -21,6 +21,7 @@ export default function format(value, key) {
       decimals = 1
       break
     case 'gsni':
+    case 'GSNI':
       decimals = 2
     break
     case 'gnipc':

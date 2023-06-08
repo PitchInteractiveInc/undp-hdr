@@ -260,7 +260,7 @@ function GSNIGraph(props) {
 
   const graphAndTooltipLabel = selectedGSNIKeyType === 'index' ?
     `Percent of ${selectedGSNIKey === 'Total' ? 'people' : (selectedGSNIKey === 'Men' ? 'Men' : 'Women')} with bias, total and by dimension`
-    : `Percent of people with a bias in ${selectedGSNIKey} factors`
+    : `Percent of people with a bias in ${selectedGSNIKey} dimension`
   let tooltip = null
   if (hoveredPoint) {
     const graph = {
@@ -330,7 +330,7 @@ function GSNIGraph(props) {
           optGroupAccessor={d => d.type}
           optGroupLabels={{
             'index': 'GSNI Index',
-            'subgroup': 'GSNI Subgroup',
+            'subgroup': 'GSNI Dimension',
           }}
         />
         <Dropdown
@@ -358,7 +358,7 @@ function GSNIGraph(props) {
         <span style={{ fontWeight: '600'}}>{index.key} (percentage of people)</span>
 
           <span className='lowerBetter'>
-            Note: GSNI comprises four dimensions— political, educational, economic and physical integrity. It is constructed based on responses to seven questions from the World Values Survey, which are used to create seven indicators. The core index value measures the percentage of people with biases, independent of the number of biases, and lower value indicates less bias.
+            Note: GSNI comprises four dimensions— political, educational, economic and physical integrity. It is constructed based on responses to seven questions from the World Values Survey, which are used to create seven indicators. The core index value measures the percentage of people with at least one bias, and lower value indicates less bias.
           </span>
       </div>
       <div>

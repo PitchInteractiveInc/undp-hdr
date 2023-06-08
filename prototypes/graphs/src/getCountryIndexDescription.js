@@ -10,7 +10,8 @@ let defaults = {
   GDI: 'The GDI measures gender gaps in achievements in three basic dimensions of human development: health (measured by female and male life expectancy at birth), knowledge (measured by female and male expected years of schooling for children and mean years of schooling for adults aged 25 years and older) and living standards (measured by female and male estimated GNI per capita). It is a ratio of the female to the male HDI.',
   GII: 'The GII measures gender inequalities (the loss in human development due to inequality between female and male achievements) in three key dimensions – reproductive health, empowerment, and labour market. Reproductive health is measured by maternal mortality ratio and adolescent birth rates; empowerment is measured by the shares of parliamentary seats held and population with at least some secondary education by each gender; and labour market participation is measured by the labour force participation rates for women and men.',
   MPI: 'The MPI looks beyond income to understand how people experience poverty in multiple and simultaneous ways. It identifies how people are being left behind across three key dimensions: health, education and standard of living, comprising 10 indicators. People who experience deprivation in at least one third of these weighted indicators fall into the category of multidimensionally poor.',
-  PHDI: 'The PHDI discounts the HDI for pressures on the planet to reflect a concern for intergenerational inequality. It is the level of human development adjusted by carbon dioxide emissions per person (production-based) and material footprint per capita to account for the excessive human pressure on the planet. In an ideal scenario where there are no pressures on the planet, the PHDI equals the HDI. However, as pressures increase, the PHDI falls below the HDI. In this sense, the PHDI measures the level of human development when planetary pressures are considered.'
+  PHDI: 'The PHDI discounts the HDI for pressures on the planet to reflect a concern for intergenerational inequality. It is the level of human development adjusted by carbon dioxide emissions per person (production-based) and material footprint per capita to account for the excessive human pressure on the planet. In an ideal scenario where there are no pressures on the planet, the PHDI equals the HDI. However, as pressures increase, the PHDI falls below the HDI. In this sense, the PHDI measures the level of human development when planetary pressures are considered.',
+  GSNI: "The GSNI assesses the impact of social beliefs on gender equality across four dimensions, including political, educational, economic, and physical integrity. It draws upon data from 91 countries, encompassing the World Values Survey waves 5 (2005-2009), 6 (2010-2014), and 7 (2017-2022), with the latest update reflecting information as of 12 January 2023. The core GSNI measures the percentage of people with at least one bias. The GSNI ranges from 0 to 1. Higher GSNI values indicate higher biases against gender equality and women's empowerment.",
 }
 
 function getCountryWithApostrophe(country) {
@@ -86,7 +87,7 @@ export default function getCountryIndexDescription(country, index, data) {
           {defaults[index.key]} {country.Country} has a GII value of {latestValueFormatted}, ranking it {country[`gii_rank_${latestYear}`]} out of {countCountriesWithGII} countries in {latestYear}.
         </p>
       )
-    } else if (index.key === 'MPI') {
+    } else if (index.key === 'MPI' || index.key === 'GSNI') {
       description = (
         <p>
           {defaults[index.key]}

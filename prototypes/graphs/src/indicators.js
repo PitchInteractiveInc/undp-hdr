@@ -16,11 +16,11 @@ const indicators =  [
         type: 'difference',
         title: ({country, extent}) => <>Trends in {country}'s HDI<br className='mobileBreak' /> {extent.join(' – ')}</>,
         noCountrySelection: true,
+        pageBreakAfter: true,
       },
       {
         type: 'scatter',
         title: ({country, extent}) =>  <>HDI in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
-        pageBreakAfter: true,
       }
     ],
   },
@@ -34,12 +34,11 @@ const indicators =  [
 
       }
     ],
-    pageBreakBefore: true,
+    pageBreakAfter: true,
   },
   {
     key: 'IHDI',
     name: 'Inequality-adjusted HDI',
-    pageBreakAfter: true,
     countryGraphs: [
       {
         type: 'difference',
@@ -56,6 +55,7 @@ const indicators =  [
         title: ({country, extent}) =>  <>GII in comparison<br className='mobileBreak' /> {extent.join(' – ')}</>,
       }
     ],
+    pageBreakAfter: true,
     lowerBetter: true,
   },
   {
@@ -72,7 +72,6 @@ const indicators =  [
   {
     key: 'MPI',
     name: 'Multidimensional Poverty Index',
-    pageBreakAfter: true,
     customGraph: <MPIGraph />,
     countryGraphs: [
       {
@@ -82,6 +81,8 @@ const indicators =  [
       }
     ],
     lowerBetter: true,
+
+    pageBreakAfter: true,
   },
   {
     key: 'PHDI',

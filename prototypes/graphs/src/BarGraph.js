@@ -149,7 +149,7 @@ export default function BarGraph(props) {
         showLabel = true
       }
     }
-    let label = showLabel ? <text x={x} key={i} dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{format(value)}</text> : null
+    let label = showLabel ? <text x={x} key={i} dy='-0.5em' textAnchor='middle' fill={labelFill} y={height - y}>{format(value, index.key)}</text> : null
     labels.push(label)
     return (
       <g transform={`translate(${x}, ${0})`} key={i}>
@@ -173,11 +173,11 @@ export default function BarGraph(props) {
 
 
 
-  const yScaleTicks = yScale.ticks(10).map((tick, index) => {
+  const yScaleTicks = yScale.ticks(10).map((tick) => {
     const y = yScale(tick)
     return (
       <g key={tick} transform={`translate(${width}, ${height - y})`}>
-        <text dy='0.3em' dx='0.5em'>{format(tick)}</text>
+        <text dy='0.3em' dx='0.5em'>{format(tick, index.key)}</text>
         {/* <line x1={-width - xScale(0.5)} x2={-xScale(0.5)} stroke='#A9B1B7' strokeDasharray='4,3' strokeWidth={0.5} /> */}
       </g>
     )

@@ -113,7 +113,10 @@
 
     max-width: 700px;
     box-sizing: border-box;
-
+    @media print {
+      font-size: 0.8em;
+      padding: 0.5em;
+    }
   }
   .additionalIndexContent {
     margin-top: 2em;
