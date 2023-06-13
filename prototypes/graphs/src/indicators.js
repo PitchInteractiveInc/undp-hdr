@@ -60,7 +60,7 @@ const indicators =  [
   },
   {
     key: 'GSNI',
-    name: 'GSNI',
+    name: 'Gender Social Norms Index',
     customGraph: <GSNIGraphWrapper />,
     countryGraphs: [{
       type: 'bar',
