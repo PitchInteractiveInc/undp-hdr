@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "./static/css/main.2e3ed84a.css",
+    "main.js": "./static/js/main.07efbbc4.js",
+    "static/js/787.ccd84155.chunk.js": "./static/js/787.ccd84155.chunk.js",
+    "static/media/Onlinemaster_HDR2122_081522.csv": "./static/media/Onlinemaster_HDR2122_081522.ac8500f84b9d9d251f41.csv",
+    "static/media/MPI_formatted.csv": "./static/media/MPI_formatted.5efdd8ad2a98d7c3bc18.csv",
+    "static/media/GSNI_2023.csv": "./static/media/GSNI_2023.943d744cc53b7ffb5657.csv",
+    "static/media/HDR201122web_metadata_040822.csv": "./static/media/HDR201122web_metadata_040822.d2339557ea432166da1a.csv",
+    "static/media/failedSync.svg": "./static/media/failedSync.bb63bd097dbf5c24605817931d8b5ebf.svg",
+    "index.html": "./index.html",
+    "static/media/plus.svg": "./static/media/plus.6a9fd0fa9e3a838147a9.svg",
+    "static/media/x.svg": "./static/media/x.97194e2fc0002fd0230125eef4f4da45.svg",
+    "static/media/downArrow.svg": "./static/media/downArrow.305c024f05554e2348301ef7529dc932.svg",
+    "static/media/syncButton.svg": "./static/media/syncButton.b901d2fd2a08a3f2b0b87e6265b0d341.svg",
+    "static/media/orangeDownArrow.svg": "./static/media/orangeDownArrow.976791b5ecaeebb6e3a7.svg",
+    "main.2e3ed84a.css.map": "./static/css/main.2e3ed84a.css.map",
+    "main.07efbbc4.js.map": "./static/js/main.07efbbc4.js.map",
+    "787.ccd84155.chunk.js.map": "./static/js/787.ccd84155.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2e3ed84a.css",
+    "static/js/main.07efbbc4.js"
+  ]
+}
