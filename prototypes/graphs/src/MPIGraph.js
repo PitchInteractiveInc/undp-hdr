@@ -10,14 +10,14 @@ import format from './format';
 import { useWindowSize } from 'react-use';
 export const mpiColors = {
   'Nutrition': '#1f5a95',
-  'Years of schooling': '#006eb5',
-  'School attendance': '#3288ce',
-  'Child mortality': '#4f95dd',
+  'Child mortality': '#006eb5',
+  'Years of schooling': '#3288ce',
+  'School attendance': '#4f95dd',
   'Cooking fuel': '#6babeb',
-  'Housing': '#94c4f5',
-  'Sanitation': '#b5d5f5',
+  'Sanitation': '#94c4f5',
+  'Drinking water': '#b5d5f5',
   'Electricity': '#a9b1b7',
-  'Drinking water': '#55606f',
+  'Housing': '#55606f',
   'Assets': '#232E3E'
 }
 
